@@ -1,1 +1,3 @@
 # AuctionTraidingMicroservice
+
+Yana Kryukova
