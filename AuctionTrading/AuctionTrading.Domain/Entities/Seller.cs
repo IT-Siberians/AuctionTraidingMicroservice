@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuctionTrading.Domain.Entities
 {
-    public class Seller:IVisitor
+    public class Seller : ISeller
     {
     }
 }
