@@ -8,5 +8,6 @@ namespace AuctionTrading.Domain.Entities
 {
     public interface ICustomer : IVisitor
     {
+        Task MakeBidAsync(AuctionLot lot, decimal amount);
     }
 }

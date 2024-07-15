@@ -8,5 +8,6 @@ namespace AuctionTrading.Domain.Entities
 {
     internal interface ISeller : IVisitor
     {
+        Task CancelLotAsync(AuctionLot lot);
     }
 }
