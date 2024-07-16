@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace AuctionTrading.Domain.Enums
 {
-    public class LotStatus
+    public enum LotStatus
     {
+        Active,
+        Canceled,
+        Completed
     }
 }
