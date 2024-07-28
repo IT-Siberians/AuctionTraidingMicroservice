@@ -9,6 +9,6 @@ namespace AuctionTrading.Domain.Interfaces
 {
     internal interface ISeller : IVisitor
     {
-        Task CancelLotAsync(AuctionLot lot);
+        void CancelLot(AuctionLot lot);
     }
 }

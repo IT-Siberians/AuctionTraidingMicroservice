@@ -64,6 +64,10 @@ namespace AuctionTrading.Domain.Entities
 
             Validate();
         }
+        public void ChangeStatus(LotStatus newLotStatus)
+        {
+            throw new NotImplementedException();
+        }
         public void AddBid(Bid bid)
         {
             if (Status == LotStatus.Canceled || Status == LotStatus.Completed)

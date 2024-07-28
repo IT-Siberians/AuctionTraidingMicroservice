@@ -9,6 +9,6 @@ namespace AuctionTrading.Domain.Interfaces
 {
     public interface ICustomer : IVisitor
     {
-        Task MakeBidAsync(AuctionLot lot, decimal amount);
+        bool MakeBid(AuctionLot lot, decimal amount);
     }
 }
