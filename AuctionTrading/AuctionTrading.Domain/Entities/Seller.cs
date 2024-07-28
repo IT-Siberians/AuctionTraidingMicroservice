@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AuctionTrading.Domain.Interfaces;
+using AuctionTrading.Domain.ValueObject;
 
 namespace AuctionTrading.Domain.Entities
 {
     public class Seller : ISeller
     {
         public Guid Id { get; }
-        public string Name { get; private set; }
+        public string Username { get; private set; }
         public Seller(Guid id, string name)
         {
             Id = id;
-            Name = name;
+            Username = name;
         }
         public bool ChangeName(string name)
         {

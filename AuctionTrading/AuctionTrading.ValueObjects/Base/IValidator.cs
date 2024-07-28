@@ -4,7 +4,7 @@
     /// Defines a method that implements the validation of the object.
     /// </summary>
     /// <typeparam name="T">Type of validation object.</typeparam>
-    public interface IValidator<T>
+    internal interface IValidator<T>
     {
         /// <summary>
         /// Validates data.

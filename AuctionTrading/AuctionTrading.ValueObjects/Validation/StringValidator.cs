@@ -1,12 +1,13 @@
 ﻿using AuctionTrading.Domain.ValueObject.Base;
 using AuctionTrading.Domain.ValueObject.Exception;
+using System.Runtime.CompilerServices;
 
 namespace AuctionTrading.Domain.ValueObject.Validation
 {
     /// <summary>
     /// Defines a method that implements the validation of the string.
     /// </summary>
-    internal class StringValidator : IValidator<string>
+    public class StringValidator : IValidator<string>
     {
         /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 
