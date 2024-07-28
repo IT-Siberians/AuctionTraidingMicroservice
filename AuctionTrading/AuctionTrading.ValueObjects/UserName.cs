@@ -1,0 +1,14 @@
+﻿using AuctionTrading.Domain.ValueObject.Base;
+using AuctionTrading.Domain.ValueObject.Validation;
+
+namespace AuctionTrading.Domain.ValueObject
+{
+    /// <summary>
+    /// Represents type of the entity's user name.
+    /// </summary>
+    /// <param name="name">The user name of the entity.</param>
+    internal class UserName(string name) : ValueObject<string>(new StringValidator(), name)
+    {
+
+    }
+}
