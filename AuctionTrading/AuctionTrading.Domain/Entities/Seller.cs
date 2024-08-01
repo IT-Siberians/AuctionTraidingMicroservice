@@ -38,16 +38,6 @@ namespace AuctionTrading.Domain.Entities
             Username = username;
             _auctionLots = auctionLots;
         }
-        /// <summary>
-        /// Initializes a new instance of a <see cref="Seller"></see> class that hasn't lots up for auction.
-        /// </summary>
-        /// <param name="id">The ID of the seller.</param>
-        /// <param name="username">The username of the seller.</param>
-        public Seller(Guid id, Username username)
-            : this(id, username, [])
-        {
-
-        }
         #endregion // Constructors
         /// <summary> 
         /// Changes the seller's username. 
@@ -67,7 +57,7 @@ namespace AuctionTrading.Domain.Entities
         {
             if (lot.Seller!=this)
                 throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_LOT_ANOTHER_SELLER);
-            if (lot.Status!=LotStatus.Active)
+            if (!lot.IsActive)
                 throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_NOT_ACTIVE_LOT);
             var canceledLot = _auctionLots.SingleOrDefault(lot);
             if (canceledLot==null)
@@ -91,7 +81,7 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         public Bid? GetLastBid(AuctionLot auctionLot)
         {
-            return auctionLot.Bids.MaxBy(i => i.Timestamp);
+            return auctionLot.LastBid;
         }
         /// <summary>
         /// Gets the lot assigned to the seller.
@@ -103,7 +93,7 @@ namespace AuctionTrading.Domain.Entities
         {
             if (lot.Seller != this)
                 throw new InvalidOperationException(ExceptionMessage.CANNOT_GET_LOT_ANOTHER_SELLER);
-            if (lot.Status != LotStatus.Active)
+            if (!lot.IsActive)
                 throw new InvalidOperationException(ExceptionMessage.CANNOT_GET_NOT_ACTIVE_LOT);
             var auctionLot = _auctionLots.SingleOrDefault(lot);
             if (auctionLot == null)

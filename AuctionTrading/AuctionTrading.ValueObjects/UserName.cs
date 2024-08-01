@@ -1,6 +1,5 @@
 ﻿using AuctionTrading.Domain.ValueObject.Base;
 using AuctionTrading.Domain.ValueObject.Validation;
-using System.Runtime.CompilerServices;
 
 namespace AuctionTrading.Domain.ValueObject
 {

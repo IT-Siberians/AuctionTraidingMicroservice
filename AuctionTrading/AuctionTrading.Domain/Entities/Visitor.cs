@@ -9,17 +9,17 @@ namespace AuctionTrading.Domain.Entities
 {
     public class Visitor : IVisitor
     {
-        public Task<IEnumerable<AuctionLot>> GetAllLotsAsync(IEnumerable<AuctionLot> lots)
+        public IReadOnlyCollection<AuctionLot> GetAllLots()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Bid> GetLastBidAsync(Guid lotId, IEnumerable<Bid> bids)
+        public Bid? GetLastBid(AuctionLot auctionLot)
         {
             throw new NotImplementedException();
         }
 
-        public Task<AuctionLot> GetLotDetailsAsync(Guid lotId, IEnumerable<AuctionLot> lots)
+        public AuctionLot GetLotDetails(AuctionLot lot)
         {
             throw new NotImplementedException();
         }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AuctionTrading.Domain.Entities;
+﻿using AuctionTrading.Domain.Entities;
+using AuctionTrading.Domain.ValueObject;
 
 namespace AuctionTrading.Domain.Interfaces
 {
     public interface ICustomer : IVisitor
     {
-        bool MakeBid(AuctionLot lot, decimal amount);
+        bool TryMakeBid(AuctionLot lot, Money amount);
+        void AddObservableLot(AuctionLot lot);
     }
 }

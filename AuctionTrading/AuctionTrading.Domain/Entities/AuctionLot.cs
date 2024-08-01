@@ -1,46 +1,74 @@
-﻿using AuctionTrading.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AuctionTrading.Domain.Base;
+using AuctionTrading.Domain.Enums;
+using AuctionTrading.Domain.ValueObject;
+using System.Diagnostics;
 
 namespace AuctionTrading.Domain.Entities
 {
-    public class AuctionLot
+    /// <summary>
+    /// Represents the auction lot.
+    /// </summary>
+    public class AuctionLot : Entity<Guid>
     {
-        [Required]
-        public Guid Id { get; private set; }
-
-        [Required]
-        [StringLength(100, MinimumLength = 1)]
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-
-        [Range(0.01, double.MaxValue, ErrorMessage = "StartPrice must be greater than zero.")]
-        public decimal StartPrice { get; private set; }
-
-        [Range(0.01, double.MaxValue, ErrorMessage = "FixedBid must be greater than zero.")]
-        public decimal FixedBid { get; private set; }
-        public decimal? RepurchasePrice { get; private set; }
-
-        [Required(ErrorMessage = "StartDate is required.")]
-        public DateTime StartDate { get; private set; }
-
-        [Required(ErrorMessage = "EndDate is required.")]
-        public DateTime EndDate { get; private set; }
-
-        [Required]
+        #region Fields
+        /// <summary>
+        /// Sequence of bids on the auction lot.
+        /// </summary>
+        private readonly IEnumerable<Bid> _bids;
+        #endregion // Fields
+        #region Properties
+        /// <summary>
+        /// Get the title of the auction lot.
+        /// </summary>
+        public Title Title { get; }
+        /// <summary>
+        /// Get the description of the auction lot.
+        /// </summary>
+        public Description Description { get; }
+        /// <summary>
+        /// Get the start price of the auction lot.
+        /// </summary>
+        public Money StartPrice { get; }
+        /// <summary>
+        /// Get the fixed bid of the auction lot.
+        /// </summary>
+        public Money FixedBid { get; }
+        /// <summary>
+        /// Get the repurchase price of the auction lot.
+        /// </summary>
+        public Money? RepurchasePrice { get; }
+        /// <summary>
+        /// Get the start date of the auction by lot. 
+        /// </summary>
+        public DateTime StartDate { get; }
+        /// <summary>
+        /// Get the end date of the auction by lot.
+        /// </summary>
+        public DateTime EndDate { get; }
+        /// <summary>
+        /// Get the status of the auction lot.
+        /// </summary>
         public LotStatus Status { get; private set; }
+        /// <summary>
+        /// Get the seller of the auction lot.
+        /// </summary>
+        public Seller Seller { get; }
+        /// <summary>
+        /// Returns a value indicating whether the lot is currently being bid on.
+        /// </summary>
+        public bool IsActive => this.Status == LotStatus.Active;
+        /// <summary>
+        /// Get the last bid of the auction lot.
+        /// </summary>
+        public Bid? LastBid => _bids.MaxBy(i => i.Timestamp);
+        #endregion // Properties
 
-        [Required]
-        public Seller Seller { get; private set; }
-        public List<Bid> Bids { get; private set; } = new List<Bid>();
-
-        public AuctionLot(Guid id, string title, string description, decimal startPrice, decimal fixedBid, decimal? repurchasePrice, DateTime startDate, DateTime endDate, LotStatus status, Seller seller, List<Bid> bids)
+        public AuctionLot(Guid id, Title title, Description description, 
+            Money startPrice, Money fixedBid, Money? repurchasePrice, 
+            DateTime startDate, DateTime endDate, LotStatus status, Seller seller, IEnumerable<Bid> bids) 
+            : base(id)
         {
-            if (repurchasePrice.HasValue && repurchasePrice < startPrice)
+            if (repurchasePrice!=null && repurchasePrice < startPrice)
             {
                 throw new ArgumentException("RepurchasePrice must be greater than startPrice.");
             }
@@ -50,7 +78,6 @@ namespace AuctionTrading.Domain.Entities
                 throw new ArgumentException("EndDate must be greater than StartDate.");
             }
 
-            Id = id;
             Title = title;
             Description = description;
             StartPrice = startPrice;
@@ -60,30 +87,32 @@ namespace AuctionTrading.Domain.Entities
             EndDate = endDate;
             Status = status;
             Seller = seller;
-            Bids = bids;
-
-            Validate();
+            _bids = bids;
         }
         public void ChangeStatus(LotStatus newLotStatus)
         {
             throw new NotImplementedException();
         }
-        public void AddBid(Bid bid)
+        public bool TryAddBid(Bid newBid)
         {
-            if (Status == LotStatus.Canceled || Status == LotStatus.Completed)
-                throw new InvalidOperationException("Cannot bid on a cancelled or finished lot.");
-
-            Bids.Add(bid);
+            if (!this.IsActive)
+                throw new InvalidOperationException();
+            if (newBid.Lot != this)
+                throw new InvalidOperationException();
+            if (!_bids.Contains(newBid))
+                throw new InvalidOperationException();
+            bool flag = IsCurrentBid(newBid);
+            if (flag) _bids.Append(newBid);
+            return flag;
         }
-        private void Validate()
+        public bool IsCurrentBid(Bid newBid)
         {
-            var validationContext = new ValidationContext(this);
-            var validationResults = new List<ValidationResult>();
+            Money minAmount = this.LastBid == null ?
+                    this.StartPrice + this.FixedBid :
+                    newBid.Amount + this.FixedBid;
+            return (newBid.Amount > minAmount && newBid.Timestamp < this.EndDate) ? true : false;
 
-            if (!Validator.TryValidateObject(this, validationContext, validationResults, true))
-            {
-                throw new ValidationException(string.Join(", ", validationResults));
-            }
+
         }
     }
 }

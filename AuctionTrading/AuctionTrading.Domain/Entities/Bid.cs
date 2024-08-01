@@ -1,46 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AuctionTrading.Domain.Base;
+using AuctionTrading.Domain.ValueObject;
 
 namespace AuctionTrading.Domain.Entities
 {
-    public class Bid
+    /// <summary>
+    /// Represents the bid for the auction lot.
+    /// </summary>
+    public class Bid : Entity<Guid>
     {
-        public Guid Id { get; private set; }
-        public DateTime Timestamp { get; private set; }
-        public decimal Amount { get; private set; }
-        public AuctionLot Lot { get; private set; }
-        public Customer Customer { get; private set; }
-        public Bid(Guid id, DateTime timestamp, decimal amount, AuctionLot lot, Customer customer)
+        #region Properties
+        /// <summary>
+        /// Get the bid time.
+        /// </summary>
+        public DateTime Timestamp => DateTime.Now;
+        /// <summary>
+        /// Get the bid amount.
+        /// </summary>
+        public Money Amount { get; }
+        /// <summary>
+        /// Get the lot on which the bid has been placed.
+        /// </summary>
+        public AuctionLot Lot { get; }
+        /// <summary>
+        /// Get the customer who has bid on the lot.
+        /// </summary>
+        public Customer Customer { get; }
+        #endregion // Properties
+        #region Constructor
+        /// <summary>
+        /// Initializes a new instance of a <see cref="Bid"></see> class.
+        /// </summary>
+        /// <param name="customer">The customer who has bid on the lot.</param>
+        /// <param name="lot">The lot on which the bid has been placed.</param>
+        /// <param name="amount">The bid amount.</param>
+        public Bid(Customer customer, AuctionLot lot, Money amount)
         {
-            Id = id;
-            Timestamp = timestamp;
-            Amount = amount;
-            Lot = lot;
             Customer = customer;
-
-            Validate();
+            Lot = lot;
+            Amount = amount;
         }
-
-        private void Validate()
-        {
-            if (Id == Guid.Empty)
-                throw new ArgumentException("Id cannot be empty.", nameof(Id));
-
-            if (Timestamp == default)
-                throw new ArgumentException("Timestamp must be a valid date.", nameof(Timestamp));
-
-            if (Amount <= 0)
-                throw new ArgumentException("Amount must be greater than zero.", nameof(Amount));
-
-            if (Lot == null)
-                throw new ArgumentNullException(nameof(Lot), "Auction lot cannot be null.");
-
-            if (Customer == null)
-                throw new ArgumentNullException(nameof(Customer), "Customer cannot be null.");
-        }
+        #endregion // Constructor
     }
 }
