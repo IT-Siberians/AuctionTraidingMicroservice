@@ -9,6 +9,7 @@ namespace AuctionTrading.Domain.Interfaces
 {
     internal interface ISeller : IVisitor
     {
-        void CancelLot(AuctionLot lot);
+        bool CancelLot(AuctionLot lot);
+        AuctionLot GetLotDetails(AuctionLot lot);
     }
 }

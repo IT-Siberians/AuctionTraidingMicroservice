@@ -10,7 +10,6 @@ namespace AuctionTrading.Domain.Interfaces
     public interface IVisitor
     {
         IReadOnlyCollection<AuctionLot> GetAllLots();
-        AuctionLot GetLotDetails(AuctionLot lot);
         Bid? GetLastBid(AuctionLot auctionLot);
     }
 }

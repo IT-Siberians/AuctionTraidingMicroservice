@@ -52,18 +52,14 @@ namespace AuctionTrading.Domain.Entities
         /// Cancels an auctioned lot.
         /// </summary>
         /// <param name="lot">Lot to be withdrawn from auction</param>
+        /// <returns>true if the lot is successfully canceled; otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public void CancelLot(AuctionLot lot)
+        public bool CancelLot(AuctionLot lot)
         {
-            if (lot.Seller!=this)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_LOT_ANOTHER_SELLER);
-            if (!lot.IsActive)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_NOT_ACTIVE_LOT);
             var canceledLot = _auctionLots.SingleOrDefault(lot);
-            if (canceledLot==null)
+            if (canceledLot == null)
                 throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_LOT_EMPTY_SEQUENCE);
-            // Думаю стоит добавить отслеживание времени. Например нельзя отменить лот за час до окончания торгов
-            canceledLot.ChangeStatus(LotStatus.Canceled);
+            return canceledLot.CancelLot(this);
         }
         /// <summary>
         /// Gets the read-only collection of seller's auction lots.
@@ -71,7 +67,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>A read-only collection of seller's auction lots.</returns>
         public IReadOnlyCollection<AuctionLot> GetAllLots()
         {
-            return _auctionLots.ToImmutableList();
+            return _auctionLots.ToList().AsReadOnly();
         }
         /// <summary>
         /// Gets the last bid of the seller's auction lot.

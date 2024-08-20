@@ -1,5 +1,6 @@
 ﻿using AuctionTrading.Domain.Base;
 using AuctionTrading.Domain.Enums;
+using AuctionTrading.Domain.Exception;
 using AuctionTrading.Domain.ValueObject;
 using System.Diagnostics;
 
@@ -62,13 +63,28 @@ namespace AuctionTrading.Domain.Entities
         /// </summary>
         public Bid? LastBid => _bids.MaxBy(i => i.Timestamp);
         #endregion // Properties
-
-        public AuctionLot(Guid id, Title title, Description description, 
-            Money startPrice, Money fixedBid, Money? repurchasePrice, 
-            DateTime startDate, DateTime endDate, LotStatus status, Seller seller, IEnumerable<Bid> bids) 
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of a <see cref="AuctionLot"></see> class.
+        /// </summary>
+        /// <param name="id">The ID of the auction lot.</param>
+        /// <param name="title">The title of the auction lot.</param>
+        /// <param name="description">The description of the auction lot.</param>
+        /// <param name="startPrice">The start price of the auction lot.</param>
+        /// <param name="fixedBid">The fixed bid of the auction lot.</param>
+        /// <param name="repurchasePrice">The repurchase price of the auction lot.</param>
+        /// <param name="startDate">The start date of the auction lot.</param>
+        /// <param name="endDate">The end date of the auction lot.</param>
+        /// <param name="status">The status of the auction lot.</param>
+        /// <param name="seller">The seller of the auction lot.</param>
+        /// <param name="bids">The bids of the auction lot.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public AuctionLot(Guid id, Title title, Description description,
+            Money startPrice, Money fixedBid, Money? repurchasePrice,
+            DateTime startDate, DateTime endDate, LotStatus status, Seller seller, IEnumerable<Bid> bids)
             : base(id)
         {
-            if (repurchasePrice!=null && repurchasePrice < startPrice)
+            if (repurchasePrice != null && repurchasePrice < startPrice)
             {
                 throw new ArgumentException("RepurchasePrice must be greater than startPrice.");
             }
@@ -89,11 +105,31 @@ namespace AuctionTrading.Domain.Entities
             Seller = seller;
             _bids = bids;
         }
-        public void ChangeStatus(LotStatus newLotStatus)
+        #endregion // Constructors
+        /// <summary>
+        /// Cancels an auctioned lot.
+        /// </summary>
+        /// <param name="seller">Seller of the lot.</param>
+        /// <returns>true if the lot is successfully canceled; otherwise false.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        internal bool CancelLot(Seller seller)
         {
-            throw new NotImplementedException();
+            if (this.Seller != seller)
+                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_LOT_ANOTHER_SELLER);
+            if (!this.IsActive)
+                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_NOT_ACTIVE_LOT);
+            if (this._bids.Any())
+                return false;
+            this.Status = LotStatus.Canceled;
+            return true;
         }
-        public bool TryAddBid(Bid newBid)
+        /// <summary>
+        /// Adds the bid to the sequence of bids.
+        /// </summary>
+        /// <param name="newBid">The new bid on the lot.</param>
+        /// <returns>true if the bid is successfully added to the bid sequence; otherwise false.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        internal bool TryAddBid(Bid newBid)
         {
             if (!this.IsActive)
                 throw new InvalidOperationException();
@@ -105,14 +141,17 @@ namespace AuctionTrading.Domain.Entities
             if (flag) _bids.Append(newBid);
             return flag;
         }
+        /// <summary>
+        /// Checks the correctness of a bid on a lot.
+        /// </summary>
+        /// <param name="newBid">The new bid on the lot.</param>
+        /// <returns>true if the bid is correctly; otherwise false.</returns>
         public bool IsCurrentBid(Bid newBid)
         {
             Money minAmount = this.LastBid == null ?
                     this.StartPrice + this.FixedBid :
                     newBid.Amount + this.FixedBid;
             return (newBid.Amount > minAmount && newBid.Timestamp < this.EndDate) ? true : false;
-
-
         }
     }
 }

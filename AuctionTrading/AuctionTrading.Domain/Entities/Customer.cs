@@ -51,7 +51,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>A read-only collection of customer's observable auction lots.</returns>
         public IReadOnlyCollection<AuctionLot> GetAllLots()
         {
-            return _observableAuctionLots.ToImmutableList();
+            return _observableAuctionLots.ToList().AsReadOnly();
         }
 
         /// <summary>
@@ -63,11 +63,6 @@ namespace AuctionTrading.Domain.Entities
         public Bid? GetLastBid(AuctionLot auctionLot)
         {
             return auctionLot.LastBid;
-        }
-
-        public AuctionLot GetLotDetails(AuctionLot lot)
-        {
-            throw new NotImplementedException();
         }
         /// <summary>
         /// Adds the auction lot to the sequence of observable lots.
