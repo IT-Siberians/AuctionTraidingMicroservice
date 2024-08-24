@@ -18,14 +18,9 @@ namespace AuctionTrading.Domain.Base
     public abstract class Entity<TId>(TId id) where TId : struct
     {
         /// <summary>
-        /// private field for id of the entity.
-        /// </summary>
-        private readonly TId _id = id;
-
-        /// <summary>
         /// Gets the ID of the entity.
         /// </summary>
-        public TId Id => _id;
+        public TId Id { get; }
         /// <summary>
         /// Protected constructor for entity framework if needed.
         /// </summary>
