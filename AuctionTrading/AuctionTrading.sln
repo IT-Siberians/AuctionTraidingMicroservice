@@ -3,14 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Domain", "AuctionTrading.Domain\AuctionTrading.Domain.csproj", "{484B915F-2462-4F22-96BA-84B09EC985E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Domain", "Domain\AuctionTrading.Domain\AuctionTrading.Domain.csproj", "{484B915F-2462-4F22-96BA-84B09EC985E3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1CF8438A-0B47-4D53-A01F-0D5353855B7F} = {1CF8438A-0B47-4D53-A01F-0D5353855B7F}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{16B0E9BE-F252-410B-9289-996567A6E3F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.ValueObjects", "Domain\AuctionTrading.ValueObjects\AuctionTrading.ValueObjects.csproj", "{1CF8438A-0B47-4D53-A01F-0D5353855B7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.ValueObjects", "AuctionTrading.ValueObjects\AuctionTrading.ValueObjects.csproj", "{1CF8438A-0B47-4D53-A01F-0D5353855B7F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{6DED46C5-A48A-460E-AD08-5DDF42429487}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,8 +31,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{484B915F-2462-4F22-96BA-84B09EC985E3} = {16B0E9BE-F252-410B-9289-996567A6E3F3}
-		{1CF8438A-0B47-4D53-A01F-0D5353855B7F} = {16B0E9BE-F252-410B-9289-996567A6E3F3}
+		{484B915F-2462-4F22-96BA-84B09EC985E3} = {6DED46C5-A48A-460E-AD08-5DDF42429487}
+		{1CF8438A-0B47-4D53-A01F-0D5353855B7F} = {6DED46C5-A48A-460E-AD08-5DDF42429487}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}
