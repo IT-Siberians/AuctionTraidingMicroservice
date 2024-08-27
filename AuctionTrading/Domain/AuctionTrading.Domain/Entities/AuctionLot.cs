@@ -136,12 +136,13 @@ namespace AuctionTrading.Domain.Entities
             if (!IsActive)
                 throw new BidOnInactiveAuctionLotException(this);
             if (newBid.Lot != this)
-                throw new AnotherAuctionLotBidException(this,newBid);
+                throw new AnotherAuctionLotBidException(this, newBid);
             if (!_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
-            bool flag = IsCurrentBid(newBid);
-            if (flag) _bids.Append(newBid);
-            return flag;
+
+            bool isCurrentBid = IsCurrentBid(newBid);
+            if (isCurrentBid) _bids.Append(newBid);
+            return isCurrentBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.
@@ -150,10 +151,10 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if the bid is correctly; otherwise false.</returns>
         private bool IsCurrentBid(Bid newBid)
         {
-            Money minAmount = this.LastBid == null ?
-                    this.StartPrice + this.FixedBid :
-                    newBid.Amount + this.FixedBid;
-            return (newBid.Amount > minAmount && newBid.Timestamp < this.EndDate) ? true : false;
+            Money minAmount = LastBid == null
+                ? StartPrice + FixedBid
+                : newBid.Amount + FixedBid;
+            return (newBid.Amount > minAmount && newBid.Timestamp < EndDate);
         }
     }
 }
