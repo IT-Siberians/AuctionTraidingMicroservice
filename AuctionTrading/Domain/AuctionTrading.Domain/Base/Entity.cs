@@ -20,7 +20,7 @@ namespace AuctionTrading.Domain.Base
         /// <summary>
         /// Gets the ID of the entity.
         /// </summary>
-        public TId Id { get; }
+        public TId Id { get; } = id;
         /// <summary>
         /// Protected constructor for entity framework if needed.
         /// </summary>
