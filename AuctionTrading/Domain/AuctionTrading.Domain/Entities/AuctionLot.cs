@@ -120,6 +120,7 @@ namespace AuctionTrading.Domain.Entities
                 throw new AnotherSellerCancelLotException(this, seller);
             if (!this.IsActive)
                 throw new CancelNotActiveAuctionLotException(this);
+
             if (this._bids.Any())
                 return false;
             this.Status = LotStatus.Canceled;
