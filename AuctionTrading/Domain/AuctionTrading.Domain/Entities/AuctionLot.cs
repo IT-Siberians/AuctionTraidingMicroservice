@@ -2,7 +2,6 @@
 using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Exception;
 using AuctionTrading.Domain.ValueObject;
-using System.Diagnostics;
 
 namespace AuctionTrading.Domain.Entities
 {
@@ -13,9 +12,9 @@ namespace AuctionTrading.Domain.Entities
     {
         #region Fields
         /// <summary>
-        /// Sequence of bids on the auction lot.
+        /// Collection of bids on the auction lot.
         /// </summary>
-        private readonly IEnumerable<Bid> _bids;
+        private readonly ICollection<Bid> _bids = [];
         #endregion // Fields
         #region Properties
         /// <summary>
@@ -61,13 +60,12 @@ namespace AuctionTrading.Domain.Entities
         /// <summary>
         /// Get the last bid of the auction lot.
         /// </summary>
-        public Bid? LastBid => _bids.MaxBy(i => i.Timestamp);
+        public Bid? LastBid => _bids.Any() ? _bids.MaxBy(i => i.Timestamp) : null;
         #endregion // Properties
         #region Constructors
         /// <summary>
         /// Initializes a new instance of a <see cref="AuctionLot"></see> class.
         /// </summary>
-        /// <param name="id">The ID of the auction lot.</param>
         /// <param name="title">The title of the auction lot.</param>
         /// <param name="description">The description of the auction lot.</param>
         /// <param name="startPrice">The start price of the auction lot.</param>
@@ -77,21 +75,25 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="endDate">The end date of the auction lot.</param>
         /// <param name="status">The status of the auction lot.</param>
         /// <param name="seller">The seller of the auction lot.</param>
-        /// <param name="bids">The bids of the auction lot.</param>
-        /// <exception cref="ArgumentException"></exception>
-        public AuctionLot(Guid id, Title title, Description description,
+        public AuctionLot(Title title, Description description,
             Money startPrice, Money fixedBid, Money? repurchasePrice,
-            DateTime startDate, DateTime endDate, LotStatus status, Seller seller, IEnumerable<Bid> bids)
-            : base(id)
+            DateTime startDate, DateTime endDate, LotStatus status, Seller seller)
+            : this(Guid.NewGuid(), title, description, startPrice, fixedBid, repurchasePrice, startDate, endDate, status, seller)
+        {
+
+        }
+        protected AuctionLot(Guid id, Title title, Description description,
+            Money startPrice, Money fixedBid, Money? repurchasePrice,
+            DateTime startDate, DateTime endDate, LotStatus status, Seller seller) : base(id)
         {
             if (repurchasePrice != null && repurchasePrice < startPrice)
             {
-                throw new ArgumentException("RepurchasePrice must be greater than startPrice.");
+                throw new InvalidAuctionLotRepurchasePriceException(repurchasePrice, startPrice);
             }
 
-            if (endDate <= startDate)
+            if (endDate.ToUniversalTime() <= startDate.ToUniversalTime())
             {
-                throw new ArgumentException("EndDate must be greater than StartDate.");
+                throw new InvalidAuctionTimePeriodException(startDate, endDate);
             }
 
             Title = title;
@@ -103,7 +105,6 @@ namespace AuctionTrading.Domain.Entities
             EndDate = endDate;
             Status = status;
             Seller = seller;
-            _bids = bids;
         }
         #endregion // Constructors
         /// <summary>
@@ -111,13 +112,14 @@ namespace AuctionTrading.Domain.Entities
         /// </summary>
         /// <param name="seller">Seller of the lot.</param>
         /// <returns>true if the lot is successfully canceled; otherwise false.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="AnotherSellerCancelLotException"></exception>
+        /// <exception cref="CancelNotActiveAuctionLotException"></exception>
         internal bool CancelLot(Seller seller)
         {
-            if (this.Seller != seller)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_LOT_ANOTHER_SELLER);
+            if (Seller != seller)
+                throw new AnotherSellerCancelLotException(this, seller);
             if (!this.IsActive)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_NOT_ACTIVE_LOT);
+                throw new CancelNotActiveAuctionLotException(this);
             if (this._bids.Any())
                 return false;
             this.Status = LotStatus.Canceled;
@@ -131,12 +133,12 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         internal bool TryAddBid(Bid newBid)
         {
-            if (!this.IsActive)
-                throw new InvalidOperationException();
+            if (!IsActive)
+                throw new BidOnInactiveAuctionLotException(this);
             if (newBid.Lot != this)
-                throw new InvalidOperationException();
+                throw new AnotherAuctionLotBidException(this,newBid);
             if (!_bids.Contains(newBid))
-                throw new InvalidOperationException();
+                throw new DoubleBidOnAuctionLotException(this, newBid);
             bool flag = IsCurrentBid(newBid);
             if (flag) _bids.Append(newBid);
             return flag;
@@ -146,7 +148,7 @@ namespace AuctionTrading.Domain.Entities
         /// </summary>
         /// <param name="newBid">The new bid on the lot.</param>
         /// <returns>true if the bid is correctly; otherwise false.</returns>
-        public bool IsCurrentBid(Bid newBid)
+        private bool IsCurrentBid(Bid newBid)
         {
             Money minAmount = this.LastBid == null ?
                     this.StartPrice + this.FixedBid :
