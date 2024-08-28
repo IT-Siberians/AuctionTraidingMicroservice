@@ -1,10 +1,10 @@
-﻿using AuctionTrading.Domain.Base;
-using AuctionTrading.Domain.Enums;
+﻿using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Interfaces;
 using AuctionTrading.Domain.ValueObject;
 using AuctionTrading.Domain.Exception;
 using System.Net.Http.Headers;
 using System.Collections.Immutable;
+using AuctionTrading.Domain.Entities.Base;
 
 namespace AuctionTrading.Domain.Entities
 {

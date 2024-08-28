@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuctionTrading.Domain.Base
+namespace AuctionTrading.Domain.Entities.Base
 {
     /// <summary>
     /// Represents an entity in the system.

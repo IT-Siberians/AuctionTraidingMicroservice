@@ -1,4 +1,4 @@
-﻿using AuctionTrading.Domain.Base;
+﻿using AuctionTrading.Domain.Entities.Base;
 using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Exception;
 using AuctionTrading.Domain.ValueObject;
