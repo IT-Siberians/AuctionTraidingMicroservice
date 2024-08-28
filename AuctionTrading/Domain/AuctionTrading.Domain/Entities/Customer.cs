@@ -1,4 +1,5 @@
 ﻿using AuctionTrading.Domain.Base;
+using AuctionTrading.Domain.Exception;
 using AuctionTrading.Domain.Interfaces;
 using AuctionTrading.Domain.ValueObject;
 using System.Collections.Immutable;
@@ -8,34 +9,25 @@ namespace AuctionTrading.Domain.Entities
     /// <summary>
     /// Represents the customer at the auction.
     /// </summary>
-    public class Customer : Entity<Guid>, ICustomer
+    public class Customer(Username username) : Entity<Guid>(Guid.NewGuid())
     {
         #region Fields
         /// <summary> 
         /// The customer's observable auction lots.
         /// </summary>
-        private readonly IEnumerable<AuctionLot> _observableAuctionLots;
+        private readonly ICollection<AuctionLot> _observableAuctionLots = [];
         #endregion // Fields
         #region Properties
         /// <summary> 
         /// Gets the customer's Username. 
         /// </summary>
-        public Username Username { get; private set; }
-        #endregion // Properties
-        #region Constructors
+        public Username Username { get; private set; } = username;
         /// <summary>
-        /// Initializes a new instance of a <see cref="Customer"></see> class that has observable lots.
+        /// Gets the read-only collection of customer's observable auction lots.
         /// </summary>
-        /// <param name="id">The ID of the customer.</param>
-        /// <param name="username">The username of the customer.</param>
-        /// <param name="observableAuctionLots">The observable auction lots of the customer.</param>
-        public Customer(Guid id, Username username, IEnumerable<AuctionLot> observableAuctionLots)
-            : base(id)
-        {
-            Username = username;
-            _observableAuctionLots = observableAuctionLots;
-        }
-        #endregion // Constructors
+        public IReadOnlyCollection<AuctionLot> ObservableAuctionLots =>
+            _observableAuctionLots.Where(lot => lot.IsActive).ToList().AsReadOnly();
+        #endregion // Properties
         /// <summary> 
         /// Changes the customer's username. 
         /// </summary>
@@ -44,25 +36,6 @@ namespace AuctionTrading.Domain.Entities
         {
             if (Username == newUsername) return;
             Username = newUsername;
-        }
-        /// <summary>
-        /// Gets the read-only collection of customer's observable auction lots.
-        /// </summary>
-        /// <returns>A read-only collection of customer's observable auction lots.</returns>
-        public IReadOnlyCollection<AuctionLot> GetAllLots()
-        {
-            return _observableAuctionLots.ToList().AsReadOnly();
-        }
-
-        /// <summary>
-        /// Gets the last bid of the seller's auction lot.
-        /// </summary>
-        /// <param name="auctionLot">An auction lot.</param>
-        /// <returns>A last bid.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public Bid? GetLastBid(AuctionLot auctionLot)
-        {
-            return auctionLot.LastBid;
         }
         /// <summary>
         /// Adds the auction lot to the sequence of observable lots.
@@ -82,11 +55,16 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if was successfully make a bid otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public bool TryMakeBid(AuctionLot lot, Money amount)
-        { 
+        {
+            if (Id == lot.Seller.Id)
+                return false;
+
             if (!lot.IsActive)
-                throw new InvalidOperationException();
-            // Как проверить, вдруг лот принадлежит покупателю??
-            Bid newBid = new Bid(this, lot, amount);
+                throw new BidOnInactiveAuctionLotException(lot);
+
+            Bid newBid = new Bid(this, lot, amount, DateTime.Now);
+            if (lot.TryAddBid(newBid))
+                AddObservableLot(lot);
             return lot.TryAddBid(newBid);
         }
     }
