@@ -11,34 +11,25 @@ namespace AuctionTrading.Domain.Entities
     /// <summary>
     /// Represents the seller of lots at the auction.
     /// </summary>
-    public class Seller : Entity<Guid>, ISeller
+    public class Seller(Username username) : Entity<Guid>(Guid.NewGuid())
     {
         #region Fields
         /// <summary> 
         /// The seller's auction lots.
         /// </summary>
-        private readonly IEnumerable<AuctionLot> _auctionLots;
+        private readonly ICollection<AuctionLot> _auctionLots = [];
         #endregion // Fields
         #region Properties
         /// <summary> 
         /// Gets the seller's Username. 
         /// </summary>
-        public Username Username { get; private set; }
-        #endregion // Properties
-        #region Constructors
+        public Username Username { get; private set; } = username;
         /// <summary>
-        /// Initializes a new instance of a <see cref="Seller"></see> class that has lots up for auction.
+        /// Gets the seller's active auction lots 
         /// </summary>
-        /// <param name="id">The ID of the seller.</param>
-        /// <param name="username">The username of the seller.</param>
-        /// <param name="auctionLots">The auction lots of the seller.</param>
-        public Seller(Guid id, Username username, IEnumerable<AuctionLot> auctionLots)
-            : base(id)
-        {
-            Username = username;
-            _auctionLots = auctionLots;
-        }
-        #endregion // Constructors
+        public IReadOnlyCollection<AuctionLot> ActiveAuctionLots =>
+            _auctionLots.Where(lot => lot.IsActive).ToList().AsReadOnly();
+        #endregion // Properties
         /// <summary> 
         /// Changes the seller's username. 
         /// </summary>
@@ -56,45 +47,10 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         public bool CancelLot(AuctionLot lot)
         {
-            var canceledLot = _auctionLots.SingleOrDefault(lot);
-            if (canceledLot == null)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_CANCEL_LOT_EMPTY_SEQUENCE);
+            var canceledLot = _auctionLots.SingleOrDefault(lot)
+                ?? throw new AuctionLotDoesNotBelongToSellerException(this, lot);
+
             return canceledLot.CancelLot(this);
-        }
-        /// <summary>
-        /// Gets the read-only collection of seller's auction lots.
-        /// </summary>
-        /// <returns>A read-only collection of seller's auction lots.</returns>
-        public IReadOnlyCollection<AuctionLot> GetAllLots()
-        {
-            return _auctionLots.ToList().AsReadOnly();
-        }
-        /// <summary>
-        /// Gets the last bid of the seller's auction lot.
-        /// </summary>
-        /// <param name="auctionLot">An auction lot.</param>
-        /// <returns>A last bid.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public Bid? GetLastBid(AuctionLot auctionLot)
-        {
-            return auctionLot.LastBid;
-        }
-        /// <summary>
-        /// Gets the lot assigned to the seller.
-        /// </summary>
-        /// <param name="lot">A auction lot assigned to the seller.</param>
-        /// <returns>Auction lot</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public AuctionLot GetLotDetails(AuctionLot lot)
-        {
-            if (lot.Seller != this)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_GET_LOT_ANOTHER_SELLER);
-            if (!lot.IsActive)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_GET_NOT_ACTIVE_LOT);
-            var auctionLot = _auctionLots.SingleOrDefault(lot);
-            if (auctionLot == null)
-                throw new InvalidOperationException(ExceptionMessage.CANNOT_GET_LOT_EMPTY_SEQUENCE);
-            return auctionLot;
         }
     }
 }
