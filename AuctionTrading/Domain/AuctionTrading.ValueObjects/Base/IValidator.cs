@@ -1,4 +1,4 @@
-﻿namespace AuctionTrading.Domain.ValueObject.Base
+﻿namespace AuctionTrading.Domain.ValueObjects.Base
 {
     /// <summary>
     /// Defines a method that implements the validation of the object.

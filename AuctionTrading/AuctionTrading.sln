@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Domain", "Do
 		{1CF8438A-0B47-4D53-A01F-0D5353855B7F} = {1CF8438A-0B47-4D53-A01F-0D5353855B7F}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.ValueObjects", "Domain\AuctionTrading.ValueObjects\AuctionTrading.ValueObjects.csproj", "{1CF8438A-0B47-4D53-A01F-0D5353855B7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Domain.ValueObjects", "Domain\AuctionTrading.ValueObjects\AuctionTrading.Domain.ValueObjects.csproj", "{1CF8438A-0B47-4D53-A01F-0D5353855B7F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{6DED46C5-A48A-460E-AD08-5DDF42429487}"
 EndProject

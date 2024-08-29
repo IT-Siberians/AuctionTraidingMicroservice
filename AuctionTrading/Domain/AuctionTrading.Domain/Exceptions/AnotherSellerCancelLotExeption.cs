@@ -1,6 +1,6 @@
 ﻿using AuctionTrading.Domain.Entities;
 
-namespace AuctionTrading.Domain.Exception
+namespace AuctionTrading.Domain.Exceptions
 {
     public class AnotherSellerCancelLotException(AuctionLot auctionLot, Seller seller)
         : InvalidOperationException($"The seller {seller.Username} can't cancel the {auctionLot.Title} auction lot.")

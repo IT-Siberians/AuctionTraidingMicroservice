@@ -1,6 +1,6 @@
-﻿using AuctionTrading.Domain.ValueObject;
+﻿using AuctionTrading.Domain.ValueObjects;
 
-namespace AuctionTrading.Domain.Exception
+namespace AuctionTrading.Domain.Exceptions
 {
     public class InvalidAuctionLotRepurchasePriceException(Money repurchasePrice, Money startPrice)
         : ArgumentException("The repurchase price cannot be less than or equal to the start price.")

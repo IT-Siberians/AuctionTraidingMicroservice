@@ -1,6 +1,6 @@
 ﻿using AuctionTrading.Domain.Entities;
 
-namespace AuctionTrading.Domain.Exception
+namespace AuctionTrading.Domain.Exceptions
 {
     public class AnotherAuctionLotBidException(AuctionLot lot, Bid bid)
         : InvalidOperationException("This bid cannot be placed on another lot")

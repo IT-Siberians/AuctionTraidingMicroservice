@@ -1,20 +1,20 @@
-﻿using AuctionTrading.Domain.ValueObject.Base;
-using AuctionTrading.Domain.ValueObject.Validation;
+﻿using AuctionTrading.Domain.ValueObjects.Base;
+using AuctionTrading.Domain.ValueObjects.Validators;
 using System.Diagnostics.CodeAnalysis;
 
-namespace AuctionTrading.Domain.ValueObject
+namespace AuctionTrading.Domain.ValueObjects
 {
     /// <summary>
     /// Represents type of the money.
     /// </summary>
     /// <param name="amount">The amount of the money.</param>
-    public class Money : ValueObject<decimal>, IEqualityComparer<Money>, IComparable<Money>
+    public class Money : ValueObject<decimal>
     {
         private const int KopecFactor = 100;
         private readonly decimal amountInRubles;
-        private Money(decimal amountInRub) : base (new DecimalValidator(), amountInRub)
+        private Money(decimal amountInRub) : base(new DecimalValidator(), amountInRub)
         {
-            amountInRubles = Decimal.Round(amountInRub, 2);
+            amountInRubles = decimal.Round(amountInRub, 2);
         }
         private Money(long amountInKopecs) : base(new DecimalValidator(), amountInKopecs)
         {
@@ -72,7 +72,7 @@ namespace AuctionTrading.Domain.ValueObject
         }
         public override bool Equals(object other)
         {
-            return (other is Money) && Equals((Money)other);
+            return other is Money && Equals((Money)other);
         }
         public bool Equals(Money other)
         {
@@ -85,7 +85,7 @@ namespace AuctionTrading.Domain.ValueObject
         }
         public override int GetHashCode()
         {
-            return (int)(AmountInKopecs ^ (AmountInKopecs >> 32));
+            return (int)(AmountInKopecs ^ AmountInKopecs >> 32);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace AuctionTrading.Domain.Exception
+﻿namespace AuctionTrading.Domain.Exceptions
 {
     public class InvalidAuctionTimePeriodException(DateTime startDate, DateTime endDate)
         : ArgumentException("The start of the auction cannot be later than or coincide with the end of the auction.")

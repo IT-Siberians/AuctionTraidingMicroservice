@@ -1,8 +1,6 @@
 ﻿using AuctionTrading.Domain.Entities.Base;
-using AuctionTrading.Domain.Exception;
-using AuctionTrading.Domain.Interfaces;
-using AuctionTrading.Domain.ValueObject;
-using System.Collections.Immutable;
+using AuctionTrading.Domain.Exceptions;
+using AuctionTrading.Domain.ValueObjects;
 
 namespace AuctionTrading.Domain.Entities
 {

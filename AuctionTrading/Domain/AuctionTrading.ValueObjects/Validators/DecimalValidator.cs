@@ -1,8 +1,7 @@
-﻿using AuctionTrading.Domain.ValueObject.Base;
-using AuctionTrading.Domain.ValueObject.Exception;
-using System.Runtime.CompilerServices;
+﻿using AuctionTrading.Domain.ValueObjects.Base;
+using AuctionTrading.Domain.ValueObjects.Exceptions;
 
-namespace AuctionTrading.Domain.ValueObject.Validation
+namespace AuctionTrading.Domain.ValueObjects.Validators
 {
     /// <summary>
     /// Defines a method that implements the validation of the decimal.
@@ -16,7 +15,7 @@ namespace AuctionTrading.Domain.ValueObject.Validation
         /// <exception cref="ArgumentNullOrWhiteSpaceException"></exception>
         public void Validate(decimal value)
         {
-            if (value<=0)
+            if (value <= 0)
                 throw new ArgumentNonPositiveException(ExceptionMessage.NON_POSITIVE, nameof(value));
         }
     }

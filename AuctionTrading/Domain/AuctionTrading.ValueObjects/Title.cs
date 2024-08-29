@@ -1,7 +1,7 @@
-﻿using AuctionTrading.Domain.ValueObject.Base;
-using AuctionTrading.Domain.ValueObject.Validation;
+﻿using AuctionTrading.Domain.ValueObjects.Validators;
+using AuctionTrading.Domain.ValueObjects.Base;
 
-namespace AuctionTrading.Domain.ValueObject
+namespace AuctionTrading.Domain.ValueObjects
 {
     /// <summary>
     /// Represents type of the entity's title.

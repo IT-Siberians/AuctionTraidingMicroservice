@@ -1,8 +1,7 @@
-﻿using AuctionTrading.Domain.ValueObject.Base;
-using AuctionTrading.Domain.ValueObject.Exception;
-using System.Runtime.CompilerServices;
+﻿using AuctionTrading.Domain.ValueObjects.Base;
+using AuctionTrading.Domain.ValueObjects.Exceptions;
 
-namespace AuctionTrading.Domain.ValueObject.Validation
+namespace AuctionTrading.Domain.ValueObjects.Validators
 {
     /// <summary>
     /// Defines a method that implements the validation of the string.
@@ -16,8 +15,8 @@ namespace AuctionTrading.Domain.ValueObject.Validation
         /// <exception cref="ArgumentNullOrWhiteSpaceException"></exception>
         public void Validate(string value)
         {
-            if (String.IsNullOrWhiteSpace(value))
-                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessage.NOT_NULL_OR_WHITE_SPACE, nameof(value));
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessage.NOT_NULL_OR_WHITE_SPACE);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace AuctionTrading.Domain.ValueObject.Exception
+﻿namespace AuctionTrading.Domain.ValueObjects.Exceptions
 {
     /// <summary>
     /// Provides string constants for error messages.
