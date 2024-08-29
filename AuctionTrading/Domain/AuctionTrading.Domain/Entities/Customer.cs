@@ -52,7 +52,7 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="amount">The bid amount.</param>
         /// <returns>true if was successfully make a bid otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool TryMakeBid(AuctionLot lot, Money amount)
+        public bool TryMakeBid(AuctionLot lot, MoneyRUB amount)
         {
             if (Id == lot.Seller.Id)
                 return false;

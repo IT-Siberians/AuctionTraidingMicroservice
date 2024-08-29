@@ -28,15 +28,15 @@ namespace AuctionTrading.Domain.Entities
         /// <summary>
         /// Get the start price of the auction lot.
         /// </summary>
-        public Money StartPrice { get; }
+        public MoneyRUB StartPrice { get; }
         /// <summary>
         /// Get the fixed bid of the auction lot.
         /// </summary>
-        public Money FixedBid { get; }
+        public MoneyRUB FixedBid { get; }
         /// <summary>
         /// Get the repurchase price of the auction lot.
         /// </summary>
-        public Money? RepurchasePrice { get; }
+        public MoneyRUB? RepurchasePrice { get; }
         /// <summary>
         /// Get the start date of the auction by lot. 
         /// </summary>
@@ -76,14 +76,14 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="status">The status of the auction lot.</param>
         /// <param name="seller">The seller of the auction lot.</param>
         public AuctionLot(Title title, Description description,
-            Money startPrice, Money fixedBid, Money? repurchasePrice,
+            MoneyRUB startPrice, MoneyRUB fixedBid, MoneyRUB? repurchasePrice,
             DateTime startDate, DateTime endDate, LotStatus status, Seller seller)
             : this(Guid.NewGuid(), title, description, startPrice, fixedBid, repurchasePrice, startDate, endDate, status, seller)
         {
 
         }
         protected AuctionLot(Guid id, Title title, Description description,
-            Money startPrice, Money fixedBid, Money? repurchasePrice,
+            MoneyRUB startPrice, MoneyRUB fixedBid, MoneyRUB? repurchasePrice,
             DateTime startDate, DateTime endDate, LotStatus status, Seller seller) : base(id)
         {
             if (repurchasePrice != null && repurchasePrice < startPrice)
@@ -152,7 +152,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if the bid is correctly; otherwise false.</returns>
         private bool IsCurrentBid(Bid newBid)
         {
-            Money minAmount = LastBid == null
+            MoneyRUB minAmount = LastBid == null
                 ? StartPrice + FixedBid
                 : newBid.Amount + FixedBid;
             return (newBid.Amount > minAmount && newBid.Timestamp < EndDate);
