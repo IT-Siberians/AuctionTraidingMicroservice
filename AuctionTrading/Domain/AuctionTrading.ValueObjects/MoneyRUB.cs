@@ -7,7 +7,7 @@ namespace AuctionTrading.Domain.ValueObjects
     /// Represents type of the money.
     /// </summary>
     /// <param name="amount">The amount of the money.</param>
-    public class MoneyRUB(decimal amountInRub) : ValueObject<decimal>(new DecimalValidator(), amountInRub)
+    public class MoneyRUB(decimal amountInRub) : ValueObject<decimal>(new MoneyAmountValidator(), amountInRub)
     {
         public static MoneyRUB operator +(MoneyRUB m1, MoneyRUB m2)
         {

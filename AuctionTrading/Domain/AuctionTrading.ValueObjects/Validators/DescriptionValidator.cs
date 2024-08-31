@@ -16,7 +16,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         public void Validate(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessage.NOT_NULL_OR_WHITE_SPACE);
+                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessage.DESCRIPTION_NOT_NULL_OR_WHITE_SPACE, nameof(value));
         }
     }
 }

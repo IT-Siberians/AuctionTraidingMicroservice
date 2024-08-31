@@ -5,9 +5,10 @@
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="paramName">The name of the parameter that caused the current exception.</param>
-    internal class ArgumentNonPositiveException(string message, string paramName)
+    /// <param name="value">Amount</param>
+    internal class MoneyAmountHasMoreThanTwoDecimalPlacesException(string message, string paramName, decimal value)
         : ArgumentException(message, paramName)
     {
-
+        public decimal Value => value;
     }
 }

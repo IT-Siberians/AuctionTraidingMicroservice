@@ -6,7 +6,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
     /// <summary>
     /// Defines a method that implements the validation of the decimal.
     /// </summary>
-    public class DecimalValidator : IValidator<decimal>
+    public class MoneyAmountValidator : IValidator<decimal>
     {
         /// <summary>
         /// Verifies that the decimal is not negative and does not equal zero. 
@@ -16,7 +16,15 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         public void Validate(decimal value)
         {
             if (value <= 0)
-                throw new ArgumentNonPositiveException(ExceptionMessage.NON_POSITIVE, nameof(value));
+                throw new MoneyAmountNonPositiveException(ExceptionMessage.MONEY_AMOUNT_NON_POSITIVE, nameof(value), value);
+            if (!CurentAmount(value))
+                throw new MoneyAmountHasMoreThanTwoDecimalPlacesException(ExceptionMessage.MONEY_AMOUNT_HAS_NOT_MORE_THEN_TWO_DECIMAL_PLACES, nameof(value), value);
+        }
+        private bool CurentAmount(decimal value)
+        {
+            value = value * 100;
+            value -= (int)value;
+            return value == 0m;
         }
     }
 }

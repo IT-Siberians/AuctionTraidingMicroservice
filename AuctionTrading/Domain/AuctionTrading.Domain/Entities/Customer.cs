@@ -58,7 +58,7 @@ namespace AuctionTrading.Domain.Entities
                 return false;
 
             if (!lot.IsActive)
-                throw new BidOnInactiveAuctionLotException(lot);
+                throw new BidOnInactiveAuctionLotException(lot, amount);
 
             Bid newBid = new Bid(this, lot, amount, DateTime.Now);
             if (lot.TryAddBid(newBid))

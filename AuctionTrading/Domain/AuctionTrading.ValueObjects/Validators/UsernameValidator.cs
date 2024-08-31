@@ -20,7 +20,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         public void Validate(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessage.NOT_NULL_OR_WHITE_SPACE);
+                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessage.USERNAME_NOT_NULL_OR_WHITE_SPACE, nameof(value));
             if (value.Length > MAX_LENGTH) throw new UsernameLongValueException(value, MAX_LENGTH);
 
         }

@@ -45,7 +45,7 @@ namespace AuctionTrading.Domain.Entities
                 || timestamp.ToUniversalTime() > lot.EndDate.ToUniversalTime())
                 throw new InvalidTimeStampBidException(lot, timestamp);
             if (!lot.IsActive)
-                throw new BidOnInactiveAuctionLotException(lot);
+                throw new BidOnInactiveAuctionLotException(lot, amount);
 
             Customer = customer;
             Lot = lot;

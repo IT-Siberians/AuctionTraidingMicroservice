@@ -135,7 +135,7 @@ namespace AuctionTrading.Domain.Entities
         internal bool TryAddBid(Bid newBid)
         {
             if (!IsActive)
-                throw new BidOnInactiveAuctionLotException(this);
+                throw new BidOnInactiveAuctionLotException(this, newBid.Amount);
             if (newBid.Lot != this)
                 throw new AnotherAuctionLotBidException(this, newBid);
             if (!_bids.Contains(newBid))
