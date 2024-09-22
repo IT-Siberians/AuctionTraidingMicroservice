@@ -4,13 +4,13 @@ namespace AuctionTrading.Domain.ValueObjects.Base
 {
     public abstract class ValueObject<T> : IEquatable<ValueObject<T>>
     {
-        private readonly IValidator<T> _validator;
         public T Value { get; }
+
         protected ValueObject(IValidator<T> validator, T value)
         {
-            _validator = validator
-                ?? throw new ValidatorNullException(GetType().FullName, ExceptionMessage.VALIDATOR_MUST_BE_SPECIFIED);
-            _validator.Validate(value);
+            if (validator == null)
+                throw new ValidatorNullException(GetType().FullName, ExceptionMessage.VALIDATOR_MUST_BE_SPECIFIED);
+            validator.Validate(value);
             Value = value;
         }
 

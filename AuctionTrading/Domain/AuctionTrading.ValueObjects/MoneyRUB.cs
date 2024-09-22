@@ -7,21 +7,23 @@ namespace AuctionTrading.Domain.ValueObjects
     /// Represents type of the money.
     /// </summary>
     /// <param name="amount">The amount of the money.</param>
-    public class MoneyRUB(decimal amountInRub) : ValueObject<decimal>(new MoneyAmountValidator(), amountInRub)
+    public class MoneyRub(decimal amountInRub) : ValueObject<decimal>(
+        new MoneyAmountValidator(),
+        Math.Round(amountInRub, 2, MidpointRounding.AwayFromZero))
     {
-        public static MoneyRUB operator +(MoneyRUB m1, MoneyRUB m2)
+        public static MoneyRub operator +(MoneyRub m1, MoneyRub m2)
         {
-            return new MoneyRUB(m1.Value + m1.Value);
+            return new MoneyRub(m1.Value + m1.Value);
         }
-        public static MoneyRUB operator -(MoneyRUB m1, MoneyRUB m2)
+        public static MoneyRub operator -(MoneyRub m1, MoneyRub m2)
         {
-            return new MoneyRUB(m1.Value - m2.Value);
+            return new MoneyRub(m1.Value - m2.Value);
         }
-        public static bool operator >(MoneyRUB m1, MoneyRUB m2)
+        public static bool operator >(MoneyRub m1, MoneyRub m2)
         {
             return m1.Value > m2.Value;
         }
-        public static bool operator <(MoneyRUB m1, MoneyRUB m2)
+        public static bool operator <(MoneyRub m1, MoneyRub m2)
         {
             return m1.Value < m2.Value;
         }

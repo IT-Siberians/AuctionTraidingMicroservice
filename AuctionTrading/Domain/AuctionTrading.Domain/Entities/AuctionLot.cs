@@ -11,80 +11,98 @@ namespace AuctionTrading.Domain.Entities
     public class AuctionLot : Entity<Guid>
     {
         #region Fields
+
         /// <summary>
         /// Collection of bids on the auction lot.
         /// </summary>
         private readonly ICollection<Bid> _bids = [];
+
         #endregion // Fields
+
         #region Properties
+
         /// <summary>
         /// Get the title of the auction lot.
         /// </summary>
         public Title Title { get; }
+
         /// <summary>
         /// Get the description of the auction lot.
         /// </summary>
         public Description Description { get; }
+
         /// <summary>
         /// Get the start price of the auction lot.
         /// </summary>
-        public MoneyRUB StartPrice { get; }
+        public MoneyRub StartPrice { get; }
+
         /// <summary>
         /// Get the fixed bid of the auction lot.
         /// </summary>
-        public MoneyRUB FixedBid { get; }
+        public MoneyRub BidIncrement { get; }
+
         /// <summary>
         /// Get the repurchase price of the auction lot.
         /// </summary>
-        public MoneyRUB? RepurchasePrice { get; }
+        public MoneyRub? RepurchasePrice { get; }
+
         /// <summary>
         /// Get the start date of the auction by lot. 
         /// </summary>
         public DateTime StartDate { get; }
+
         /// <summary>
         /// Get the end date of the auction by lot.
         /// </summary>
         public DateTime EndDate { get; }
+
         /// <summary>
         /// Get the status of the auction lot.
         /// </summary>
         public LotStatus Status { get; private set; }
+
         /// <summary>
         /// Get the seller of the auction lot.
         /// </summary>
         public Seller Seller { get; }
+
         /// <summary>
         /// Returns a value indicating whether the lot is currently being bid on.
         /// </summary>
-        public bool IsActive => this.Status == LotStatus.Active;
+        public bool IsActive => Status == LotStatus.Active;
+
         /// <summary>
         /// Get the last bid of the auction lot.
         /// </summary>
-        public Bid? LastBid => _bids.Any() ? _bids.MaxBy(i => i.Timestamp) : null;
+        public Bid? LastBid => _bids.Any() ? _bids.MaxBy(i => i.CreationTime) : null;
+
         #endregion // Properties
+
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of a <see cref="AuctionLot"></see> class.
         /// </summary>
         /// <param name="title">The title of the auction lot.</param>
         /// <param name="description">The description of the auction lot.</param>
         /// <param name="startPrice">The start price of the auction lot.</param>
-        /// <param name="fixedBid">The fixed bid of the auction lot.</param>
+        /// <param name="bidIncrement">The fixed bid of the auction lot.</param>
         /// <param name="repurchasePrice">The repurchase price of the auction lot.</param>
         /// <param name="startDate">The start date of the auction lot.</param>
         /// <param name="endDate">The end date of the auction lot.</param>
         /// <param name="status">The status of the auction lot.</param>
         /// <param name="seller">The seller of the auction lot.</param>
-        public AuctionLot(Title title, Description description,
-            MoneyRUB startPrice, MoneyRUB fixedBid, MoneyRUB? repurchasePrice,
-            DateTime startDate, DateTime endDate, LotStatus status, Seller seller)
-            : this(Guid.NewGuid(), title, description, startPrice, fixedBid, repurchasePrice, startDate, endDate, status, seller)
-        {
-
-        }
-        protected AuctionLot(Guid id, Title title, Description description,
-            MoneyRUB startPrice, MoneyRUB fixedBid, MoneyRUB? repurchasePrice,
-            DateTime startDate, DateTime endDate, LotStatus status, Seller seller) : base(id)
+        public AuctionLot(
+            Guid id,
+            Title title,
+            Description description,
+            MoneyRub startPrice,
+            MoneyRub bidIncrement,
+            MoneyRub? repurchasePrice,
+            DateTime startDate,
+            DateTime endDate,
+            LotStatus status,
+            Seller seller) : base(id)
         {
             if (repurchasePrice != null && repurchasePrice < startPrice)
             {
@@ -96,17 +114,19 @@ namespace AuctionTrading.Domain.Entities
                 throw new InvalidAuctionTimePeriodException(startDate, endDate);
             }
 
-            Title = title;
-            Description = description;
-            StartPrice = startPrice;
-            FixedBid = fixedBid;
+            Title = title ?? throw new ArgumentNullValueException(nameof(title));
+            Description = description ?? throw new ArgumentNullValueException(nameof(description));
+            StartPrice = startPrice ?? throw new ArgumentNullValueException(nameof(startPrice));
+            BidIncrement = bidIncrement ?? throw new ArgumentNullValueException(nameof(bidIncrement));
+            Seller = seller ?? throw new ArgumentNullValueException(nameof(seller));
             RepurchasePrice = repurchasePrice;
             StartDate = startDate;
             EndDate = endDate;
             Status = status;
-            Seller = seller;
         }
+
         #endregion // Constructors
+
         /// <summary>
         /// Cancels an auctioned lot.
         /// </summary>
@@ -118,14 +138,33 @@ namespace AuctionTrading.Domain.Entities
         {
             if (Seller != seller)
                 throw new AnotherSellerCancelLotException(this, seller);
-            if (!this.IsActive)
+
+            if (!IsActive)
                 throw new CancelNotActiveAuctionLotException(this);
 
-            if (this._bids.Any())
+            if (_bids.Any())
                 return false;
-            this.Status = LotStatus.Canceled;
+
+            Status = LotStatus.Canceled;
             return true;
         }
+
+        internal bool CompletedLot()
+        {
+            if (!IsActive)
+                throw new CompletedNotActiveAuctionLotException(this);
+
+            if (!(RepurchasePrice != null
+                && LastBid != null
+                && LastBid.Amount == RepurchasePrice
+                || EndDate.ToUniversalTime() == DateTime.Now))
+                return false;
+
+            Status = LotStatus.Completed;
+            return true;
+
+        }
+
         /// <summary>
         /// Adds the bid to the sequence of bids.
         /// </summary>
@@ -136,26 +175,32 @@ namespace AuctionTrading.Domain.Entities
         {
             if (!IsActive)
                 throw new BidOnInactiveAuctionLotException(this, newBid.Amount);
+
             if (newBid.Lot != this)
                 throw new AnotherAuctionLotBidException(this, newBid);
+
             if (!_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
 
-            bool isCurrentBid = IsCurrentBid(newBid);
-            if (isCurrentBid) _bids.Append(newBid);
-            return isCurrentBid;
+            bool isCorrectBid = IsCorrectBid(newBid);
+            if (isCorrectBid)
+            {
+                _bids.Add(newBid);
+                CompletedLot();
+            }
+            return isCorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.
         /// </summary>
         /// <param name="newBid">The new bid on the lot.</param>
         /// <returns>true if the bid is correctly; otherwise false.</returns>
-        private bool IsCurrentBid(Bid newBid)
+        private bool IsCorrectBid(Bid newBid)
         {
-            MoneyRUB minAmount = LastBid == null
-                ? StartPrice + FixedBid
-                : newBid.Amount + FixedBid;
-            return (newBid.Amount > minAmount && newBid.Timestamp < EndDate);
+            MoneyRub minAmount = LastBid == null
+                ? StartPrice + BidIncrement
+                : newBid.Amount + BidIncrement;
+            return (newBid.Amount > minAmount && newBid.CreationTime.ToUniversalTime() < EndDate.ToUniversalTime());
         }
     }
 }

@@ -21,7 +21,8 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullOrWhiteSpaceException(nameof(value), ExceptionMessage.TITLE_NOT_NULL_OR_WHITE_SPACE);
-            if (value.Length > MAX_LENGTH) throw new TitleLongValueException(value, MAX_LENGTH);
+            if (value.Length > MAX_LENGTH)
+                throw new TitleLongValueException(value, MAX_LENGTH);
         }
     }
 }

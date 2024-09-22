@@ -10,23 +10,29 @@ namespace AuctionTrading.Domain.Entities
     public class Bid : Entity<Guid>
     {
         #region Properties
+
         /// <summary>
-        /// Get the bid time.
+        /// Get the bid creation time.
         /// </summary>
-        public DateTime Timestamp { get; }
+        public DateTime CreationTime { get; }
+
         /// <summary>
         /// Get the bid amount.
         /// </summary>
-        public MoneyRUB Amount { get; }
+        public MoneyRub Amount { get; }
+
         /// <summary>
         /// Get the lot on which the bid has been placed.
         /// </summary>
         public AuctionLot Lot { get; }
+
         /// <summary>
         /// Get the customer who has bid on the lot.
         /// </summary>
         public Customer Customer { get; }
+
         #endregion // Properties
+
         #region Constructor
         /// <summary>
         /// Initializes a new instance of a <see cref="Bid"></see> class.
@@ -34,23 +40,26 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="customer">The customer who has bid on the lot.</param>
         /// <param name="lot">The lot on which the bid has been placed.</param>
         /// <param name="amount">The bid amount.</param>
-        public Bid(Customer customer, AuctionLot lot, MoneyRUB amount, DateTime timestamp)
+        public Bid(Customer customer, AuctionLot lot, MoneyRub amount, DateTime timestamp)
             : this(Guid.NewGuid(), customer, lot, amount, timestamp)
         {
 
         }
-        protected Bid(Guid id, Customer customer, AuctionLot lot, MoneyRUB amount, DateTime timestamp)
+
+        protected Bid(Guid id, Customer customer, AuctionLot lot, MoneyRub amount, DateTime timestamp)
+            : base(id)
         {
             if (timestamp.ToUniversalTime() < lot.StartDate.ToUniversalTime()
                 || timestamp.ToUniversalTime() > lot.EndDate.ToUniversalTime())
                 throw new InvalidTimeStampBidException(lot, timestamp);
+
             if (!lot.IsActive)
                 throw new BidOnInactiveAuctionLotException(lot, amount);
 
-            Customer = customer;
-            Lot = lot;
-            Amount = amount;
-            Timestamp = timestamp;
+            Customer = customer ?? throw new ArgumentNullValueException(nameof(customer));
+            Lot = lot ?? throw new ArgumentNullValueException(nameof(lot));
+            Amount = amount ?? throw new ArgumentNullValueException(nameof(amount));
+            CreationTime = timestamp;
         }
         #endregion // Constructor
     }

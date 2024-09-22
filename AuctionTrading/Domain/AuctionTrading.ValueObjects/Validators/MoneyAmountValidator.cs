@@ -17,10 +17,10 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         {
             if (value <= 0)
                 throw new MoneyAmountNonPositiveException(ExceptionMessage.MONEY_AMOUNT_NON_POSITIVE, nameof(value), value);
-            if (!CurentAmount(value))
+            if (!IsValidAmount(value))
                 throw new MoneyAmountHasMoreThanTwoDecimalPlacesException(ExceptionMessage.MONEY_AMOUNT_HAS_NOT_MORE_THEN_TWO_DECIMAL_PLACES, nameof(value), value);
         }
-        private bool CurentAmount(decimal value)
+        private bool IsValidAmount(decimal value)
         {
             value = value * 100;
             value -= (int)value;

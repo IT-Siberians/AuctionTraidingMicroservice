@@ -7,34 +7,42 @@ namespace AuctionTrading.Domain.Entities
     /// <summary>
     /// Represents the seller of lots at the auction.
     /// </summary>
-    public class Seller(Username username) : Entity<Guid>(Guid.NewGuid())
+    public class Seller(Guid id, Username username) : Entity<Guid>(id)
     {
         #region Fields
+
         /// <summary> 
         /// The seller's auction lots.
         /// </summary>
         private readonly ICollection<AuctionLot> _auctionLots = [];
+
         #endregion // Fields
         #region Properties
+
         /// <summary> 
         /// Gets the seller's Username. 
         /// </summary>
-        public Username Username { get; private set; } = username;
+        public Username Username { get; private set; } = username ?? throw new ArgumentNullValueException(nameof(username));
+
         /// <summary>
         /// Gets the seller's active auction lots 
         /// </summary>
         public IReadOnlyCollection<AuctionLot> ActiveAuctionLots =>
             _auctionLots.Where(lot => lot.IsActive).ToList().AsReadOnly();
+
         #endregion // Properties
+
         /// <summary> 
         /// Changes the seller's username. 
         /// </summary>
         /// <param name="newUsername">New seller's username.</param>
-        internal void ChangeUsername(Username newUsername)
+        internal bool IsChangeUsername(Username newUsername)
         {
-            if (Username == newUsername) return;
+            if (Username == newUsername) return false;
             Username = newUsername;
+            return true;
         }
+
         /// <summary>
         /// Cancels an auctioned lot.
         /// </summary>
