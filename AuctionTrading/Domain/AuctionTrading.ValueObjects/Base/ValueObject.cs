@@ -9,7 +9,7 @@ namespace AuctionTrading.Domain.ValueObjects.Base
         protected ValueObject(IValidator<T> validator, T value)
         {
             if (validator == null)
-                throw new ValidatorNullException(GetType().FullName, ExceptionMessage.VALIDATOR_MUST_BE_SPECIFIED);
+                throw new ValidatorNullException(GetType().FullName, ExceptionMessages.VALIDATOR_MUST_BE_SPECIFIED);
             validator.Validate(value);
             Value = value;
         }
@@ -25,7 +25,7 @@ namespace AuctionTrading.Domain.ValueObjects.Base
         }
 
         public override bool Equals(object? other)
-            => other is not null && Equals(other as ValueObject<T>);
+            => Equals(other as ValueObject<T>);
 
         public bool Equals(ValueObject<T>? other)
         {
@@ -39,11 +39,7 @@ namespace AuctionTrading.Domain.ValueObjects.Base
         }
 
         public static bool operator ==(ValueObject<T>? left, ValueObject<T>? right)
-        {
-            if ((object?)left == null || (object?)right == null)
-                return Equals(left, right);
-            return left.Equals(right);
-        }
+            => Equals(left, right);
 
         public static bool operator !=(ValueObject<T>? left, ValueObject<T>? right)
         {

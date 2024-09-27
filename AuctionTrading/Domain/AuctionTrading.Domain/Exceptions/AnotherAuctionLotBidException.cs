@@ -3,7 +3,7 @@
 namespace AuctionTrading.Domain.Exceptions
 {
     public class AnotherAuctionLotBidException(AuctionLot lot, Bid bid)
-        : InvalidOperationException("This bid cannot be placed on another lot")
+        : InvalidOperationException($"The bid on lot {bid.Lot.Title} cannot be placed on lot {lot.Title} (id = {lot.Id})")
     {
         public AuctionLot AuctionLot => lot;
         public Bid Bid => bid;

@@ -3,7 +3,7 @@
 namespace AuctionTrading.Domain.Exceptions
 {
     public class CompletedNotActiveAuctionLotException(AuctionLot lot)
-        : InvalidOperationException($"Can't completed an inactive lot (id = {lot.Id}).")
+        : InvalidOperationException($"Can't completed an inactive lot {lot.Title} (id = {lot.Id}).")
     {
         public AuctionLot Lot => lot;
     }

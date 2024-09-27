@@ -36,7 +36,7 @@ namespace AuctionTrading.Domain.Entities
         /// Changes the customer's username. 
         /// </summary>
         /// <param name="newUsername">New customer's username.</param>
-        internal bool IsChangeUsername(Username newUsername)
+        internal bool ChangeUsername(Username newUsername)
         {
             if (Username == newUsername) return false;
             Username = newUsername;
@@ -51,7 +51,7 @@ namespace AuctionTrading.Domain.Entities
         {
             if (_observableAuctionLots.Contains(lot))
                 return;
-            _observableAuctionLots.Append(lot);
+            _observableAuctionLots.Add(lot);
         }
 
         /// <summary>
@@ -69,10 +69,11 @@ namespace AuctionTrading.Domain.Entities
             if (!lot.IsActive)
                 throw new BidOnInactiveAuctionLotException(lot, amount);
 
-            Bid newBid = new Bid(this, lot, amount, DateTime.Now);
-            if (lot.TryAddBid(newBid))
+            Bid newBid = new Bid(this, lot, amount, DateTime.UtcNow);
+            bool isMakeBid = lot.MakeBid(newBid);
+            if (isMakeBid)
                 AddObservableLot(lot);
-            return lot.TryAddBid(newBid);
+            return isMakeBid;
         }
     }
 }

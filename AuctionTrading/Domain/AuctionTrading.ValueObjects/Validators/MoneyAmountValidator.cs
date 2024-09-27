@@ -16,10 +16,11 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         public void Validate(decimal value)
         {
             if (value <= 0)
-                throw new MoneyAmountNonPositiveException(ExceptionMessage.MONEY_AMOUNT_NON_POSITIVE, nameof(value), value);
+                throw new MoneyAmountNonPositiveException(ExceptionMessages.MONEY_AMOUNT_NON_POSITIVE, nameof(value), value);
             if (!IsValidAmount(value))
-                throw new MoneyAmountHasMoreThanTwoDecimalPlacesException(ExceptionMessage.MONEY_AMOUNT_HAS_NOT_MORE_THEN_TWO_DECIMAL_PLACES, nameof(value), value);
+                throw new MoneyAmountHasMoreThanTwoDecimalPlacesException(ExceptionMessages.MONEY_AMOUNT_HAS_NOT_MORE_THEN_TWO_DECIMAL_PLACES, nameof(value), value);
         }
+
         private bool IsValidAmount(decimal value)
         {
             value = value * 100;

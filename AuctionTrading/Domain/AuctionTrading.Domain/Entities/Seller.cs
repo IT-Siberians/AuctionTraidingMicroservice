@@ -36,7 +36,7 @@ namespace AuctionTrading.Domain.Entities
         /// Changes the seller's username. 
         /// </summary>
         /// <param name="newUsername">New seller's username.</param>
-        internal bool IsChangeUsername(Username newUsername)
+        internal bool ChangeUsername(Username newUsername)
         {
             if (Username == newUsername) return false;
             Username = newUsername;
@@ -51,10 +51,10 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         public bool CancelLot(AuctionLot lot)
         {
-            var canceledLot = _auctionLots.SingleOrDefault(lot)
+            var canceledLot = _auctionLots.FirstOrDefault(lot)
                 ?? throw new AuctionLotDoesNotBelongToSellerException(this, lot);
 
-            return canceledLot.CancelLot(this);
+            return canceledLot.SetCancel(this);
         }
     }
 }

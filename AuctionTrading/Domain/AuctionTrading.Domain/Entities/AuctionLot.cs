@@ -104,14 +104,14 @@ namespace AuctionTrading.Domain.Entities
             LotStatus status,
             Seller seller) : base(id)
         {
-            if (repurchasePrice != null && repurchasePrice < startPrice)
+            if (repurchasePrice != null && repurchasePrice <= startPrice)
             {
-                throw new InvalidAuctionLotRepurchasePriceException(repurchasePrice, startPrice);
+                throw new InvalidAuctionLotRepurchasePriceException(this, repurchasePrice, startPrice);
             }
 
-            if (endDate.ToUniversalTime() <= startDate.ToUniversalTime())
+            if (endDate <= startDate)
             {
-                throw new InvalidAuctionTimePeriodException(startDate, endDate);
+                throw new InvalidAuctionTimePeriodException(this, startDate, endDate);
             }
 
             Title = title ?? throw new ArgumentNullValueException(nameof(title));
@@ -134,7 +134,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if the lot is successfully canceled; otherwise false.</returns>
         /// <exception cref="AnotherSellerCancelLotException"></exception>
         /// <exception cref="CancelNotActiveAuctionLotException"></exception>
-        internal bool CancelLot(Seller seller)
+        internal bool SetCancel(Seller seller)
         {
             if (Seller != seller)
                 throw new AnotherSellerCancelLotException(this, seller);
@@ -149,7 +149,7 @@ namespace AuctionTrading.Domain.Entities
             return true;
         }
 
-        internal bool CompletedLot()
+        internal bool SetComplete()
         {
             if (!IsActive)
                 throw new CompletedNotActiveAuctionLotException(this);
@@ -157,7 +157,7 @@ namespace AuctionTrading.Domain.Entities
             if (!(RepurchasePrice != null
                 && LastBid != null
                 && LastBid.Amount == RepurchasePrice
-                || EndDate.ToUniversalTime() == DateTime.Now))
+                || EndDate == DateTime.UtcNow))
                 return false;
 
             Status = LotStatus.Completed;
@@ -171,7 +171,7 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="newBid">The new bid on the lot.</param>
         /// <returns>true if the bid is successfully added to the bid sequence; otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        internal bool TryAddBid(Bid newBid)
+        internal bool MakeBid(Bid newBid)
         {
             if (!IsActive)
                 throw new BidOnInactiveAuctionLotException(this, newBid.Amount);
@@ -179,14 +179,14 @@ namespace AuctionTrading.Domain.Entities
             if (newBid.Lot != this)
                 throw new AnotherAuctionLotBidException(this, newBid);
 
-            if (!_bids.Contains(newBid))
+            if (_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
 
             bool isCorrectBid = IsCorrectBid(newBid);
             if (isCorrectBid)
             {
                 _bids.Add(newBid);
-                CompletedLot();
+                SetComplete();
             }
             return isCorrectBid;
         }
@@ -200,7 +200,7 @@ namespace AuctionTrading.Domain.Entities
             MoneyRub minAmount = LastBid == null
                 ? StartPrice + BidIncrement
                 : newBid.Amount + BidIncrement;
-            return (newBid.Amount > minAmount && newBid.CreationTime.ToUniversalTime() < EndDate.ToUniversalTime());
+            return (newBid.Amount >= minAmount && newBid.CreationTime < EndDate);
         }
     }
 }

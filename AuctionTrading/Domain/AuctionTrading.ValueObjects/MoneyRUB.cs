@@ -12,21 +12,23 @@ namespace AuctionTrading.Domain.ValueObjects
         Math.Round(amountInRub, 2, MidpointRounding.AwayFromZero))
     {
         public static MoneyRub operator +(MoneyRub m1, MoneyRub m2)
-        {
-            return new MoneyRub(m1.Value + m1.Value);
-        }
+            => new MoneyRub(m1.Value + m1.Value);
+
         public static MoneyRub operator -(MoneyRub m1, MoneyRub m2)
-        {
-            return new MoneyRub(m1.Value - m2.Value);
-        }
+            => new MoneyRub(m1.Value - m2.Value);
+
         public static bool operator >(MoneyRub m1, MoneyRub m2)
-        {
-            return m1.Value > m2.Value;
-        }
+            => m1.Value > m2.Value;
+
         public static bool operator <(MoneyRub m1, MoneyRub m2)
-        {
-            return m1.Value < m2.Value;
-        }
+            => m1.Value < m2.Value;
+
+        public static bool operator >=(MoneyRub m1, MoneyRub m2)
+            => m1.Value >= m2.Value;
+
+        public static bool operator <=(MoneyRub m1, MoneyRub m2)
+            => m1.Value <= m2.Value;
+
     }
 }
 
