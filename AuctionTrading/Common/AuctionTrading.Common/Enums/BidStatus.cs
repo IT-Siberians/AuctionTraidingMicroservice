@@ -4,6 +4,7 @@
     {
         Success,
         FaultedIncorrectBid,
+        FaultedCreateBidOnYourLot,
         FaultedLotWasCancel,
         FaultedLotWasPurchased
     }

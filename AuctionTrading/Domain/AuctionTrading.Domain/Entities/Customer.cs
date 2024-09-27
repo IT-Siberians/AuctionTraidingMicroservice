@@ -1,4 +1,6 @@
-﻿using AuctionTrading.Domain.Entities.Base;
+﻿using AuctionTrading.Common.Enums;
+using AuctionTrading.Domain.Entities.Base;
+using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Exceptions;
 using AuctionTrading.Domain.ValueObjects;
 
@@ -61,17 +63,22 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="amount">The bid amount.</param>
         /// <returns>true if was successfully make a bid otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool TryMakeBid(AuctionLot lot, MoneyRub amount)
+        public BidStatus TryMakeBid(AuctionLot lot, MoneyRub amount)
         {
             if (Id == lot.Seller.Id)
-                return false;
-
+                return BidStatus.FaultedCreateBidOnYourLot;
             if (!lot.IsActive)
-                throw new BidOnInactiveAuctionLotException(lot, amount);
+            {
+                if (lot.Status == LotStatus.Canceled)
+                    return BidStatus.FaultedLotWasCancel;
+
+                if (lot.Status == LotStatus.Completed)
+                    return BidStatus.FaultedLotWasPurchased;
+            }
 
             Bid newBid = new Bid(this, lot, amount, DateTime.UtcNow);
-            bool isMakeBid = lot.MakeBid(newBid);
-            if (isMakeBid)
+            BidStatus isMakeBid = lot.MakeBid(newBid);
+            if (isMakeBid == BidStatus.Success)
                 AddObservableLot(lot);
             return isMakeBid;
         }

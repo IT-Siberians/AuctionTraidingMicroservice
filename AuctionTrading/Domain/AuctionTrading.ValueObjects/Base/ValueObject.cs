@@ -9,7 +9,7 @@ namespace AuctionTrading.Domain.ValueObjects.Base
         protected ValueObject(IValidator<T> validator, T value)
         {
             if (validator == null)
-                throw new ValidatorNullException(GetType().FullName, ExceptionMessages.VALIDATOR_MUST_BE_SPECIFIED);
+                throw new ValidatorNullException(GetType().FullName ?? String.Empty, ExceptionMessages.VALIDATOR_MUST_BE_SPECIFIED);
             validator.Validate(value);
             Value = value;
         }
