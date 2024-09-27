@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\AuctionTrading.Common\AuctionTrading.Common.csproj" />
     <ProjectReference Include="..\AuctionTrading.ValueObjects\AuctionTrading.Domain.ValueObjects.csproj" />
   </ItemGroup>
 

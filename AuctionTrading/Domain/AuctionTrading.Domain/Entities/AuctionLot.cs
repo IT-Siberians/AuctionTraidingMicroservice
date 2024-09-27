@@ -1,4 +1,5 @@
-﻿using AuctionTrading.Domain.Entities.Base;
+﻿using AuctionTrading.Common.Enums;
+using AuctionTrading.Domain.Entities.Base;
 using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Exceptions;
 using AuctionTrading.Domain.ValueObjects;
@@ -171,10 +172,16 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="newBid">The new bid on the lot.</param>
         /// <returns>true if the bid is successfully added to the bid sequence; otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        internal bool MakeBid(Bid newBid)
+        internal BidStatus MakeBid(Bid newBid)
         {
             if (!IsActive)
-                throw new BidOnInactiveAuctionLotException(this, newBid.Amount);
+            {
+                if (Status == LotStatus.Canceled)
+                    return BidStatus.FaultedLotWasCancel;
+
+                if (Status == LotStatus.Completed)
+                    return BidStatus.FaultedLotWasPurchased;
+            }
 
             if (newBid.Lot != this)
                 throw new AnotherAuctionLotBidException(this, newBid);
@@ -188,7 +195,7 @@ namespace AuctionTrading.Domain.Entities
                 _bids.Add(newBid);
                 SetComplete();
             }
-            return isCorrectBid;
+            return isCorrectBid == true ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.
