@@ -16,6 +16,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C01A6B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Common", "Common\AuctionTrading.Common\AuctionTrading.Common.csproj", "{34A152B2-9C4B-4CF2-B4A3-2F695C94FA6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Domain.Repositories.Abstractions", "Domain\AuctionTrading.Domain.Repositories.Abstractions\AuctionTrading.Domain.Repositories.Abstractions.csproj", "{E001A288-CF91-4574-946B-AC221E89075B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4B500E4D-7F20-4DD2-B0EF-68D3670386C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Infrastructure.Repositories.Implementations", "Infrastructures\Repositories.Implementations\AuctionTrading.Infrastructure.Repositories.Implementations.csproj", "{B324A3E7-DD2E-495C-B15A-47DB82AB3374}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Infrastructure.EntityFramework", "Infrastructure\AuctionTrading.Infrastructure.EntityFramework\AuctionTrading.Infrastructure.EntityFramework.csproj", "{4A3DE83C-429F-401F-8FF9-E0094AACE111}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +42,18 @@ Global
 		{34A152B2-9C4B-4CF2-B4A3-2F695C94FA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34A152B2-9C4B-4CF2-B4A3-2F695C94FA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34A152B2-9C4B-4CF2-B4A3-2F695C94FA6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E001A288-CF91-4574-946B-AC221E89075B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E001A288-CF91-4574-946B-AC221E89075B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E001A288-CF91-4574-946B-AC221E89075B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E001A288-CF91-4574-946B-AC221E89075B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B324A3E7-DD2E-495C-B15A-47DB82AB3374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B324A3E7-DD2E-495C-B15A-47DB82AB3374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B324A3E7-DD2E-495C-B15A-47DB82AB3374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B324A3E7-DD2E-495C-B15A-47DB82AB3374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3DE83C-429F-401F-8FF9-E0094AACE111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3DE83C-429F-401F-8FF9-E0094AACE111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3DE83C-429F-401F-8FF9-E0094AACE111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3DE83C-429F-401F-8FF9-E0094AACE111}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +62,9 @@ Global
 		{484B915F-2462-4F22-96BA-84B09EC985E3} = {6DED46C5-A48A-460E-AD08-5DDF42429487}
 		{1CF8438A-0B47-4D53-A01F-0D5353855B7F} = {6DED46C5-A48A-460E-AD08-5DDF42429487}
 		{34A152B2-9C4B-4CF2-B4A3-2F695C94FA6D} = {C01A6B14-E48B-446D-8632-2E87DF68DC5B}
+		{E001A288-CF91-4574-946B-AC221E89075B} = {6DED46C5-A48A-460E-AD08-5DDF42429487}
+		{B324A3E7-DD2E-495C-B15A-47DB82AB3374} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
+		{4A3DE83C-429F-401F-8FF9-E0094AACE111} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}
