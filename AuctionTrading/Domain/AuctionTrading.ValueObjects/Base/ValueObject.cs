@@ -15,26 +15,22 @@ namespace AuctionTrading.Domain.ValueObjects.Base
         }
 
         public override string ToString()
-        {
-            return Value?.ToString() ?? GetType().ToString();
-        }
+            => Value!.ToString() ?? GetType().ToString();
 
         public override int GetHashCode()
-        {
-            return Value!.GetHashCode();
-        }
+            => Value!.GetHashCode();
 
         public override bool Equals(object? other)
             => Equals(other as ValueObject<T>);
 
         public bool Equals(ValueObject<T>? other)
         {
-            if (other == null)
-                return false;
-            if (GetType() != other.GetType())
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
+            if (GetType() != other.GetType())
+                return false;
             return other.Value!.Equals(Value);
         }
 
@@ -42,8 +38,6 @@ namespace AuctionTrading.Domain.ValueObjects.Base
             => Equals(left, right);
 
         public static bool operator !=(ValueObject<T>? left, ValueObject<T>? right)
-        {
-            return !(left == right);
-        }
+            => !(left == right);
     }
 }
