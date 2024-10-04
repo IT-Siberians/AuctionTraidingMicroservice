@@ -12,6 +12,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         /// The Title's max length
         /// </summary>
         public const int MAX_LENGTH = 50;
+
         /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 
         /// </summary>

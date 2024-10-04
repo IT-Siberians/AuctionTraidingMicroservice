@@ -35,17 +35,17 @@ namespace AuctionTrading.Domain.Entities
         /// <summary>
         /// Get the start price of the auction lot.
         /// </summary>
-        public MoneyRub StartPrice { get; }
+        public Money StartPrice { get; }
 
         /// <summary>
         /// Get the fixed bid of the auction lot.
         /// </summary>
-        public MoneyRub BidIncrement { get; }
+        public Money BidIncrement { get; }
 
         /// <summary>
         /// Get the repurchase price of the auction lot.
         /// </summary>
-        public MoneyRub? RepurchasePrice { get; }
+        public Money? RepurchasePrice { get; }
 
         /// <summary>
         /// Get the start date of the auction by lot. 
@@ -97,9 +97,9 @@ namespace AuctionTrading.Domain.Entities
             Guid id,
             Title title,
             Description description,
-            MoneyRub startPrice,
-            MoneyRub bidIncrement,
-            MoneyRub? repurchasePrice,
+            Money startPrice,
+            Money bidIncrement,
+            Money? repurchasePrice,
             DateTime startDate,
             DateTime endDate,
             LotStatus status,
@@ -204,7 +204,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if the bid is correctly; otherwise false.</returns>
         private bool IsCorrectBid(Bid newBid)
         {
-            MoneyRub minAmount = LastBid is null
+            Money minAmount = LastBid is null
                 ? StartPrice + BidIncrement
                 : newBid.Amount + BidIncrement;
             return (newBid.Amount >= minAmount && newBid.CreationTime < EndDate);

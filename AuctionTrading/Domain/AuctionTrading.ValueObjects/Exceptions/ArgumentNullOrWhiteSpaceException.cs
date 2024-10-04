@@ -6,8 +6,5 @@
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="paramName">The name of the parameter that caused the current exception.</param>
     internal class ArgumentNullOrWhiteSpaceException(string paramName, string message)
-        : ArgumentNullException(paramName, message)
-    {
-
-    }
+        : ArgumentNullException(paramName, message);
 }

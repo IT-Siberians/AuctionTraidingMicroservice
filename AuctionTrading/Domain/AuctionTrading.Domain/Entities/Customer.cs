@@ -63,7 +63,7 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="amount">The bid amount.</param>
         /// <returns>true if was successfully make a bid otherwise false.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public BidStatus TryMakeBid(AuctionLot lot, MoneyRub amount)
+        public BidStatus TryMakeBid(AuctionLot lot, Money amount)
         {
             if (Id == lot.Seller.Id)
                 return BidStatus.FaultedCreateBidOnYourLot;

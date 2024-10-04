@@ -12,6 +12,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         /// The Username's max length
         /// </summary>
         public const int MAX_LENGTH = 30;
+
         /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 
         /// </summary>
@@ -23,7 +24,6 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
                 throw new ArgumentNullOrWhiteSpaceException(ExceptionMessages.USERNAME_NOT_NULL_OR_WHITE_SPACE, nameof(value));
             if (value.Length > MAX_LENGTH)
                 throw new UsernameLongValueException(value, MAX_LENGTH);
-
         }
     }
 }
