@@ -6,8 +6,5 @@
     /// <param name="paramName">The name of the object type in which the current exception occurred.</param>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     internal class ValidatorNullException(string paramName, string message)
-        : ArgumentNullException(paramName, message)
-    {
-
-    }
+        : ArgumentNullException(paramName, message);
 }

@@ -35,17 +35,17 @@ namespace AuctionTrading.Domain.Entities
         /// <summary>
         /// Get the start price of the auction lot.
         /// </summary>
-        public MoneyRub StartPrice { get; }
+        public Money StartPrice { get; }
 
         /// <summary>
         /// Get the fixed bid of the auction lot.
         /// </summary>
-        public MoneyRub BidIncrement { get; }
+        public Money BidIncrement { get; }
 
         /// <summary>
         /// Get the repurchase price of the auction lot.
         /// </summary>
-        public MoneyRub? RepurchasePrice { get; }
+        public Money? RepurchasePrice { get; }
 
         /// <summary>
         /// Get the start date of the auction by lot. 
@@ -97,9 +97,9 @@ namespace AuctionTrading.Domain.Entities
             Guid id,
             Title title,
             Description description,
-            MoneyRub startPrice,
-            MoneyRub bidIncrement,
-            MoneyRub? repurchasePrice,
+            Money startPrice,
+            Money bidIncrement,
+            Money? repurchasePrice,
             DateTime startDate,
             DateTime endDate,
             LotStatus status,
@@ -155,8 +155,8 @@ namespace AuctionTrading.Domain.Entities
             if (!IsActive)
                 throw new CompletedNotActiveAuctionLotException(this);
 
-            if (!(RepurchasePrice != null
-                && LastBid != null
+            if (!(RepurchasePrice is not null
+                && LastBid is not null
                 && LastBid.Amount == RepurchasePrice
                 || EndDate == DateTime.UtcNow))
                 return false;
@@ -174,28 +174,29 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         internal BidStatus MakeBid(Bid newBid)
         {
-            if (!IsActive)
-            {
-                if (Status == LotStatus.Canceled)
-                    return BidStatus.FaultedLotWasCancel;
-
-                if (Status == LotStatus.Completed)
-                    return BidStatus.FaultedLotWasPurchased;
-            }
-
-            if (newBid.Lot != this)
+            if (!Object.ReferenceEquals(newBid.Lot, this))
                 throw new AnotherAuctionLotBidException(this, newBid);
 
             if (_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
 
-            bool isCorrectBid = IsCorrectBid(newBid);
-            if (isCorrectBid)
+            switch (Status)
             {
-                _bids.Add(newBid);
-                SetComplete();
+                case LotStatus.Canceled:
+                    return BidStatus.FaultedLotWasCancel;
+                case LotStatus.Completed:
+                    return BidStatus.FaultedLotWasPurchased;
+                case LotStatus.Active:
+                    bool isCorrectBid = IsCorrectBid(newBid);
+                    if (isCorrectBid)
+                    {
+                        _bids.Add(newBid);
+                        SetComplete();
+                    }
+                    return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
+                default:
+                    throw new NotForeseenSituationForThisLotStatusException(this, Status);
             }
-            return isCorrectBid == true ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.
@@ -204,7 +205,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if the bid is correctly; otherwise false.</returns>
         private bool IsCorrectBid(Bid newBid)
         {
-            MoneyRub minAmount = LastBid == null
+            Money minAmount = LastBid is null
                 ? StartPrice + BidIncrement
                 : newBid.Amount + BidIncrement;
             return (newBid.Amount >= minAmount && newBid.CreationTime < EndDate);

@@ -19,7 +19,7 @@ namespace AuctionTrading.Domain.Entities
         /// <summary>
         /// Get the bid amount.
         /// </summary>
-        public MoneyRub Amount { get; }
+        public Money Amount { get; }
 
         /// <summary>
         /// Get the lot on which the bid has been placed.
@@ -41,13 +41,13 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="lot">The lot on which the bid has been placed.</param>
         /// <param name="amount">The bid amount.</param>
         /// <param name="creationTime">Date of bid creation</param>
-        public Bid(Customer customer, AuctionLot lot, MoneyRub amount, DateTime creationTime)
+        public Bid(Customer customer, AuctionLot lot, Money amount, DateTime creationTime)
             : this(Guid.NewGuid(), customer, lot, amount, creationTime)
         {
 
         }
 
-        protected Bid(Guid id, Customer customer, AuctionLot lot, MoneyRub amount, DateTime creationTime)
+        protected Bid(Guid id, Customer customer, AuctionLot lot, Money amount, DateTime creationTime)
             : base(id)
         {
             if (creationTime < lot.StartDate || creationTime > lot.EndDate)
