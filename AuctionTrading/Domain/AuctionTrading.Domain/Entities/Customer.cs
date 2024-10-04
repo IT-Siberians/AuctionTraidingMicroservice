@@ -77,10 +77,10 @@ namespace AuctionTrading.Domain.Entities
             }
 
             Bid newBid = new Bid(this, lot, amount, DateTime.UtcNow);
-            BidStatus isMakeBid = lot.MakeBid(newBid);
-            if (isMakeBid == BidStatus.Success)
+            BidStatus bidStatus = lot.MakeBid(newBid);
+            if (bidStatus == BidStatus.Success)
                 AddObservableLot(lot);
-            return isMakeBid;
+            return bidStatus;
         }
     }
 }
