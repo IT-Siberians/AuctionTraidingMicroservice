@@ -174,28 +174,29 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         internal BidStatus MakeBid(Bid newBid)
         {
-            if (!IsActive)
-            {
-                if (Status == LotStatus.Canceled)
-                    return BidStatus.FaultedLotWasCancel;
-
-                if (Status == LotStatus.Completed)
-                    return BidStatus.FaultedLotWasPurchased;
-            }
-
             if (!Object.ReferenceEquals(newBid.Lot, this))
                 throw new AnotherAuctionLotBidException(this, newBid);
 
             if (_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
 
-            bool isCorrectBid = IsCorrectBid(newBid);
-            if (isCorrectBid)
+            switch (Status)
             {
-                _bids.Add(newBid);
-                SetComplete();
+                case LotStatus.Canceled:
+                    return BidStatus.FaultedLotWasCancel;
+                case LotStatus.Completed:
+                    return BidStatus.FaultedLotWasPurchased;
+                case LotStatus.Active:
+                    bool isCorrectBid = IsCorrectBid(newBid);
+                    if (isCorrectBid)
+                    {
+                        _bids.Add(newBid);
+                        SetComplete();
+                    }
+                    return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
+                default:
+                    throw new NotForeseenSituationForThisLotStatusException(this, Status);
             }
-            return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.
