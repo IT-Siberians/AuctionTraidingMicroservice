@@ -1,6 +1,6 @@
 ﻿namespace AuctionTrading.Application.Models.Seller
 {
-    public class CancelLotModel
+    public class CancelAuctionLotModel
     {
         public required Guid SellerId { get; init; }
 

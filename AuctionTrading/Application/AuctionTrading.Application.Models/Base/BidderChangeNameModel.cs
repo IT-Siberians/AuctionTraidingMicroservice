@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace AuctionTrading.Application.Models.Base
 {
-    public abstract class BidderModel : IModel<Guid>
-    {
-        public required Guid Id { get; init; }
-        public required string Name { get; init; }
+    public class BidderChangeNameModel : BidderModel;
 
-    }
 }

@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Application.Models", "Application\AuctionTrading.Application.Models\AuctionTrading.Application.Models.csproj", "{1F605BC6-CDED-4EB5-8FF1-4E9D1EF6B8E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Application.Services", "Application\AuctionTrading.Application.Services\AuctionTrading.Application.Services.csproj", "{466C96A4-6B15-48FF-A570-D424C7FE67C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{1F605BC6-CDED-4EB5-8FF1-4E9D1EF6B8E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F605BC6-CDED-4EB5-8FF1-4E9D1EF6B8E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F605BC6-CDED-4EB5-8FF1-4E9D1EF6B8E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466C96A4-6B15-48FF-A570-D424C7FE67C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466C96A4-6B15-48FF-A570-D424C7FE67C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466C96A4-6B15-48FF-A570-D424C7FE67C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466C96A4-6B15-48FF-A570-D424C7FE67C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{B324A3E7-DD2E-495C-B15A-47DB82AB3374} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
 		{4A3DE83C-429F-401F-8FF9-E0094AACE111} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
 		{1F605BC6-CDED-4EB5-8FF1-4E9D1EF6B8E2} = {67507186-785A-4039-9032-61075ADB1691}
+		{466C96A4-6B15-48FF-A570-D424C7FE67C7} = {67507186-785A-4039-9032-61075ADB1691}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}
