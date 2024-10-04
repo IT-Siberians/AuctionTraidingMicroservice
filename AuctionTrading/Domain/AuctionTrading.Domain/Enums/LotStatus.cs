@@ -2,8 +2,8 @@
 {
     public enum LotStatus
     {
-        Active,
-        Canceled,
-        Completed
+        Active = 2,
+        Canceled = 4,
+        Completed = 8
     }
 }

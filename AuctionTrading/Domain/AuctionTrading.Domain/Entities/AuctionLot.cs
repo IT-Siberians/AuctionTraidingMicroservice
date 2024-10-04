@@ -187,13 +187,13 @@ namespace AuctionTrading.Domain.Entities
                 case LotStatus.Completed:
                     return BidStatus.FaultedLotWasPurchased;
                 case LotStatus.Active:
-                    bool isCorrectBid = IsCorrectBid(newBid);
-                    if (isCorrectBid)
+                    if (IsCorrectBid(newBid))
                     {
                         _bids.Add(newBid);
                         SetComplete();
+                        return BidStatus.Success;
                     }
-                    return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
+                    return BidStatus.FaultedIncorrectBid;
                 default:
                     throw new NotForeseenSituationForThisLotStatusException(this, Status);
             }

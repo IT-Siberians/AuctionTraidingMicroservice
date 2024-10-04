@@ -9,6 +9,16 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
     public class DescriptionValidator : IValidator<string>
     {
         /// <summary>
+        /// The Title's min length
+        /// </summary>
+        public int? MIN_LENGTH => null;
+
+        /// <summary>
+        /// The Title's max length
+        /// </summary>
+        public int? MAX_LENGTH => null;
+
+        /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 
         /// </summary>
         /// <param name="value">A string containing data.</param>
@@ -16,7 +26,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         public void Validate(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentNullOrWhiteSpaceException(ExceptionMessages.DESCRIPTION_NOT_NULL_OR_WHITE_SPACE, nameof(value));
+                throw new ArgumentNullOrWhiteSpaceException(nameof(value), ExceptionMessages.TITLE_NOT_NULL_OR_WHITE_SPACE);
         }
     }
 }

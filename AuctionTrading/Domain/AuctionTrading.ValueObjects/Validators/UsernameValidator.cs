@@ -6,12 +6,14 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
     /// <summary>
     /// Defines a method that implements the validation of the string.
     /// </summary>
-    public class UsernameValidator : IValidator<string>
+    public class UsernameValidator : ITextValidator
     {
         /// <summary>
         /// The Username's max length
         /// </summary>
-        public const int MAX_LENGTH = 30;
+        public int? MAX_LENGTH => 30;
+
+        public int? MIN_LENGTH => null;
 
         /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 
@@ -23,7 +25,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullOrWhiteSpaceException(ExceptionMessages.USERNAME_NOT_NULL_OR_WHITE_SPACE, nameof(value));
             if (value.Length > MAX_LENGTH)
-                throw new UsernameLongValueException(value, MAX_LENGTH);
+                throw new UsernameLongValueException(value, MAX_LENGTH.Value);
         }
     }
 }
