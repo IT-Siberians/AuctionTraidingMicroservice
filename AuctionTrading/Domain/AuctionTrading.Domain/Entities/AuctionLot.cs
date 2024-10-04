@@ -155,8 +155,8 @@ namespace AuctionTrading.Domain.Entities
             if (!IsActive)
                 throw new CompletedNotActiveAuctionLotException(this);
 
-            if (!(RepurchasePrice != null
-                && LastBid != null
+            if (!(RepurchasePrice is not null
+                && LastBid is not null
                 && LastBid.Amount == RepurchasePrice
                 || EndDate == DateTime.UtcNow))
                 return false;
@@ -183,7 +183,7 @@ namespace AuctionTrading.Domain.Entities
                     return BidStatus.FaultedLotWasPurchased;
             }
 
-            if (newBid.Lot != this)
+            if (!Object.ReferenceEquals(newBid.Lot, this))
                 throw new AnotherAuctionLotBidException(this, newBid);
 
             if (_bids.Contains(newBid))
@@ -195,7 +195,7 @@ namespace AuctionTrading.Domain.Entities
                 _bids.Add(newBid);
                 SetComplete();
             }
-            return isCorrectBid == true ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
+            return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.
@@ -204,7 +204,7 @@ namespace AuctionTrading.Domain.Entities
         /// <returns>true if the bid is correctly; otherwise false.</returns>
         private bool IsCorrectBid(Bid newBid)
         {
-            MoneyRub minAmount = LastBid == null
+            MoneyRub minAmount = LastBid is null
                 ? StartPrice + BidIncrement
                 : newBid.Amount + BidIncrement;
             return (newBid.Amount >= minAmount && newBid.CreationTime < EndDate);
