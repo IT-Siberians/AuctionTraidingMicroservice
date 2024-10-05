@@ -3,7 +3,8 @@ using AuctionTrading.Domain.Repositories.Abstractions;
 
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 {
-    public class InMemoryRepository<TEntity, TId>(IEnumerable<TEntity> entities) : IRepository<TEntity, TId> where TEntity : Entity<TId> where TId : struct
+    public class InMemoryRepository<TEntity, TId>(IEnumerable<TEntity> entities)
+        : IRepository<TEntity, TId> where TEntity : Entity<TId> where TId : struct
     {
         protected readonly List<TEntity> Entities = entities.ToList();
 
@@ -11,6 +12,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
         {
 
         }
+
         public Task<TEntity> AddAsync(TEntity entity)
         {
             Entities.Add(entity);
@@ -31,12 +33,11 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
             await DeleteAsync(entity);
         }
 
+        public Task<IEnumerable<TEntity>> GetAllAsync() 
+            => Task.FromResult(Entities.AsEnumerable());
 
-        public Task<IEnumerable<TEntity>> GetAllAsync() => Task.FromResult(Entities.AsEnumerable());
-
-
-        public Task<TEntity?> GetByIdAsync(TId id) => Task.FromResult(Entities.FirstOrDefault(x => x.Id.Equals(id)));
-
+        public Task<TEntity?> GetByIdAsync(TId id) 
+            => Task.FromResult(Entities.FirstOrDefault(x => x.Id.Equals(id)));
 
         public Task UpdateAsync(TEntity entity)
         {

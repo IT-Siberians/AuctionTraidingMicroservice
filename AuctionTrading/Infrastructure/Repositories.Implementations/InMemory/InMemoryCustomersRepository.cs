@@ -3,7 +3,8 @@ using AuctionTrading.Domain.Repositories.Abstractions;
 
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 {
-    public class InMemoryCustomersRepository(IEnumerable<Customer> customers) : InMemoryRepository<Customer, Guid>(customers), ICustomersRepository
+    public class InMemoryCustomersRepository(IEnumerable<Customer> customers)
+        : InMemoryRepository<Customer, Guid>(customers), ICustomersRepository
     {
         public InMemoryCustomersRepository() : this([])
         {

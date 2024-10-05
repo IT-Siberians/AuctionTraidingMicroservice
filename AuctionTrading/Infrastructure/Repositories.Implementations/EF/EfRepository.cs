@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 {
-    public class EfRepository<TEntity, TId>(ApplicationDbContext context) : IRepository<TEntity, TId>
-                                                                        where TEntity : Entity<TId> where TId : struct
+    public class EfRepository<TEntity, TId>(ApplicationDbContext context)
+        : IRepository<TEntity, TId> where TEntity : Entity<TId> where TId : struct
     {
         public async Task<TEntity> AddAsync(TEntity entity)
         {
@@ -29,10 +29,11 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
             await DeleteAsync(entity);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync() => (await context.Set<TEntity>().ToListAsync()).AsEnumerable();
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+            => (await context.Set<TEntity>().ToListAsync()).AsEnumerable();
 
-
-        public virtual async Task<TEntity?> GetByIdAsync(TId id) => await context.Set<TEntity>().FindAsync(id);
+        public virtual async Task<TEntity?> GetByIdAsync(TId id)
+            => await context.Set<TEntity>().FindAsync(id);
 
 
         public Task UpdateAsync(TEntity entity)
