@@ -12,8 +12,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Username).IsRequired().HasMaxLength(30);
             builder.HasMany("_auctionLots").WithOne();
-            builder.HasMany("_bids").WithOne();
-            builder.Navigation(x => x.ActiveAuctionLots).AutoInclude(); // Вот тут не уверена!!!
+            builder.Navigation("_auctionLots").AutoInclude(); // Вот тут не уверена!!!
             builder.Ignore(x => x.ActiveAuctionLots);
         }
     }

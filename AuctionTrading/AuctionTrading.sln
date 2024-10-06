@@ -30,6 +30,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Application.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Infrastructure.Repositories.Implementations", "Infrastructure\Repositories.Implementations\AuctionTrading.Infrastructure.Repositories.Implementations.csproj", "{6AD2AC84-39AD-412C-B38B-5174E13AD6E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{FEAA0A05-F1A5-4C51-9353-3F72F06CF385}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.WebHost", "Presentation\AuctionTrading.WebHost\AuctionTrading.WebHost.csproj", "{3EFC2FF3-86F5-406C-A390-E89A9EF339DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +72,10 @@ Global
 		{6AD2AC84-39AD-412C-B38B-5174E13AD6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AD2AC84-39AD-412C-B38B-5174E13AD6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AD2AC84-39AD-412C-B38B-5174E13AD6E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EFC2FF3-86F5-406C-A390-E89A9EF339DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EFC2FF3-86F5-406C-A390-E89A9EF339DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EFC2FF3-86F5-406C-A390-E89A9EF339DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EFC2FF3-86F5-406C-A390-E89A9EF339DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +89,7 @@ Global
 		{1F605BC6-CDED-4EB5-8FF1-4E9D1EF6B8E2} = {67507186-785A-4039-9032-61075ADB1691}
 		{466C96A4-6B15-48FF-A570-D424C7FE67C7} = {67507186-785A-4039-9032-61075ADB1691}
 		{6AD2AC84-39AD-412C-B38B-5174E13AD6E5} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
+		{3EFC2FF3-86F5-406C-A390-E89A9EF339DE} = {FEAA0A05-F1A5-4C51-9353-3F72F06CF385}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}

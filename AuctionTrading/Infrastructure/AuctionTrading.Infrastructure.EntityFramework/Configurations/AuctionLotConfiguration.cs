@@ -29,7 +29,6 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.HasOne(x => x.Seller).WithMany("_auctionLots");
             builder.HasMany("_bids").WithOne();
             builder.Navigation(x => x.Seller).AutoInclude();
-            builder.Navigation(x => x.LastBid).AutoInclude(); // Вот тут не уверена!!!
             builder.Ignore(x => x.IsActive);
             builder.Ignore(x => x.LastBid);
         }
