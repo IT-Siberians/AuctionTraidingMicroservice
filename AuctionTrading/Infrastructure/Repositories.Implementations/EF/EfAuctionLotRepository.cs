@@ -15,18 +15,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
         private readonly DbSet<AuctionLot> _auctionLots = context.AuctionLots;
 
         public async Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(DateTime endDateUtc)
-        {
-            var results = new ConcurrentQueue<AuctionLot>();
-            var tasks = _auctionLots.Select(
-                async x =>
-                {
-                    if (await _auctionLots.FirstOrDefaultAsync((x)=>x.EndDate==endDateUtc))
-                        results.Enqueue(x);
-                });
-            await Task.WhenAll(tasks);
-            return results;
-        }
-
+            => _auctionLots.Where((x) => x.EndDate == endDateUtc); 
 
         public override Task<AuctionLot?> GetByIdAsync(Guid id)
                 => _auctionLots

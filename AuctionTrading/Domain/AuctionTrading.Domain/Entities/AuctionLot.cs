@@ -174,7 +174,7 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         internal BidStatus MakeBid(Bid newBid)
         {
-            if (!Object.ReferenceEquals(newBid.Lot, this))
+            if (!Object.ReferenceEquals(newBid.AuctionLot, this))
                 throw new AnotherAuctionLotBidException(this, newBid);
 
             if (_bids.Contains(newBid))
