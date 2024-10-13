@@ -12,7 +12,7 @@ namespace AuctionTrading.WebHost
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddNpgsql<ApplicationDbContext>("Host=localhost;Port=5432;Database=AuctionTradingdb;UserName=postgres;Password=12345", options =>
+            builder.Services.AddNpgsql<ApplicationDbContext>("Host=localhost;Port=5432;UserName=postgres;Password=12345", options =>
             {
                 options.MigrationsAssembly("AuctionTrading.Infrastructure.EntityFramework");
 
