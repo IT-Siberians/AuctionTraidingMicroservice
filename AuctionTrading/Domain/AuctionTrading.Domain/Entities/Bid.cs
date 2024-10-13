@@ -34,6 +34,11 @@ namespace AuctionTrading.Domain.Entities
         #endregion // Properties
 
         #region Constructor
+        protected Bid()
+        {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of a <see cref="Bid"></see> class.
         /// </summary>

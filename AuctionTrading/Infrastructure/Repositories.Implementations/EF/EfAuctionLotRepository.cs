@@ -1,9 +1,7 @@
 ﻿using AuctionTrading.Domain.Entities;
-using AuctionTrading.Domain.Entities.Base;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 {
@@ -13,8 +11,10 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
     {
         private readonly DbSet<AuctionLot> _auctionLots = context.Set<AuctionLot>();
 
+
+        // У меня большой вопрос, как сделать правильный асинхронный метод GetAllByEndDateAsync?
         public async Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(DateTime endDateUtc)
-            => _auctionLots.Where((x) => x.EndDate == endDateUtc);
+            => _auctionLots.Where((x) => x.EndDate < endDateUtc.ToUniversalTime());
 
         public override Task<AuctionLot?> GetByIdAsync(Guid id)
                 => _auctionLots

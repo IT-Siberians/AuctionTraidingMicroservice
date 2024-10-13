@@ -12,6 +12,6 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
         }
 
         public Task<Customer?> GetCustomerByUsernameAsync(string username)
-            => Task.FromResult(Entities.FirstOrDefault(x => x.Username.Value == username));
+            => Task.FromResult(_entities.FirstOrDefault(x => x.Username.Value == username));
     }
 }

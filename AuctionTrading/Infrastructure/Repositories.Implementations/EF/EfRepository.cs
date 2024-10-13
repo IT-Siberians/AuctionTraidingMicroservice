@@ -8,38 +8,48 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
     public class EfRepository<TEntity, TId>(ApplicationDbContext context)
         : IRepository<TEntity, TId> where TEntity : Entity<TId> where TId : struct
     {
-        public async Task<TEntity> AddAsync(TEntity entity)
-        {
-            context.Add(entity);
-            await context.SaveChangesAsync();
-            return entity;
-        }
-
-        public Task DeleteAsync(TEntity entity)
-        {
-            context.Remove(entity);
-            return context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(TId id)
-        {
-            var entity = await GetByIdAsync(id);
-            if (entity is null)
-                return;
-            await DeleteAsync(entity);
-        }
-
         public async Task<IEnumerable<TEntity>> GetAllAsync()
             => (await context.Set<TEntity>().ToListAsync()).AsEnumerable();
 
         public virtual async Task<TEntity?> GetByIdAsync(TId id)
             => await context.Set<TEntity>().FindAsync(id);
 
-
-        public Task UpdateAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
+            CheckEntity(entity);
+
+            context.Add(entity);
+            await context.SaveChangesAsync();
+        }
+
+        protected void CheckEntity(TEntity entity)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+        }
+        public Task<bool> UpdateAsync(TEntity entity)
+        {
+            CheckEntity(entity);
+
             context.Update(entity);
-            return context.SaveChangesAsync();
+            context.SaveChangesAsync();
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> DeleteAsync(TEntity entity)
+        {
+            CheckEntity(entity);
+
+            context.Remove(entity);
+            context.SaveChangesAsync();
+            return Task.FromResult(true);
+        }
+
+        public async Task<bool> DeleteAsync(TId id)
+        {
+            var entity = await GetByIdAsync(id);
+
+            return entity is null ? false : await DeleteAsync(entity);
+
         }
     }
 }

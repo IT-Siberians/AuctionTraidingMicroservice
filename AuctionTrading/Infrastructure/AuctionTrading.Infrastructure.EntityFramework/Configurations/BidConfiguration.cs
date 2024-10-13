@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using AuctionTrading.Domain.Entities;
+using AuctionTrading.Domain.ValueObjects;
 
 namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
 {
@@ -10,7 +11,9 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.Amount).IsRequired();
+            builder.Property(x => x.Amount)
+                .IsRequired()
+                .HasConversion(amount=> amount.Value, amount=>new Money(amount));
             builder.Property(x => x.CreationTime).IsRequired().HasConversion
             (
                 src => src.Kind == DateTimeKind.Utc ? src : DateTime.SpecifyKind(src, DateTimeKind.Utc),

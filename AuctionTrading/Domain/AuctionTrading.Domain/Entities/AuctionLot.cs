@@ -81,6 +81,11 @@ namespace AuctionTrading.Domain.Entities
 
         #region Constructors
 
+        protected AuctionLot() 
+        {
+        
+        }
+
         /// <summary>
         /// Initializes a new instance of a <see cref="AuctionLot"></see> class.
         /// </summary>
