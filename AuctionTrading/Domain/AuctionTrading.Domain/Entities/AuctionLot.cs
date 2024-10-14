@@ -81,6 +81,11 @@ namespace AuctionTrading.Domain.Entities
 
         #region Constructors
 
+        protected AuctionLot() 
+        {
+        
+        }
+
         /// <summary>
         /// Initializes a new instance of a <see cref="AuctionLot"></see> class.
         /// </summary>
@@ -174,7 +179,7 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         internal BidStatus MakeBid(Bid newBid)
         {
-            if (!Object.ReferenceEquals(newBid.Lot, this))
+            if (!Object.ReferenceEquals(newBid.AuctionLot, this))
                 throw new AnotherAuctionLotBidException(this, newBid);
 
             if (_bids.Contains(newBid))
@@ -187,13 +192,13 @@ namespace AuctionTrading.Domain.Entities
                 case LotStatus.Completed:
                     return BidStatus.FaultedLotWasPurchased;
                 case LotStatus.Active:
-                    bool isCorrectBid = IsCorrectBid(newBid);
-                    if (isCorrectBid)
+                    if (IsCorrectBid(newBid))
                     {
                         _bids.Add(newBid);
                         SetComplete();
+                        return BidStatus.Success;
                     }
-                    return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
+                    return BidStatus.FaultedIncorrectBid;
                 default:
                     throw new NotForeseenSituationForThisLotStatusException(this, Status);
             }
