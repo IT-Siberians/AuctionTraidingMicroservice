@@ -15,7 +15,10 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
                 .IsRequired()
                 .HasConversion(username => username.Value, username => new Username(username))
                 .HasMaxLength(30);
-            builder.HasMany("_auctionLots").WithOne();
+            builder.HasMany<AuctionLot>("_auctionLots")
+                .WithOne(x => x.Seller)
+                .HasForeignKey("SellerId")
+                .HasPrincipalKey(x => x.Id);
             builder.Ignore(x => x.ActiveAuctionLots);
         }
     }

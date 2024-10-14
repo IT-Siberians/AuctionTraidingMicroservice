@@ -27,7 +27,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
                 .HasConversion(bidIncrement => bidIncrement.Value, bidIncrement => new Money(bidIncrement));
             builder.Property(x => x.RepurchasePrice)
                 .IsRequired(false)
-                .HasConversion(repurchasePrice => repurchasePrice.Value, repurchasePrice => new Money(repurchasePrice));
+                .HasConversion(repurchasePrice => repurchasePrice!.Value, repurchasePrice => new Money(repurchasePrice));
             builder.Property(x => x.StartDate).IsRequired().HasConversion
             (
                 src => src.Kind == DateTimeKind.Utc ? src : DateTime.SpecifyKind(src, DateTimeKind.Utc),
@@ -39,7 +39,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
                 dst => dst.Kind == DateTimeKind.Utc ? dst : DateTime.SpecifyKind(dst, DateTimeKind.Utc)
             );
             builder.HasOne(x => x.Seller).WithMany("_auctionLots");
-            builder.HasMany("_bids").WithOne();
+            builder.HasMany<Bid>("_bids").WithOne(x => x.AuctionLot);
             builder.Ignore(x => x.IsActive);
             builder.Ignore(x => x.LastBid);
         }

@@ -15,7 +15,7 @@ namespace AuctionTrading.Application.Models.AuctionLot
 
         public required decimal BidIncrement { get; init; }
 
-        public decimal? RepurchasePrice { get; }
+        public decimal? RepurchasePrice { get; init; }
 
         public required DateTime StartDate { get; init; }
 
@@ -23,6 +23,6 @@ namespace AuctionTrading.Application.Models.AuctionLot
 
         public required Guid SellerId { get; init; }
 
-        public BidModel? LastBid { get; }
+        public BidModel? LastBid { get; init; }
     }
 }

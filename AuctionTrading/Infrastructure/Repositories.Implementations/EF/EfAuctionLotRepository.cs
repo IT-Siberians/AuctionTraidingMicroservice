@@ -14,7 +14,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 
         // У меня большой вопрос, как сделать правильный асинхронный метод GetAllByEndDateAsync?
         public async Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(DateTime endDateUtc)
-            => _auctionLots.Where((x) => x.EndDate < endDateUtc.ToUniversalTime());
+            => await _auctionLots.Where((x) => x.EndDate < endDateUtc.ToUniversalTime()).ToListAsync();
 
         public override Task<AuctionLot?> GetByIdAsync(Guid id)
                 => _auctionLots

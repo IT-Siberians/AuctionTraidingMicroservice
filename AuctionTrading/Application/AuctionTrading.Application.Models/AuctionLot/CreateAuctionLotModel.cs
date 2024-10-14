@@ -4,6 +4,7 @@ namespace AuctionTrading.Application.Models.AuctionLot
 {
     public class CreateAuctionLotModel : ICreateModel
     {
+        public required Guid Id { get; init; }
 
         public required string Title { get; init; }
 
@@ -13,7 +14,7 @@ namespace AuctionTrading.Application.Models.AuctionLot
 
         public required decimal BidIncrement { get; init; }
 
-        public decimal? RepurchasePrice { get; }
+        public decimal? RepurchasePrice { get; init; }
 
         public required DateTime StartDate { get; init; }
 

@@ -48,14 +48,14 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    SellerId1 = table.Column<Guid>(type: "uuid", nullable: false)
+                    SellerId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuctionLots", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AuctionLots_Sellers_SellerId1",
-                        column: x => x.SellerId1,
+                        name: "FK_AuctionLots_Sellers_SellerId",
+                        column: x => x.SellerId,
                         principalTable: "Sellers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -89,9 +89,9 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuctionLots_SellerId1",
+                name: "IX_AuctionLots_SellerId",
                 table: "AuctionLots",
-                column: "SellerId1");
+                column: "SellerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bids_AuctionLotId",

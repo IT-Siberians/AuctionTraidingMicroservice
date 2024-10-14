@@ -41,7 +41,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
                     b.Property<decimal?>("RepurchasePrice")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid>("SellerId1")
+                    b.Property<Guid>("SellerId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartDate")
@@ -60,7 +60,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SellerId1");
+                    b.HasIndex("SellerId");
 
                     b.ToTable("AuctionLots");
                 });
@@ -126,11 +126,13 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
 
             modelBuilder.Entity("AuctionTrading.Domain.Entities.AuctionLot", b =>
                 {
-                    b.HasOne("AuctionTrading.Domain.Entities.Seller", null)
+                    b.HasOne("AuctionTrading.Domain.Entities.Seller", "Seller")
                         .WithMany("_auctionLots")
-                        .HasForeignKey("SellerId1")
+                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("AuctionTrading.Domain.Entities.Bid", b =>

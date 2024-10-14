@@ -3,6 +3,6 @@
     public interface IBidderCreateModel<out TId> where TId : struct
     {
         public TId Id { get; }
-        public string Name { get; }
+        public string Username { get; }
     }
 }
