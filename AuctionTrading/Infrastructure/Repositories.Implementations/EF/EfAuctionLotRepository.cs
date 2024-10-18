@@ -18,9 +18,9 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 
         public override Task<AuctionLot?> GetByIdAsync(Guid id)
                 => _auctionLots
-                .Include(l => l.Seller)
-                .Include(l => l.LastBid)
-                .FirstOrDefaultAsync(l => l.Id == id);
+                .Include(lot => lot.Seller)
+                .Include(lot => lot.LastBid)
+                .FirstOrDefaultAsync(lot => lot.Id == id);
 
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AuctionTrading.Application.Models.Customer
 {
-    public class CreateCustomerModel : BidderCreateModel;
+    public record class CreateCustomerModel(Guid Id, string Username)
+        : BidderCreateModel(Id, Username);
 
 }

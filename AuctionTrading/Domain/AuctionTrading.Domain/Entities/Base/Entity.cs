@@ -9,7 +9,7 @@
     /// Initializes a new instance of the <see cref="Entity{TId}"/> class.
     /// </remarks>
     /// <param name="id">The ID of the entity.</param>
-    public abstract class Entity<TId>(TId id) where TId : struct
+    public abstract class Entity<TId>(TId id) where TId : struct, IEquatable<TId>
     {
         /// <summary>
         /// Gets the ID of the entity.

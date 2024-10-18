@@ -2,25 +2,14 @@
 
 namespace AuctionTrading.Application.Models.AuctionLot
 {
-    public class CreateAuctionLotModel : ICreateModel
-    {
-        public required Guid Id { get; init; }
-
-        public required string Title { get; init; }
-
-        public required string Description { get; init; }
-
-        public required decimal StartPrice { get; init; }
-
-        public required decimal BidIncrement { get; init; }
-
-        public decimal? RepurchasePrice { get; init; }
-
-        public required DateTime StartDate { get; init; }
-
-        public required DateTime EndDate { get; init; }
-
-        public required Guid SellerId { get; init; }
-
-    }
+    public record class CreateAuctionLotModel(
+       Guid Id,
+       string Title,
+       string Description,
+       decimal StartPrice,
+       decimal BidIncrement,
+       decimal? RepurchasePrice,
+       DateTime StartDate,
+       DateTime EndDate,
+       Guid SellerId) : ICreateModel;
 }

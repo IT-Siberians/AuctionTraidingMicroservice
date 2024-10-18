@@ -13,21 +13,21 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Title)
                 .IsRequired()
-                .HasConversion(title => title.Value, title => new Title(title))
+                .HasConversion(title => title.Value, str => new Title(str))
                 .HasMaxLength(50);
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.Description)
                 .IsRequired()
-                .HasConversion(description => description.Value, description => new Description(description));
+                .HasConversion(description => description.Value, str => new Description(str));
             builder.Property(x => x.StartPrice)
                 .IsRequired()
-                .HasConversion(startPrice => startPrice.Value, startPrice => new Money(startPrice));
+                .HasConversion(startPrice => startPrice.Value, d => new Money(d));
             builder.Property(x => x.BidIncrement)
                 .IsRequired()
-                .HasConversion(bidIncrement => bidIncrement.Value, bidIncrement => new Money(bidIncrement));
+                .HasConversion(bidIncrement => bidIncrement.Value, d => new Money(d));
             builder.Property(x => x.RepurchasePrice)
                 .IsRequired(false)
-                .HasConversion(repurchasePrice => repurchasePrice!.Value, repurchasePrice => new Money(repurchasePrice));
+                .HasConversion(repurchasePrice => repurchasePrice!.Value, d => new Money(d));
             builder.Property(x => x.StartDate).IsRequired().HasConversion
             (
                 src => src.Kind == DateTimeKind.Utc ? src : DateTime.SpecifyKind(src, DateTimeKind.Utc),

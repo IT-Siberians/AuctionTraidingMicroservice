@@ -5,7 +5,9 @@ using AuctionTrading.Domain.Repositories.Abstractions;
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 {
     public class InMemoryRepository<TEntity, TId>
-        : IRepository<TEntity, TId> where TEntity : Entity<TId> where TId : struct
+        : IRepository<TEntity, TId> 
+        where TEntity : Entity<TId> 
+        where TId : struct, IEquatable<TId>
     {
         protected readonly List<TEntity> _entities;
 
@@ -28,20 +30,15 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 
         public virtual Task AddAsync(TEntity entity)
         {
-            CheckEntity(entity);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             _entities.Add(entity);
             return Task.CompletedTask;
         }
 
-        protected void CheckEntity(TEntity entity)
-        {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
-        }
-
         public virtual Task<bool> UpdateAsync(TEntity entity)
         {
-            CheckEntity(entity);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             var existingEntity = _entities.FirstOrDefault(e => e.Id.Equals(entity.Id));
 
@@ -58,7 +55,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 
         public virtual Task<bool> DeleteAsync(TEntity entity)
         {
-            CheckEntity(entity);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             return _entities.Remove(entity) ? Task.FromResult(true) : Task.FromResult(false);
 

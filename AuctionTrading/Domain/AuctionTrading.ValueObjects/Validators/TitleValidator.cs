@@ -6,7 +6,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
     /// <summary>
     /// Defines a method that implements the validation of the string.
     /// </summary>
-    public class TitleValidator : ITextValidator
+    public class TitleValidator : IValidator<string>
     {
         /// <summary>
         /// The Title's min length

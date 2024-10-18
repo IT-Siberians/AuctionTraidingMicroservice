@@ -6,18 +6,8 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
     /// <summary>
     /// Defines a method that implements the validation of the string.
     /// </summary>
-    public class DescriptionValidator : ITextValidator
+    public class DescriptionValidator : IValidator<string>
     {
-        /// <summary>
-        /// The Description's min length
-        /// </summary>
-        public int MIN_LENGTH => 0;
-
-        /// <summary>
-        /// The Description's max length
-        /// </summary>
-        public int MAX_LENGTH => 0;
-
         /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 
         /// </summary>

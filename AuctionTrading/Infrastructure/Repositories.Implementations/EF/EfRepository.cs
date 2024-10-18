@@ -6,42 +6,38 @@ using Microsoft.EntityFrameworkCore;
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 {
     public class EfRepository<TEntity, TId>(ApplicationDbContext context)
-        : IRepository<TEntity, TId> where TEntity : Entity<TId> where TId : struct
+        : IRepository<TEntity, TId>
+        where TEntity : Entity<TId>
+        where TId : struct, IEquatable<TId>
     {
         public async Task<IEnumerable<TEntity>> GetAllAsync()
-            => (await context.Set<TEntity>().ToListAsync()).AsEnumerable();
+            => (await context.Set<TEntity>().ToListAsync());
 
         public virtual async Task<TEntity?> GetByIdAsync(TId id)
             => await context.Set<TEntity>().FindAsync(id);
 
         public async Task AddAsync(TEntity entity)
         {
-            CheckEntity(entity);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             context.Add(entity);
             await context.SaveChangesAsync();
         }
 
-        protected void CheckEntity(TEntity entity)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
-        }
-        public Task<bool> UpdateAsync(TEntity entity)
-        {
-            CheckEntity(entity);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             context.Update(entity);
-            context.SaveChangesAsync();
-            return Task.FromResult(true);
+            return await context.SaveChangesAsync() > 0;
         }
 
-        public Task<bool> DeleteAsync(TEntity entity)
+        public async Task<bool> DeleteAsync(TEntity entity)
         {
-            CheckEntity(entity);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             context.Remove(entity);
-            context.SaveChangesAsync();
-            return Task.FromResult(true);
+            return await context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteAsync(TId id)

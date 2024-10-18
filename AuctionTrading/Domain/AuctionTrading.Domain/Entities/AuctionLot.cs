@@ -81,9 +81,9 @@ namespace AuctionTrading.Domain.Entities
 
         #region Constructors
 
-        protected AuctionLot() 
+        protected AuctionLot()
         {
-        
+
         }
 
         /// <summary>
@@ -185,23 +185,24 @@ namespace AuctionTrading.Domain.Entities
             if (_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
 
-            switch (Status)
+            return Status switch
             {
-                case LotStatus.Canceled:
-                    return BidStatus.FaultedLotWasCancel;
-                case LotStatus.Completed:
-                    return BidStatus.FaultedLotWasPurchased;
-                case LotStatus.Active:
-                    if (IsCorrectBid(newBid))
-                    {
-                        _bids.Add(newBid);
-                        SetComplete();
-                        return BidStatus.Success;
-                    }
-                    return BidStatus.FaultedIncorrectBid;
-                default:
-                    throw new NotForeseenSituationForThisLotStatusException(this, Status);
+                LotStatus.Canceled => BidStatus.FaultedLotWasCancel,
+                LotStatus.Completed => BidStatus.FaultedLotWasPurchased,
+                LotStatus.Active => CheckBid(newBid),
+                _ => throw new NotForeseenSituationForThisLotStatusException(this, Status)
+            };
+        }
+
+        private BidStatus CheckBid(Bid bid)
+        {
+            if (IsCorrectBid(bid))
+            {
+                _bids.Add(bid);
+                SetComplete();
+                return BidStatus.Success;
             }
+            return BidStatus.FaultedIncorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.

@@ -27,4 +27,8 @@
     <ProjectReference Include="..\..\Infrastructure\Repositories.Implementations\AuctionTrading.Infrastructure.Repositories.Implementations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

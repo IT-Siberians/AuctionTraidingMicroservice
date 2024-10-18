@@ -13,7 +13,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Amount)
                 .IsRequired()
-                .HasConversion(amount=> amount.Value, amount=>new Money(amount));
+                .HasConversion(amount=> amount.Value, d=>new Money(d));
             builder.Property(x => x.CreationTime).IsRequired().HasConversion
             (
                 src => src.Kind == DateTimeKind.Utc ? src : DateTime.SpecifyKind(src, DateTimeKind.Utc),

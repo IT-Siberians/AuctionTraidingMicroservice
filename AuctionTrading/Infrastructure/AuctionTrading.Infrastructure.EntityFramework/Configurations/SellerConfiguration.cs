@@ -13,7 +13,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Id).IsRequired();
             builder.Property(x => x.Username)
                 .IsRequired()
-                .HasConversion(username => username.Value, username => new Username(username))
+                .HasConversion(username => username.Value, str => new Username(str))
                 .HasMaxLength(30);
             builder.HasMany<AuctionLot>("_auctionLots")
                 .WithOne(x => x.Seller)

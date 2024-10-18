@@ -2,7 +2,9 @@
 
 namespace AuctionTrading.Domain.Repositories.Abstractions
 {
-    public interface IRepository<TEntity, in TId> where TEntity : Entity<TId> where TId : struct
+    public interface IRepository<TEntity, in TId> 
+        where TEntity : Entity<TId> 
+        where TId : struct, IEquatable<TId>
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity?> GetByIdAsync(TId id);

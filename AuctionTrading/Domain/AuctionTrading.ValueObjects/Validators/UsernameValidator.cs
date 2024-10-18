@@ -6,7 +6,7 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
     /// <summary>
     /// Defines a method that implements the validation of the string.
     /// </summary>
-    public class UsernameValidator : ITextValidator
+    public class UsernameValidator : IValidator<string>
     {
         /// <summary>
         /// The Username's max length
