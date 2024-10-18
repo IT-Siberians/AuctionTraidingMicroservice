@@ -67,16 +67,19 @@ namespace AuctionTrading.Domain.Entities
         {
             if (Id == lot.Seller.Id)
                 return BidStatus.FaultedCreateBidOnYourLot;
-            if (!lot.IsActive)
+
+            return lot.Status switch
             {
-                if (lot.Status == LotStatus.Canceled)
-                    return BidStatus.FaultedLotWasCancel;
+                LotStatus.Canceled => BidStatus.FaultedLotWasCancel,
+                LotStatus.Completed => BidStatus.FaultedLotWasPurchased,
+                LotStatus.Active => MakeBid(lot, amount),
+                _ => throw new NotForeseenSituationForThisLotStatusException(lot, lot.Status)
+            };
+        }
 
-                if (lot.Status == LotStatus.Completed)
-                    return BidStatus.FaultedLotWasPurchased;
-            }
-
-            Bid newBid = new Bid(this, lot, amount, DateTime.UtcNow);
+        private BidStatus MakeBid(AuctionLot lot, Money amount)
+        {
+            Bid newBid = new(this, lot, amount, DateTime.UtcNow);
             BidStatus bidStatus = lot.MakeBid(newBid);
             if (bidStatus == BidStatus.Success)
                 AddObservableLot(lot);

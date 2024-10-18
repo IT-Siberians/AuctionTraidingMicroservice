@@ -24,7 +24,7 @@ namespace AuctionTrading.Domain.Entities
         /// <summary>
         /// Get the lot on which the bid has been placed.
         /// </summary>
-        public AuctionLot Lot { get; }
+        public AuctionLot AuctionLot { get; }
 
         /// <summary>
         /// Get the customer who has bid on the lot.
@@ -34,6 +34,11 @@ namespace AuctionTrading.Domain.Entities
         #endregion // Properties
 
         #region Constructor
+        protected Bid()
+        {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of a <see cref="Bid"></see> class.
         /// </summary>
@@ -57,7 +62,7 @@ namespace AuctionTrading.Domain.Entities
                 throw new BidOnInactiveAuctionLotException(lot, amount);
 
             Customer = customer ?? throw new ArgumentNullValueException(nameof(customer));
-            Lot = lot ?? throw new ArgumentNullValueException(nameof(lot));
+            AuctionLot = lot ?? throw new ArgumentNullValueException(nameof(lot));
             Amount = amount ?? throw new ArgumentNullValueException(nameof(amount));
             CreationTime = creationTime;
         }
