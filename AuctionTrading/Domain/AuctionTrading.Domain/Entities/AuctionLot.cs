@@ -81,6 +81,11 @@ namespace AuctionTrading.Domain.Entities
 
         #region Constructors
 
+        protected AuctionLot()
+        {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of a <see cref="AuctionLot"></see> class.
         /// </summary>
@@ -174,29 +179,30 @@ namespace AuctionTrading.Domain.Entities
         /// <exception cref="InvalidOperationException"></exception>
         internal BidStatus MakeBid(Bid newBid)
         {
-            if (!Object.ReferenceEquals(newBid.Lot, this))
+            if (!Object.ReferenceEquals(newBid.AuctionLot, this))
                 throw new AnotherAuctionLotBidException(this, newBid);
 
             if (_bids.Contains(newBid))
                 throw new DoubleBidOnAuctionLotException(this, newBid);
 
-            switch (Status)
+            return Status switch
             {
-                case LotStatus.Canceled:
-                    return BidStatus.FaultedLotWasCancel;
-                case LotStatus.Completed:
-                    return BidStatus.FaultedLotWasPurchased;
-                case LotStatus.Active:
-                    bool isCorrectBid = IsCorrectBid(newBid);
-                    if (isCorrectBid)
-                    {
-                        _bids.Add(newBid);
-                        SetComplete();
-                    }
-                    return isCorrectBid ? BidStatus.Success : BidStatus.FaultedIncorrectBid;
-                default:
-                    throw new NotForeseenSituationForThisLotStatusException(this, Status);
+                LotStatus.Canceled => BidStatus.FaultedLotWasCancel,
+                LotStatus.Completed => BidStatus.FaultedLotWasPurchased,
+                LotStatus.Active => CheckBid(newBid),
+                _ => throw new NotForeseenSituationForThisLotStatusException(this, Status)
+            };
+        }
+
+        private BidStatus CheckBid(Bid bid)
+        {
+            if (IsCorrectBid(bid))
+            {
+                _bids.Add(bid);
+                SetComplete();
+                return BidStatus.Success;
             }
+            return BidStatus.FaultedIncorrectBid;
         }
         /// <summary>
         /// Checks the correctness of a bid on a lot.

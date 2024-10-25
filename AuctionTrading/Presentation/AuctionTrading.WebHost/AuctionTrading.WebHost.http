@@ -1,0 +1,6 @@
+@AuctionTrading.WebHost_HostAddress = http://localhost:5233
+
+GET {{AuctionTrading.WebHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
