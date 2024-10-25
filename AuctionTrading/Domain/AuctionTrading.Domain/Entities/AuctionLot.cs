@@ -98,7 +98,7 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="endDate">The end date of the auction lot.</param>
         /// <param name="status">The status of the auction lot.</param>
         /// <param name="seller">The seller of the auction lot.</param>
-        public AuctionLot(
+        protected AuctionLot(
             Guid id,
             Title title,
             Description description,
@@ -131,6 +131,20 @@ namespace AuctionTrading.Domain.Entities
             Status = status;
         }
 
+        public AuctionLot(
+            Guid id,
+            Title title,
+            Description description,
+            Money startPrice,
+            Money bidIncrement,
+            Money? repurchasePrice,
+            DateTime startDate,
+            DateTime endDate,
+            Seller seller) :
+            this(id, title, description, startPrice, bidIncrement, repurchasePrice, startDate, endDate, LotStatus.Active, seller)
+        {
+
+        }
         #endregion // Constructors
 
         /// <summary>

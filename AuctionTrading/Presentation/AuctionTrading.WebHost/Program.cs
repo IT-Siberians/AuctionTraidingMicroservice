@@ -1,7 +1,12 @@
+using AuctionTrading.Application.Services;
+using AuctionTrading.Application.Services.Abstractions;
+using AuctionTrading.Application.Services.Mapping;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Infrastructure.EntityFramework;
 using AuctionTrading.Infrastructure.Repositories.Implementations.EF;
+using AuctionTrading.WebHost.Helpers;
+using GradeBookMicroservice.WebHost.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -50,16 +55,27 @@ namespace AuctionTrading.WebHost
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IRepository<Bid, Guid>, EfRepository<Bid, Guid>>();
-            //builder.Services.AddScoped<IStudentsApplicationService, StudentsApplicationService>();
-            builder.Services.AddScoped<IRepository<AuctionLot, Guid>, EfAuctionLotRepository>();
-            //builder.Services.AddScoped<ITeachersApplicationService, TeachersApplicationService>();
-            builder.Services.AddScoped<IRepository<Seller, Guid>, EfSellerRepository>();
-            //builder.Services.AddScoped<ILessonsApplicationService, LessonsApplicationService>();
-            //builder.Services.AddScoped<ITeachingApplicationService, TeachingApplicationService>();
-            //builder.Services.AddScoped<IVisitingApplicationService, VisitingApplicationService>();
-            builder.Services.AddScoped<IRepository<Customer, Guid>, EfCustomerRepository>();
-            //builder.Services.AddScoped<IAssesmentApplicationService, AssesmentApplicationService>();
+
+            builder.Services.AddScoped<IAuctionLotRepository, EfAuctionLotRepository>();
+            builder.Services.AddScoped<IAuctionLotsApplicationService, AuctionLotsApplicationService>();
+
+            builder.Services.AddScoped<ISellersRepository, EfSellerRepository>();
+            builder.Services.AddScoped<ISellersApplicationService, SellersApplicationService>();
+            builder.Services.AddScoped<ISellingApplicationService, SellingApplicationService>();
+
+            builder.Services.AddScoped<ICustomersRepository, EfCustomerRepository>();
+            builder.Services.AddScoped<ICustomersApplicationService, CustomersApplicationService>();
+            builder.Services.AddScoped<IBidderApplicationService, BidderApplicationService>();
+
+            builder.Services.AddAutoMapper(typeof(RepresentationProfile), typeof(ApplicationProfile));
             //builder.Services.AddAutoMapper(typeof(Program), typeof(GroupMapping));
+
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options =>
+                {
+                    options.UseNpgsql(connectionString);
+                });
+
 
             var app = builder.Build();
 
@@ -77,7 +93,7 @@ namespace AuctionTrading.WebHost
 
             app.MapControllers();
 
-            // app.MigrateDatabase<ApplicationDbContext>();
+            app.MigrateDatabase<ApplicationDbContext>();
 
             app.Run();
         }

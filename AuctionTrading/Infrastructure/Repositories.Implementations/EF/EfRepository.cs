@@ -16,12 +16,12 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
         public virtual async Task<TEntity?> GetByIdAsync(TId id)
             => await context.Set<TEntity>().FindAsync(id);
 
-        public async Task AddAsync(TEntity entity)
+        public async Task<bool> AddAsync(TEntity entity)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             context.Add(entity);
-            await context.SaveChangesAsync();
+            return await context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

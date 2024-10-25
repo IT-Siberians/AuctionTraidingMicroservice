@@ -6,6 +6,8 @@
         FaultedIncorrectBid,
         FaultedCreateBidOnYourLot,
         FaultedLotWasCancel,
-        FaultedLotWasPurchased
+        FaultedLotWasPurchased,
+        FaultedCustomerNotFound,
+        FaultedLotNotFound
     }
 }

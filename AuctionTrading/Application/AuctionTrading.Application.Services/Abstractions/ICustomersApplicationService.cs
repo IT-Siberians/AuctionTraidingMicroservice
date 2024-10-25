@@ -6,6 +6,8 @@ namespace AuctionTrading.Application.Services.Abstractions
     {
         Task<CustomerModel?> GetCustomerByIdAsync(Guid id);
 
+        Task<CustomerModel?> GetCustomerByUsernameAsync(string username);
+
         Task<IEnumerable<CustomerModel>> GetCustomersAsync();
 
         Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation);

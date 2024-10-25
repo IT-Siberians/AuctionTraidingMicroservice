@@ -28,12 +28,12 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
         public virtual Task<TEntity?> GetByIdAsync(TId id)
             => Task.FromResult(_entities.FirstOrDefault(x => x.Id.Equals(id)));
 
-        public virtual Task AddAsync(TEntity entity)
+        public virtual Task<bool> AddAsync(TEntity entity)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             _entities.Add(entity);
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
         public virtual Task<bool> UpdateAsync(TEntity entity)

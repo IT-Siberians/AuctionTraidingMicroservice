@@ -7,5 +7,5 @@ namespace AuctionTrading.Application.Models.Seller
         Guid Id,
         string Username,
         IEnumerable<AuctionLotModel> AuctionedLots)
-        : BidderCreateModel(Id, Username);
+        : BidderModel(Id, Username);
 }
