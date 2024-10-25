@@ -10,11 +10,13 @@ namespace AuctionTrading.Application.Services
     public class SellersApplicationService(ISellersRepository repository, IMapper mapper) : ISellersApplicationService
     {
         public async Task<IEnumerable<SellerModel>> GetSellersAsync()
-            => (await repository.GetAllAsync()).Select(mapper.Map<SellerModel>);
+            => (await repository.GetAllAsync())
+            .Select(mapper.Map<SellerModel>);
 
         public async Task<SellerModel?> GetSellerByIdAsync(Guid id)
         {
             var seller = await repository.GetByIdAsync(id);
+            var res = mapper.Map<SellerModel>(seller);
             return seller is null ? null : mapper.Map<SellerModel>(seller);
         }
         

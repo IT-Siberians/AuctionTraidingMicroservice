@@ -5,7 +5,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name" : "Oleg Golenischev"
+  "name" : "Yana Kryukova"
 }
 > {%
     client.test("Request executed successfully", function () {
