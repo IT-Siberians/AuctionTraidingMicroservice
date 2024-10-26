@@ -4,6 +4,6 @@ namespace AuctionTrading.Application.Services.Abstractions
 {
     public interface ISellingApplicationService
     {
-        Task<bool> CancelAuctionLotAsync(CancelAuctionLotModel information);
+        Task<bool> CancelAuctionLotAsync(CancelAuctionLotModel information, CancellationToken cancellationToken);
     }
 }

@@ -5,6 +5,6 @@ namespace AuctionTrading.Application.Services.Abstractions
 {
     public interface IBidderApplicationService
     {
-        Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation);
+        Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken);
     }
 }

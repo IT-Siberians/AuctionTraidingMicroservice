@@ -17,17 +17,17 @@ namespace AuctionTrading.WebHost.Controllers
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SellerShortResponse>))]
-        public async Task<IActionResult> GetAllSellers()
+        public async Task<IActionResult> GetAllSellers(CancellationToken cancellationToken)
         {
-            var sellers = await sellersApplicationService.GetSellersAsync();
+            var sellers = await sellersApplicationService.GetSellersAsync(cancellationToken);
             return Ok(mapper.Map<IEnumerable<SellerShortResponse>>(sellers));
         }
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SellerDetailedResponse))]
-        public async Task<IActionResult> GetSellerById(Guid id)
+        public async Task<IActionResult> GetSellerById(Guid id, CancellationToken cancellationToken)
         {
-            var seller = await sellersApplicationService.GetSellerByIdAsync(id);
+            var seller = await sellersApplicationService.GetSellerByIdAsync(id, cancellationToken);
             if (seller is null)
                 return NotFound(id);
             return Ok(mapper.Map<SellerDetailedResponse>(seller));
@@ -35,9 +35,9 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SellerDetailedResponse))]
-        public async Task<IActionResult> GetSellerByUsernameId(string username)
+        public async Task<IActionResult> GetSellerByUsernameId(string username, CancellationToken cancellationToken)
         {
-            var seller = await sellersApplicationService.GetSellerByUsernameAsync(username);
+            var seller = await sellersApplicationService.GetSellerByUsernameAsync(username, cancellationToken);
             if (seller is null)
                 return NotFound(username);
             return Ok(mapper.Map<SellerDetailedResponse>(seller));
@@ -46,10 +46,10 @@ namespace AuctionTrading.WebHost.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SellerShortResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateSeller(CreateSellerRequest request)
+        public async Task<IActionResult> CreateSeller(CreateSellerRequest request, CancellationToken cancellationToken)
         {
             var seller = mapper.Map<CreateSellerModel>(request);
-            var isCreatedSeller = await sellersApplicationService.CreateSellerAsync(seller);
+            var isCreatedSeller = await sellersApplicationService.CreateSellerAsync(seller, cancellationToken);
             if (!isCreatedSeller)
                 return BadRequest();
             return Created("", mapper.Map<SellerShortResponse>(seller));
@@ -59,17 +59,17 @@ namespace AuctionTrading.WebHost.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotDetailedResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Guid))]
-        public async Task<ActionResult<AuctionLotDetailedResponse>> CancelAuctionLotAsync(CancelAuctionLotRequest request)
+        public async Task<ActionResult<AuctionLotDetailedResponse>> CancelAuctionLotAsync(CancelAuctionLotRequest request, CancellationToken cancellationToken)
         {
-            var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId);
+            var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
             if (auctionLot is null)
                 return NotFound(request.AuctionLotId);
-            var seller = await sellersApplicationService.GetSellerByIdAsync(request.SellerId);
+            var seller = await sellersApplicationService.GetSellerByIdAsync(request.SellerId, cancellationToken);
             if (seller is null)
                 return NotFound(request.SellerId);
             if (seller.AuctionedLots.FirstOrDefault(l => l.Id == auctionLot.SellerId) is null)
                 return BadRequest($"Seller has not cancel this auction lot with id {auctionLot.Id} ");
-            
+
             return Created("", mapper.Map<AuctionLotDetailedResponse>(auctionLot));
         }
     }

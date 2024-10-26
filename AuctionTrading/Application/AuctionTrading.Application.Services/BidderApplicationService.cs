@@ -17,13 +17,13 @@ namespace AuctionTrading.Application.Services
         IMapper mapper)
         : IBidderApplicationService
     {
-        public async Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation)
+        public async Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken = default)
         {
-            var customer = await customersRepository.GetByIdAsync(bidInformation.CustomerId);
+            var customer = await customersRepository.GetByIdAsync(bidInformation.CustomerId, cancellationToken);
             if (customer is null)
                 return BidStatus.FaultedCustomerNotFound;
 
-            var lot = await lotsRepository.GetByIdAsync(bidInformation.AuctionLotId);
+            var lot = await lotsRepository.GetByIdAsync(bidInformation.AuctionLotId, cancellationToken);
             if (lot is null)
                 return BidStatus.FaultedLotNotFound;
 
@@ -32,10 +32,10 @@ namespace AuctionTrading.Application.Services
             if (bidStatus == BidStatus.Success)
             {
                 // не уверена, что эта строчка нужна!
-                Task.WaitAll(customersRepository.UpdateAsync(customer), lotsRepository.UpdateAsync(lot));
+                Task.WaitAll(customersRepository.UpdateAsync(customer, cancellationToken), lotsRepository.UpdateAsync(lot, cancellationToken));
             }
 
-            return bidStatus; 
+            return bidStatus;
         }
     }
 }

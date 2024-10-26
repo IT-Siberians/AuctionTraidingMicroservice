@@ -14,17 +14,17 @@ namespace AuctionTrading.WebHost.Controllers
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerShortResponse>))]
-        public async Task<IActionResult> GetAllCustomers()
+        public async Task<IActionResult> GetAllCustomers(CancellationToken cancellationToken)
         {
-            var customers = await customersApplicationService.GetCustomersAsync();
+            var customers = await customersApplicationService.GetCustomersAsync(cancellationToken);
             return Ok(mapper.Map<IEnumerable<CustomerShortResponse>>(customers));
         }
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDetailedResponse))]
-        public async Task<IActionResult> GetCustomerById(Guid id)
+        public async Task<IActionResult> GetCustomerById(Guid id, CancellationToken cancellationToken)
         {
-            var customer = await customersApplicationService.GetCustomerByIdAsync(id);
+            var customer = await customersApplicationService.GetCustomerByIdAsync(id, cancellationToken);
             if (customer is null)
                 return NotFound(id);
             return Ok(mapper.Map<CustomerDetailedResponse>(customer));
@@ -32,9 +32,9 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDetailedResponse))]
-        public async Task<IActionResult> GetCustomerByUsernameId(string username)
+        public async Task<IActionResult> GetCustomerByUsernameId(string username, CancellationToken cancellationToken)
         {
-            var customer = await customersApplicationService.GetCustomerByUsernameAsync(username);
+            var customer = await customersApplicationService.GetCustomerByUsernameAsync(username, cancellationToken);
             if (customer is null)
                 return NotFound(username);
             return Ok(mapper.Map<CustomerDetailedResponse>(customer));
@@ -43,10 +43,10 @@ namespace AuctionTrading.WebHost.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerShortResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request)
+        public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request, CancellationToken cancellationToken)
         {
             var customer = mapper.Map<CreateCustomerModel>(request);
-            var isCreatedCustomer = await customersApplicationService.CreateCustomerAsync(customer);
+            var isCreatedCustomer = await customersApplicationService.CreateCustomerAsync(customer, cancellationToken);
             if (!isCreatedCustomer)
                 return BadRequest();
             return Created("", mapper.Map<CustomerShortResponse>(customer));

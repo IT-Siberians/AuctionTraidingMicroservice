@@ -5,8 +5,8 @@ using AuctionTrading.Domain.Repositories.Abstractions;
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 {
     public class InMemoryRepository<TEntity, TId>
-        : IRepository<TEntity, TId> 
-        where TEntity : Entity<TId> 
+        : IRepository<TEntity, TId>
+        where TEntity : Entity<TId>
         where TId : struct, IEquatable<TId>
     {
         protected readonly List<TEntity> _entities;
@@ -22,13 +22,13 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
                 ?? throw new ArgumentNullValueException(nameof(entities));
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken, bool asNoTracking = false)
             => Task.FromResult(_entities.AsEnumerable());
 
-        public virtual Task<TEntity?> GetByIdAsync(TId id)
+        public virtual Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
             => Task.FromResult(_entities.FirstOrDefault(x => x.Id.Equals(id)));
 
-        public virtual Task<bool> AddAsync(TEntity entity)
+        public virtual Task<bool> AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
@@ -36,7 +36,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
             return Task.FromResult(true);
         }
 
-        public virtual Task<bool> UpdateAsync(TEntity entity)
+        public virtual Task<bool> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
@@ -53,18 +53,18 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
             return Task.FromResult(true);
         }
 
-        public virtual Task<bool> DeleteAsync(TEntity entity)
+        public virtual Task<bool> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             return _entities.Remove(entity) ? Task.FromResult(true) : Task.FromResult(false);
 
         }
-        public virtual async Task<bool> DeleteAsync(TId id)
+        public virtual async Task<bool> DeleteAsync(TId id, CancellationToken cancellationToken)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await GetByIdAsync(id, cancellationToken);
 
-            return entity is null ? false : await DeleteAsync(entity);
+            return entity is null ? false : await DeleteAsync(entity, cancellationToken);
         }
     }
 }

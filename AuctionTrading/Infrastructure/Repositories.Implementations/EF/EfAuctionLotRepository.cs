@@ -1,4 +1,5 @@
 ﻿using AuctionTrading.Domain.Entities;
+using AuctionTrading.Domain.Entities.Base;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +14,19 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 
 
         // У меня большой вопрос, как сделать правильный асинхронный метод GetAllByEndDateAsync?
-        public async Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(DateTime endDateUtc)
-            => await _auctionLots.Where((x) => x.EndDate < endDateUtc.ToUniversalTime()).ToListAsync();
+        public async Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(
+            DateTime endDateUtc,
+            CancellationToken cancellationToken,
+        bool asNoTracking = false)
+            => await (asNoTracking ? _auctionLots.AsNoTracking() : _auctionLots)
+            .Where((x) => x.EndDate < endDateUtc.ToUniversalTime())
+            .ToListAsync(cancellationToken);
 
-        public override Task<AuctionLot?> GetByIdAsync(Guid id)
-                => _auctionLots
-                .Include(lot => lot.Seller)
-                .Include(lot => lot.LastBid)
-                .FirstOrDefaultAsync(lot => lot.Id == id);
+        public override Task<AuctionLot?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+            => _auctionLots
+            .Include(lot => lot.Seller)
+            .Include("_bids")
+            .FirstOrDefaultAsync(lot => lot.Id == id, cancellationToken);
 
     }
 }

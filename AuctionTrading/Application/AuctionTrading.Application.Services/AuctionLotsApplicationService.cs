@@ -1,33 +1,28 @@
-﻿
-using AuctionTrading.Application.Models.AuctionLot;
-using AuctionTrading.Application.Models.Seller;
+﻿using AuctionTrading.Application.Models.AuctionLot;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
-using AuctionTrading.Domain.ValueObjects;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuctionTrading.Application.Services
 {
     public class AuctionLotsApplicationService(IAuctionLotRepository lotRepository, ISellersRepository sellersRepository, IMapper mapper) : IAuctionLotsApplicationService
     {
-        public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsAsync()
-            => (await lotRepository.GetAllAsync()).Select(mapper.Map<AuctionLotModel>);
+        public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsAsync(CancellationToken cancellationToken = default)
+            => (await lotRepository.GetAllAsync(cancellationToken, true)).Select(mapper.Map<AuctionLotModel>);
 
-        public async Task<AuctionLotModel?> GetAuctionLotByIdAsync(Guid id)
+        public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsByEndDateAsync(DateTime endDateUtc, CancellationToken cancellationToken = default)
+            => (await lotRepository.GetAllByEndDateAsync(endDateUtc, cancellationToken, true)).Select(mapper.Map<AuctionLotModel>);
+
+        public async Task<AuctionLotModel?> GetAuctionLotByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var lot = await lotRepository.GetByIdAsync(id);
+            var lot = await lotRepository.GetByIdAsync(id, cancellationToken);
             return lot is null ? null : mapper.Map<AuctionLotModel>(lot);
         }
 
-        public async Task<bool> CreateAuctionLotAsync(CreateAuctionLotModel auctionLotInformation)
+        public async Task<bool> CreateAuctionLotAsync(CreateAuctionLotModel auctionLotInformation, CancellationToken cancellationToken = default)
         {
-            var seller = await sellersRepository.GetByIdAsync(auctionLotInformation.SellerId);
+            var seller = await sellersRepository.GetByIdAsync(auctionLotInformation.SellerId, cancellationToken);
             if (seller is null)
                 return false;
             AuctionLot lot = new(
@@ -40,23 +35,23 @@ namespace AuctionTrading.Application.Services
                 auctionLotInformation.StartDate,
                 auctionLotInformation.EndDate,
                 seller);
-            await sellersRepository.UpdateAsync(seller); // не уверена, что эта строчка нужна!
-            return await lotRepository.AddAsync(lot);
+            await sellersRepository.UpdateAsync(seller, cancellationToken); // не уверена, что эта строчка нужна!
+            return await lotRepository.AddAsync(lot, cancellationToken);
         }
 
-        public async Task<bool> UpdateAuctionLotAsync(AuctionLotModel auctionLot)
+        public async Task<bool> UpdateAuctionLotAsync(AuctionLotModel auctionLot, CancellationToken cancellationToken = default)
         {
-            var entity = await lotRepository.GetByIdAsync(auctionLot.Id);
+            var entity = await lotRepository.GetByIdAsync(auctionLot.Id, cancellationToken);
             if (entity is null)
                 return false;
             entity = mapper.Map<AuctionLot>(auctionLot);
-            return await lotRepository.UpdateAsync(entity);
+            return await lotRepository.UpdateAsync(entity, cancellationToken);
         }
 
-        public async Task<bool> DeleteAuctionLotAsync(Guid id)
+        public async Task<bool> DeleteAuctionLotAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var lot = await lotRepository.GetByIdAsync(id);
-            return lot is null ? false : await lotRepository.DeleteAsync(lot);
+            var lot = await lotRepository.GetByIdAsync(id, cancellationToken);
+            return lot is null ? false : await lotRepository.DeleteAsync(lot, cancellationToken);
         }
     }
 }

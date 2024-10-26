@@ -10,12 +10,12 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
     {
         private readonly DbSet<Customer> _customers = context.Set<Customer>();
 
-        public override Task<Customer?> GetByIdAsync(Guid id) 
-            => _customers.Include(c => c.ObservableAuctionLots)
-            .FirstOrDefaultAsync(c => c.Id == id);
+        public override Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken) 
+            => _customers.Include("_observableAuctionLots")
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
-        public Task<Customer?> GetCustomerByUsernameAsync(string username) 
-            => _customers.Include(s => s.ObservableAuctionLots)
-            .FirstOrDefaultAsync(s => s.Username.Value == username);
+        public Task<Customer?> GetCustomerByUsernameAsync(string username, CancellationToken cancellationToken) 
+            => _customers.Include("_observableAuctionLots")
+            .FirstOrDefaultAsync(s => s.Username.Value == username, cancellationToken);
     }
 }

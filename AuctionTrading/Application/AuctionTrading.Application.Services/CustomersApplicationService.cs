@@ -9,39 +9,39 @@ namespace AuctionTrading.Application.Services
 {
     public class CustomersApplicationService(ICustomersRepository repository, IMapper mapper) : ICustomersApplicationService
     {
-        public async Task<IEnumerable<CustomerModel>> GetCustomersAsync()
-            => (await repository.GetAllAsync()).Select(mapper.Map<CustomerModel>);
+        public async Task<IEnumerable<CustomerModel>> GetCustomersAsync(CancellationToken cancellationToken = default)
+            => (await repository.GetAllAsync(cancellationToken = default, true)).Select(mapper.Map<CustomerModel>);
 
-        public async Task<CustomerModel?> GetCustomerByIdAsync(Guid id)
+        public async Task<CustomerModel?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var customer = await repository.GetByIdAsync(id);
+            var customer = await repository.GetByIdAsync(id, cancellationToken);
             return customer is null ? null : mapper.Map<CustomerModel>(customer);
         }
 
-        public async Task<CustomerModel?> GetCustomerByUsernameAsync(string username)
+        public async Task<CustomerModel?> GetCustomerByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            var customer = await repository.GetCustomerByUsernameAsync(username);
+            var customer = await repository.GetCustomerByUsernameAsync(username, cancellationToken);
             return customer is null ? null : mapper.Map<CustomerModel>(customer);
         }
-        public async Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation)
+        public async Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken = default)
         {
             Customer customer = new(customerInformation.Id, new Username(customerInformation.Username));
-            return await repository.AddAsync(customer);
+            return await repository.AddAsync(customer, cancellationToken);
         }
 
-        public async Task<bool> UpdateCustomerAsync(CustomerModel customer)
+        public async Task<bool> UpdateCustomerAsync(CustomerModel customer, CancellationToken cancellationToken = default)
         {
-            var entity = await repository.GetByIdAsync(customer.Id);
+            var entity = await repository.GetByIdAsync(customer.Id, cancellationToken);
             if (entity is null)
                 return false;
             entity = mapper.Map<Customer>(customer);
-            return await repository.UpdateAsync(entity);
+            return await repository.UpdateAsync(entity, cancellationToken);
         }
 
-        public async Task<bool> DeleteCustomerAsync(Guid id)
+        public async Task<bool> DeleteCustomerAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var customer = await repository.GetByIdAsync(id);
-            return customer is null ? false : await repository.DeleteAsync(customer);
+            var customer = await repository.GetByIdAsync(id, cancellationToken);
+            return customer is null ? false : await repository.DeleteAsync(customer, cancellationToken);
         }
     }
 }

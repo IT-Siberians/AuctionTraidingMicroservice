@@ -11,7 +11,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
 
         }
 
-        public Task<Customer?> GetCustomerByUsernameAsync(string username)
+        public Task<Customer?> GetCustomerByUsernameAsync(string username, CancellationToken cancellationToken)
             => Task.FromResult(_entities.FirstOrDefault(x => x.Username.Value == username));
     }
 }

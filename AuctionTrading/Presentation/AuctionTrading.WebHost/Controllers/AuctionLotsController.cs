@@ -14,17 +14,17 @@ namespace AuctionTrading.WebHost.Controllers
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AuctionLotShortResponse>))]
-        public async Task<IActionResult> GetAllAuctionLots()
+        public async Task<IActionResult> GetAllAuctionLots(CancellationToken cancellationToken)
         {
-            var auctionLots = await auctionLotsApplicationService.GetAuctionLotsAsync();
+            var auctionLots = await auctionLotsApplicationService.GetAuctionLotsAsync(cancellationToken);
             return Ok(mapper.Map<IEnumerable<AuctionLotShortResponse>>(auctionLots));
         }
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuctionLotDetailedResponse))]
-        public async Task<IActionResult> GetAuctionLotById(Guid id)
+        public async Task<IActionResult> GetAuctionLotById(Guid id, CancellationToken cancellationToken)
         {
-            var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(id);
+            var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(id, cancellationToken);
             if (auctionLot is null)
                 return NotFound(id);
             return Ok(mapper.Map<AuctionLotDetailedResponse>(auctionLot));
@@ -33,10 +33,10 @@ namespace AuctionTrading.WebHost.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotDetailedResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateSeller(CreateAuctionLotRequest request)
+        public async Task<IActionResult> CreateSeller(CreateAuctionLotRequest request, CancellationToken cancellationToken)
         {
             var auctionLot = mapper.Map<CreateAuctionLotModel>(request);
-            var isCreatedAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot);
+            var isCreatedAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot, cancellationToken);
             if (!isCreatedAuctionLot)
                 return BadRequest();
             return Created("", mapper.Map<AuctionLotShortResponse>(auctionLot));

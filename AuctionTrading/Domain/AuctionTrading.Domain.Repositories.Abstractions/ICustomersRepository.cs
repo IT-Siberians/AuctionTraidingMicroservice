@@ -4,7 +4,7 @@ namespace AuctionTrading.Domain.Repositories.Abstractions
 {
     public interface ICustomersRepository : IRepository<Customer, Guid>
     {
-        Task<Customer?> GetCustomerByUsernameAsync(string username);
+        Task<Customer?> GetCustomerByUsernameAsync(string username, CancellationToken cancellationToken);
 
     }
 }
