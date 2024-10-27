@@ -16,6 +16,6 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 
         public Task<Seller?> GetSellerByUsernameAsync(string username, CancellationToken cancellationToken)
             => _sellers.Include("_auctionLots")
-            .FirstOrDefaultAsync(s => s.Username.Value == username, cancellationToken);
+            .FirstOrDefaultAsync(s => s.Username.Equals(username), cancellationToken);
     }
 }

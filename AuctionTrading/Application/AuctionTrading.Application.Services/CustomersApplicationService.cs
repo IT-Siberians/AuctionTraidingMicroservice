@@ -25,6 +25,9 @@ namespace AuctionTrading.Application.Services
         }
         public async Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken = default)
         {
+            if (await repository.GetByIdAsync(customerInformation.Id, cancellationToken) is not null)
+                return false;
+
             Customer customer = new(customerInformation.Id, new Username(customerInformation.Username));
             return await repository.AddAsync(customer, cancellationToken);
         }
@@ -34,6 +37,7 @@ namespace AuctionTrading.Application.Services
             var entity = await repository.GetByIdAsync(customer.Id, cancellationToken);
             if (entity is null)
                 return false;
+
             entity = mapper.Map<Customer>(customer);
             return await repository.UpdateAsync(entity, cancellationToken);
         }

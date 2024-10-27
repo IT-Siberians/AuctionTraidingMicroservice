@@ -25,6 +25,10 @@ namespace AuctionTrading.Application.Services
             var seller = await sellersRepository.GetByIdAsync(auctionLotInformation.SellerId, cancellationToken);
             if (seller is null)
                 return false;
+
+            if (await lotRepository.GetByIdAsync(auctionLotInformation.Id, cancellationToken) is not null)
+                return false;
+
             AuctionLot lot = new(
                 auctionLotInformation.Id,
                 new(auctionLotInformation.Title),
@@ -35,6 +39,7 @@ namespace AuctionTrading.Application.Services
                 auctionLotInformation.StartDate,
                 auctionLotInformation.EndDate,
                 seller);
+
             await sellersRepository.UpdateAsync(seller, cancellationToken); // не уверена, что эта строчка нужна!
             return await lotRepository.AddAsync(lot, cancellationToken);
         }
@@ -44,8 +49,23 @@ namespace AuctionTrading.Application.Services
             var entity = await lotRepository.GetByIdAsync(auctionLot.Id, cancellationToken);
             if (entity is null)
                 return false;
+
             entity = mapper.Map<AuctionLot>(auctionLot);
             return await lotRepository.UpdateAsync(entity, cancellationToken);
+        }
+
+        public async Task<bool> FinalizeAuctionOfLotAsync(CancellationToken cancellationToken = default)
+        {
+            var entities = await lotRepository.GetAllAsync(cancellationToken,true);
+            if (entities is null)
+                return false;
+
+            foreach (var entity in entities)
+            {
+                entity.SetComplete();
+                await lotRepository.UpdateAsync(entity, cancellationToken);
+            }
+            return true;
         }
 
         public async Task<bool> DeleteAuctionLotAsync(Guid id, CancellationToken cancellationToken = default)

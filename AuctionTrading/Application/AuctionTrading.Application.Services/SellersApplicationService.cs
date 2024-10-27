@@ -16,7 +16,6 @@ namespace AuctionTrading.Application.Services
         public async Task<SellerModel?> GetSellerByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var seller = await repository.GetByIdAsync(id, cancellationToken);
-            var res = mapper.Map<SellerModel>(seller);
             return seller is null ? null : mapper.Map<SellerModel>(seller);
         }
 
@@ -27,6 +26,9 @@ namespace AuctionTrading.Application.Services
         }
         public async Task<bool> CreateSellerAsync(CreateSellerModel sellerInformation, CancellationToken cancellationToken = default)
         {
+            if (await repository.GetByIdAsync(sellerInformation.Id, cancellationToken) is not null)
+                return false;
+
             Seller seller = new(sellerInformation.Id, new Username(sellerInformation.Username));
             return await repository.AddAsync(seller, cancellationToken);
         }
@@ -36,6 +38,7 @@ namespace AuctionTrading.Application.Services
             var entity = await repository.GetByIdAsync(seller.Id, cancellationToken);
             if (entity is null)
                 return false;
+
             entity = mapper.Map<Seller>(seller);
             return await repository.UpdateAsync(entity, cancellationToken);
         }

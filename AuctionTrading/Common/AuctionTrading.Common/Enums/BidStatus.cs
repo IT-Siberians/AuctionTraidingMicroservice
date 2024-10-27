@@ -5,6 +5,7 @@
         Success,
         FaultedIncorrectBid,
         FaultedCreateBidOnYourLot,
+        FaultedLotNotActive,
         FaultedLotWasCancel,
         FaultedLotWasPurchased,
         FaultedCustomerNotFound,

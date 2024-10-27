@@ -6,12 +6,7 @@ using AutoMapper;
 
 namespace AuctionTrading.Application.Services
 {
-    public class SellingApplicationService(
-        ISellersRepository sellersRepository,
-        ICustomersRepository customersRepository,
-        IAuctionLotRepository lotsRepository,
-        IRepository<Bid, Guid> bidsRepository,
-        IMapper mapper)
+    public class SellingApplicationService(ISellersRepository sellersRepository, IAuctionLotRepository lotsRepository)
         : ISellingApplicationService
     {
         public async Task<bool> CancelAuctionLotAsync(CancelAuctionLotModel information, CancellationToken cancellationToken = default)
@@ -24,8 +19,7 @@ namespace AuctionTrading.Application.Services
             if (lot is null)
                 return false;
 
-            await sellersRepository.UpdateAsync(seller, cancellationToken);
-            return seller.CancelLot(lot);
+            return !seller.CancelLot(lot) ? false : await sellersRepository.UpdateAsync(seller, cancellationToken);
         }
     }
 }

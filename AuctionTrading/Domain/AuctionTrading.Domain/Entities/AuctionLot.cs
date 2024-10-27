@@ -169,7 +169,7 @@ namespace AuctionTrading.Domain.Entities
             return true;
         }
 
-        internal bool SetComplete()
+        public bool SetComplete()
         {
             if (!IsActive)
                 throw new CompletedNotActiveAuctionLotException(this);
