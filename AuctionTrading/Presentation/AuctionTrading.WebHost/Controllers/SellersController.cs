@@ -13,6 +13,7 @@ namespace AuctionTrading.WebHost.Controllers
     [Route("api/v1/[controller]")]
     public class SellersController(ISellersApplicationService sellersApplicationService,
                                     IAuctionLotsApplicationService auctionLotsApplicationService,
+                                    ISellingApplicationService sellingApplicationService,
                                     IMapper mapper) : ControllerBase
     {
         [HttpGet]
@@ -55,6 +56,7 @@ namespace AuctionTrading.WebHost.Controllers
             return Created("", mapper.Map<SellerShortResponse>(seller));
 
         }
+
         [HttpPost("cancel auction lot")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotDetailedResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -64,13 +66,17 @@ namespace AuctionTrading.WebHost.Controllers
             var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
             if (auctionLot is null)
                 return NotFound(request.AuctionLotId);
+
             var seller = await sellersApplicationService.GetSellerByIdAsync(request.SellerId, cancellationToken);
             if (seller is null)
                 return NotFound(request.SellerId);
-            if (seller.AuctionedLots.FirstOrDefault(l => l.Id == auctionLot.SellerId) is null)
+
+            if (seller.AuctionedLots is null || seller.AuctionedLots.FirstOrDefault(l => l.Id == request.AuctionLotId) is null)
                 return BadRequest($"Seller has not cancel this auction lot with id {auctionLot.Id} ");
 
-            return Created("", mapper.Map<AuctionLotDetailedResponse>(auctionLot));
+            return await sellingApplicationService.CancelAuctionLotAsync(auctionLot, cancellationToken) 
+                ? Created("", mapper.Map<AuctionLotShortResponse>(auctionLot))
+                : BadRequest($"Seller has not cancel this auction lot with id {auctionLot.Id} ");
         }
     }
 }

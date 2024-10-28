@@ -33,7 +33,7 @@ namespace AuctionTrading.WebHost.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotDetailedResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateSeller(CreateAuctionLotRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAuctionLot(CreateAuctionLotRequest request, CancellationToken cancellationToken)
         {
             var auctionLot = mapper.Map<CreateAuctionLotModel>(request);
             var isCreatedAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot, cancellationToken);

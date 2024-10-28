@@ -12,7 +12,7 @@ namespace AuctionTrading.Application.Services.Abstractions
 
         Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken);
 
-        Task<bool> UpdateCustomerAsync(CustomerModel seller, CancellationToken cancellationToken);
+        Task<bool> UpdateCustomerAsync(CustomerModel customer, CancellationToken cancellationToken);
 
         Task<bool> DeleteCustomerAsync(Guid id, CancellationToken cancellationToken);
     }

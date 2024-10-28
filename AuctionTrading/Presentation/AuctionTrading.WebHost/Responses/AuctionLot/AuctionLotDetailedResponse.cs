@@ -9,5 +9,6 @@
        decimal? RepurchasePrice,
        DateTime StartDate,
        DateTime EndDate,
+       decimal? LastBid,
        Guid SellerId);
 }

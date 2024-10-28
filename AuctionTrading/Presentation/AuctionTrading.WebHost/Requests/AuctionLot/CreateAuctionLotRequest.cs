@@ -6,6 +6,7 @@
        string Description,
        decimal StartPrice,
        decimal BidIncrement,
+       decimal? RepurchasePrice,
        DateTime StartDate,
        DateTime EndDate,
        Guid SellerId);

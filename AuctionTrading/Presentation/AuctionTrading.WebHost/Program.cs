@@ -23,7 +23,7 @@ namespace AuctionTrading.WebHost
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new InvalidOperationException("Connection string for EmailSenderMicroserviceDbContext is not configured.");
+                throw new InvalidOperationException("Connection string for AuctionTradingMicroserviceDbContext is not configured.");
             }
 
             builder.Services.AddNpgsql<ApplicationDbContext>(connectionString, options =>
