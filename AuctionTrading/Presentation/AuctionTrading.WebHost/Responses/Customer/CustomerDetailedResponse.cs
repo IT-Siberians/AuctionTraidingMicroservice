@@ -5,5 +5,5 @@ namespace AuctionTrading.WebHost.Responses.Customer
     public record class CustomerDetailedResponse(
         Guid Id,
         string Username,
-        IEnumerable<AuctionLotModel> ObservedLots);
+        IEnumerable<AuctionLotModel> ObservedAuctionLots);
 }

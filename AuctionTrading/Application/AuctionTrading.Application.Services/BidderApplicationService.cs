@@ -37,17 +37,12 @@ namespace AuctionTrading.Application.Services
 
             if (bidStatus == BidStatus.Success)
             {
-                var bid = new Bid(
-                    customer,
-                    lot,
-                    new Money(bidInformation.Amount),
-                    DateTime.UtcNow);
+                var newBid = lot.LastBid;
+                var result = await bidsRepository.AddAsync(newBid, cancellationToken);
+                await lotsRepository.UpdateAsync(lot, cancellationToken);
+                if (result == true)
+                    return bidStatus;
 
-                // не уверена, что эта строчка нужна
-                Task.WaitAll(
-                    bidsRepository.UpdateAsync(bid, cancellationToken),
-                    lotsRepository.UpdateAsync(lot, cancellationToken),
-                    customersRepository.UpdateAsync(customer, cancellationToken));
             }
 
             return bidStatus;

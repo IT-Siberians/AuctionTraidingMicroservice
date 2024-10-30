@@ -1,4 +1,5 @@
 ﻿using AuctionTrading.Application.Models.Customer;
+using AuctionTrading.Domain.Entities;
 
 namespace AuctionTrading.Application.Services.Abstractions
 {

@@ -1,4 +1,6 @@
-﻿namespace AuctionTrading.WebHost.Responses.AuctionLot
+﻿using AuctionTrading.WebHost.Responses.Bid;
+
+namespace AuctionTrading.WebHost.Responses.AuctionLot
 {
     public record class AuctionLotDetailedResponse(
        Guid Id,
@@ -9,6 +11,6 @@
        decimal? RepurchasePrice,
        DateTime StartDate,
        DateTime EndDate,
-       decimal? LastBid,
+       BidDetailedResponse? LastBid,
        Guid SellerId);
 }

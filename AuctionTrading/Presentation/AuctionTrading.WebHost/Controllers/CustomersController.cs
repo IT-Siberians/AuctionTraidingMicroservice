@@ -62,39 +62,32 @@ namespace AuctionTrading.WebHost.Controllers
         }
 
         [HttpPost("Add bid")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BidDetailedResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotDetailedResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Guid))]
         public async Task<IActionResult> TryBidOnAuctionLot(CreateBidRequest request, CancellationToken cancellationToken)
         {
-            var bid = mapper.Map<CreateBidModel>(request);
-
-            var customer = await customersApplicationService.GetCustomerByIdAsync(bid.CustomerId, cancellationToken);
-            var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(bid.AuctionLotId, cancellationToken);
+            var customer = await customersApplicationService.GetCustomerByIdAsync(request.CustomerId, cancellationToken);
+            var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
 
             if (auctionLot is null)
                 return NotFound(request.AuctionLotId);
 
+            if (customer is null)
+                return NotFound(request.CustomerId);
+
+
             if (auctionLot.SellerId == customer.Id)
                 return BadRequest($"the buyer cannot bid on his auction lot with id {auctionLot.Id}");
 
-
+            var bid = mapper.Map<CreateBidModel>(request);
             var bidStatus = await bidderApplicationService.MakeBidAsync(bid, cancellationToken);
             if (bidStatus != Common.Enums.BidStatus.Success)
                 return BadRequest($"An attempt to place a bet ended in failure. Status {bidStatus}");
 
 
-            if (await customersApplicationService.GetCustomerByIdAsync(customer.Id, cancellationToken) is null)
-            {
-                await customersApplicationService.CreateCustomerAsync(
-                    new CreateCustomerModel(customer.Id, customer.Username),
-                    cancellationToken);
 
-
-                await customersApplicationService.UpdateCustomerAsync(customer, cancellationToken);
-            }
-
-            return Created("", mapper.Map<BidDetailedResponse>(customer));
+            return Created("", mapper.Map<BidDetailedResponse>(auctionLot.LastBid));
 
         }
     }

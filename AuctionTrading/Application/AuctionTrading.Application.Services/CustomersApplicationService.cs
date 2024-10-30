@@ -10,7 +10,8 @@ namespace AuctionTrading.Application.Services
     public class CustomersApplicationService(ICustomersRepository repository, IMapper mapper) : ICustomersApplicationService
     {
         public async Task<IEnumerable<CustomerModel>> GetCustomersAsync(CancellationToken cancellationToken = default)
-            => (await repository.GetAllAsync(cancellationToken = default, true)).Select(mapper.Map<CustomerModel>);
+            => (await repository.GetAllAsync(cancellationToken = default, true))
+            .Select(mapper.Map<CustomerModel>);
 
         public async Task<CustomerModel?> GetCustomerByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {

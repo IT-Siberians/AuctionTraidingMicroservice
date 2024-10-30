@@ -19,7 +19,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
             CancellationToken cancellationToken,
         bool asNoTracking = false)
             => await (asNoTracking ? _auctionLots.AsNoTracking() : _auctionLots)
-            .Where((x) => x.EndDate < endDateUtc.ToUniversalTime())
+            .Where((x) => x.EndDate < endDateUtc.ToUniversalTime() && x.Status != Domain.Enums.LotStatus.Completed)
             .ToListAsync(cancellationToken);
 
         public override Task<AuctionLot?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

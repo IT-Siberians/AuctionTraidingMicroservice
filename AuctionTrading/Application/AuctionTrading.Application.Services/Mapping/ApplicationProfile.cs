@@ -26,7 +26,8 @@ namespace AuctionTrading.Application.Services.Mapping
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount.Value));
 
             CreateMap<Customer, CustomerModel>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username.Value));
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username.Value))
+                .ForMember(dest => dest.ObservedAuctionLots, opt => opt.MapFrom(src => src.ObservableAuctionLots));
 
             CreateMap<Seller, SellerModel>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username.Value))

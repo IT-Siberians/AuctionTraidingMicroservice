@@ -13,5 +13,5 @@ namespace AuctionTrading.Application.Models.AuctionLot
         DateTime StartDate,
         DateTime EndDate,
         Guid SellerId,
-        decimal? LastBid) : IModel<Guid>;
+        BidModel? LastBid) : IModel<Guid>;
 }

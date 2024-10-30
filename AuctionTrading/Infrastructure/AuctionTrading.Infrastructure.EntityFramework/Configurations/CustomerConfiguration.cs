@@ -15,6 +15,8 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
                 .IsRequired()
                 .HasConversion(username => username.Value, str => new Username(str))
                 .HasMaxLength(30);
+            builder.HasMany<AuctionLot>("_observableAuctionLots")
+                .WithMany();
             builder.Ignore(x => x.ObservableAuctionLots);
         }
     }

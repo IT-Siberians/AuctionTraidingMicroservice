@@ -1,5 +1,6 @@
 ﻿using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
+using AuctionTrading.Domain.ValueObjects;
 using AuctionTrading.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,6 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 
         public Task<Customer?> GetCustomerByUsernameAsync(string username, CancellationToken cancellationToken) 
             => _customers.Include("_observableAuctionLots")
-            .FirstOrDefaultAsync(s => s.Username.Value == username, cancellationToken);
+            .FirstOrDefaultAsync(s => s.Username.Equals(new Username(username)), cancellationToken);
     }
 }

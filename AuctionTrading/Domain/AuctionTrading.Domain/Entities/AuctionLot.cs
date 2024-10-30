@@ -227,7 +227,7 @@ namespace AuctionTrading.Domain.Entities
         {
             Money minAmount = LastBid is null
                 ? StartPrice + BidIncrement
-                : newBid.Amount + BidIncrement;
+                : LastBid.Amount + BidIncrement;
             return (newBid.Amount >= minAmount && newBid.CreationTime < EndDate);
         }
     }
