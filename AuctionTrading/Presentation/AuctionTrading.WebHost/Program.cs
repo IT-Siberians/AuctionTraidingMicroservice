@@ -9,6 +9,8 @@ using AuctionTrading.WebHost.Helpers;
 using GradeBookMicroservice.WebHost.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 namespace AuctionTrading.WebHost
 {
@@ -67,14 +69,17 @@ namespace AuctionTrading.WebHost
             builder.Services.AddScoped<ICustomersApplicationService, CustomersApplicationService>();
             builder.Services.AddScoped<IBidderApplicationService, BidderApplicationService>();
 
-            builder.Services.AddAutoMapper(typeof(RepresentationProfile), typeof(ApplicationProfile));
-            //builder.Services.AddAutoMapper(typeof(Program), typeof(GroupMapping));
+            builder.Services.AddAutoMapper(typeof(PresentationProfile), typeof(ApplicationProfile));
 
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options =>
                 {
                     options.UseNpgsql(connectionString);
                 });
+
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+            builder.Services.AddFluentValidationAutoValidation();
+
 
 
             var app = builder.Build();

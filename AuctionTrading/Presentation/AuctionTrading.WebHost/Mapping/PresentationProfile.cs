@@ -14,9 +14,9 @@ using AutoMapper;
 
 namespace GradeBookMicroservice.WebHost.Mapping
 {
-    public class RepresentationProfile : Profile
+    public class PresentationProfile : Profile
     {
-        public RepresentationProfile()
+        public PresentationProfile()
         {
             CreateMap<SellerModel, SellerShortResponse>();
             CreateMap<SellerModel, SellerDetailedResponse>();

@@ -26,7 +26,7 @@ namespace AuctionTrading.WebHost.Controllers
         {
             var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(id, cancellationToken);
             if (auctionLot is null)
-                return NotFound(id);
+                return NotFound($"Auction lot with id:{id} not found");
             return Ok(mapper.Map<AuctionLotDetailedResponse>(auctionLot));
         }
 
@@ -38,7 +38,7 @@ namespace AuctionTrading.WebHost.Controllers
             var auctionLot = mapper.Map<CreateAuctionLotModel>(request);
             var isCreatedAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot, cancellationToken);
             if (!isCreatedAuctionLot)
-                return BadRequest();
+                return BadRequest("Auction lot can not be created");
             return Created("", mapper.Map<AuctionLotShortResponse>(auctionLot));
 
         }

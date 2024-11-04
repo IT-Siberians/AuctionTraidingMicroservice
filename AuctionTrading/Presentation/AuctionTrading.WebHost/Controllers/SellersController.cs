@@ -30,7 +30,7 @@ namespace AuctionTrading.WebHost.Controllers
         {
             var seller = await sellersApplicationService.GetSellerByIdAsync(id, cancellationToken);
             if (seller is null)
-                return NotFound(id);
+                return NotFound($"Seller with id:{id} not found");
             return Ok(mapper.Map<SellerDetailedResponse>(seller));
         }
 
@@ -40,7 +40,7 @@ namespace AuctionTrading.WebHost.Controllers
         {
             var seller = await sellersApplicationService.GetSellerByUsernameAsync(username, cancellationToken);
             if (seller is null)
-                return NotFound(username);
+                return NotFound($"Seller with username:{username} not found");
             return Ok(mapper.Map<SellerDetailedResponse>(seller));
         }
 
@@ -52,7 +52,7 @@ namespace AuctionTrading.WebHost.Controllers
             var seller = mapper.Map<CreateSellerModel>(request);
             var isCreatedSeller = await sellersApplicationService.CreateSellerAsync(seller, cancellationToken);
             if (!isCreatedSeller)
-                return BadRequest();
+                return BadRequest("Seller can not be created");
             return Created("", mapper.Map<SellerShortResponse>(seller));
 
         }
@@ -65,18 +65,18 @@ namespace AuctionTrading.WebHost.Controllers
         {
             var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
             if (auctionLot is null)
-                return NotFound(request.AuctionLotId);
+                return NotFound($"Auction lot with id:{request.AuctionLotId} not found");
 
             var seller = await sellersApplicationService.GetSellerByIdAsync(request.SellerId, cancellationToken);
             if (seller is null)
-                return NotFound(request.SellerId);
+                return NotFound($"Seller with id:{request.SellerId} not found");
 
             if (seller.AuctionedLots is null || seller.AuctionedLots.FirstOrDefault(l => l.Id == request.AuctionLotId) is null)
-                return BadRequest($"Seller has not cancel this auction lot with id {auctionLot.Id} ");
+                return BadRequest($"Lot with id: {request.AuctionLotId} is not owned by the seller with id: {request.SellerId}");
 
             return await sellingApplicationService.CancelAuctionLotAsync(auctionLot, cancellationToken) 
                 ? Created("", mapper.Map<AuctionLotShortResponse>(auctionLot))
-                : BadRequest($"Seller has not cancel this auction lot with id {auctionLot.Id} ");
+                : BadRequest($"Seller has not cancel this auction lot with id {request.AuctionLotId} ");
         }
     }
 }

@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Application.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Application.Services", "Application\AuctionTrading.Application.Services\AuctionTrading.Application.Services.csproj", "{FB1C0A69-DF96-4A15-9445-B3365903CB86}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validators", "Validators", "{27F3A428-7C05-4AEA-B77A-2A14710D2A87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Domain.Services", "Domain\AuctionTrading.Domain.Services\AuctionTrading.Domain.Services.csproj", "{FB503AD5-3A9F-4D09-BCED-D97D6F171DFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +78,10 @@ Global
 		{FB1C0A69-DF96-4A15-9445-B3365903CB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB1C0A69-DF96-4A15-9445-B3365903CB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB1C0A69-DF96-4A15-9445-B3365903CB86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB503AD5-3A9F-4D09-BCED-D97D6F171DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB503AD5-3A9F-4D09-BCED-D97D6F171DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB503AD5-3A9F-4D09-BCED-D97D6F171DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB503AD5-3A9F-4D09-BCED-D97D6F171DFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,7 +96,7 @@ Global
 		{3EFC2FF3-86F5-406C-A390-E89A9EF339DE} = {FEAA0A05-F1A5-4C51-9353-3F72F06CF385}
 		{5B50B1D3-1FBA-466A-A76C-5DEE838A20FE} = {9C8EDB21-57EE-4EEE-86B6-57917BBDFC95}
 		{FB1C0A69-DF96-4A15-9445-B3365903CB86} = {9C8EDB21-57EE-4EEE-86B6-57917BBDFC95}
-		{27F3A428-7C05-4AEA-B77A-2A14710D2A87} = {FEAA0A05-F1A5-4C51-9353-3F72F06CF385}
+		{FB503AD5-3A9F-4D09-BCED-D97D6F171DFA} = {6DED46C5-A48A-460E-AD08-5DDF42429487}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}

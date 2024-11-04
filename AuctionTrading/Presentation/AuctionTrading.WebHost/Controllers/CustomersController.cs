@@ -1,7 +1,6 @@
 ﻿using AuctionTrading.Application.Models.Bid;
 using AuctionTrading.Application.Models.Customer;
 using AuctionTrading.Application.Services.Abstractions;
-using AuctionTrading.Domain.ValueObjects;
 using AuctionTrading.WebHost.Requests.Bid;
 using AuctionTrading.WebHost.Requests.Customer;
 using AuctionTrading.WebHost.Responses.AuctionLot;
@@ -33,7 +32,7 @@ namespace AuctionTrading.WebHost.Controllers
         {
             var customer = await customersApplicationService.GetCustomerByIdAsync(id, cancellationToken);
             if (customer is null)
-                return NotFound(id);
+                return NotFound($"Customer with id:{id} not found");
             return Ok(mapper.Map<CustomerDetailedResponse>(customer));
         }
 
@@ -43,7 +42,7 @@ namespace AuctionTrading.WebHost.Controllers
         {
             var customer = await customersApplicationService.GetCustomerByUsernameAsync(username, cancellationToken);
             if (customer is null)
-                return NotFound(username);
+                return NotFound($"Customer with username:{username} not found");
             return Ok(mapper.Map<CustomerDetailedResponse>(customer));
         }
 
@@ -56,7 +55,7 @@ namespace AuctionTrading.WebHost.Controllers
 
             var isCreatedCustomer = await customersApplicationService.CreateCustomerAsync(customer, cancellationToken);
             if (!isCreatedCustomer)
-                return BadRequest();
+                return BadRequest("Customer can not be created");
 
             return Created("", mapper.Map<CustomerShortResponse>(customer));
         }
@@ -71,21 +70,19 @@ namespace AuctionTrading.WebHost.Controllers
             var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
 
             if (auctionLot is null)
-                return NotFound(request.AuctionLotId);
+                return NotFound($"Auction lot with id:{request.AuctionLotId} not found");
 
             if (customer is null)
-                return NotFound(request.CustomerId);
+                return NotFound($"Customer with id:{request.CustomerId} not found");
 
 
             if (auctionLot.SellerId == customer.Id)
-                return BadRequest($"the buyer cannot bid on his auction lot with id {auctionLot.Id}");
+                return BadRequest($"The buyer cannot bid on his auction lot with id {auctionLot.Id}");
 
             var bid = mapper.Map<CreateBidModel>(request);
             var bidStatus = await bidderApplicationService.MakeBidAsync(bid, cancellationToken);
             if (bidStatus != Common.Enums.BidStatus.Success)
                 return BadRequest($"An attempt to place a bet ended in failure. Status {bidStatus}");
-
-
 
             return Created("", mapper.Map<BidDetailedResponse>(auctionLot.LastBid));
 
