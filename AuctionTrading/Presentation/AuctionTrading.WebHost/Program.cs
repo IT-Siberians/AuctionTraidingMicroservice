@@ -80,7 +80,7 @@ namespace AuctionTrading.WebHost
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
             builder.Services.AddFluentValidationAutoValidation();
 
-
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 
@@ -92,6 +92,8 @@ namespace AuctionTrading.WebHost
             }
 
             //app.UseHttpsRedirection();
+
+            app.MapHealthChecks("health");
 
             app.UseAuthorization();
 

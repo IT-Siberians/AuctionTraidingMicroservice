@@ -1,0 +1,33 @@
+services:
+  backend:
+    container_name: auctiontradingwebhost_api
+    build:
+     context: .
+     dockerfile: Presentation/AuctionTrading.WebHost/Dockerfile
+    restart: always
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+    ports:
+      - "3040:8080"
+    depends_on:
+      - database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  database:
+    image: postgres:latest
+    container_name: local_pgdb_email
+    restart: always
+    env_file: ".env"
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  local_pgdata:
