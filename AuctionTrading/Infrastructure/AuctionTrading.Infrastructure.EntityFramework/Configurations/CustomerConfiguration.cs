@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using AuctionTrading.Domain.ValueObjects;
+using AuctionTrading.Domain.ValueObjects.Validators;
 
 namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
 {
@@ -14,7 +15,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Username)
                 .IsRequired()
                 .HasConversion(username => username.Value, str => new Username(str))
-                .HasMaxLength(30);
+                .HasMaxLength(UsernameValidator.MAX_LENGTH);
             builder.HasMany<AuctionLot>("_observableAuctionLots")
                 .WithMany();
             builder.Ignore(x => x.ObservableAuctionLots);

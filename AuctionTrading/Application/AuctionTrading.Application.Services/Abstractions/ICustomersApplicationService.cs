@@ -11,7 +11,7 @@ namespace AuctionTrading.Application.Services.Abstractions
 
         Task<IEnumerable<CustomerModel>> GetCustomersAsync(CancellationToken cancellationToken);
 
-        Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken);
+        Task<CustomerModel?> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken);
 
         Task<bool> UpdateCustomerAsync(CustomerModel customer, CancellationToken cancellationToken);
 

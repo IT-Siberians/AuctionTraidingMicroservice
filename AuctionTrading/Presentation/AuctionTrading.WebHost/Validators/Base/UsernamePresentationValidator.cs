@@ -8,8 +8,8 @@ namespace AuctionTrading.WebHost.Validators.Base
         public UsernamePresentationValidator()
         {
             RuleFor(request => request)
-                .NotEmpty()
                 .NotNull()
+                .NotEmpty()
                 .MinimumLength(UsernameValidator.MIN_LENGTH)
                 .MaximumLength(UsernameValidator.MAX_LENGTH);
         }

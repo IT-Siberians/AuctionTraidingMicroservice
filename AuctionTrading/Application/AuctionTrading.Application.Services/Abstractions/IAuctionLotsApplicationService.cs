@@ -1,4 +1,5 @@
 ﻿using AuctionTrading.Application.Models.AuctionLot;
+using System.Threading.Tasks;
 
 namespace AuctionTrading.Application.Services.Abstractions
 {
@@ -10,7 +11,7 @@ namespace AuctionTrading.Application.Services.Abstractions
 
         Task<IEnumerable<AuctionLotModel>> GetAuctionLotsByEndDateAsync(DateTime endDateUtc, CancellationToken cancellationToken);
 
-        Task<bool> CreateAuctionLotAsync(CreateAuctionLotModel auctionLotInformation, CancellationToken cancellationToken);
+        Task<AuctionLotModel?> CreateAuctionLotAsync(CreateAuctionLotModel auctionLotInformation, CancellationToken cancellationToken);
 
         Task<bool> UpdateAuctionLotAsync(AuctionLotModel auctionLot, CancellationToken cancellationToken);
 

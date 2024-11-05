@@ -1,4 +1,5 @@
-﻿using AuctionTrading.Application.Models.Seller;
+﻿using AuctionTrading.Application.Models.Customer;
+using AuctionTrading.Application.Models.Seller;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
@@ -24,13 +25,14 @@ namespace AuctionTrading.Application.Services
             var seller = await repository.GetSellerByUsernameAsync(username, cancellationToken);
             return seller is null ? null : mapper.Map<SellerModel>(seller);
         }
-        public async Task<bool> CreateSellerAsync(CreateSellerModel sellerInformation, CancellationToken cancellationToken = default)
+        public async Task<SellerModel?> CreateSellerAsync(CreateSellerModel sellerInformation, CancellationToken cancellationToken = default)
         {
             if (await repository.GetByIdAsync(sellerInformation.Id, cancellationToken) is not null)
-                return false;
+                return null;
 
             Seller seller = new(sellerInformation.Id, new Username(sellerInformation.Username));
-            return await repository.AddAsync(seller, cancellationToken);
+            var createdSeller = await repository.AddAsync(seller, cancellationToken);
+            return createdSeller is null ? null : mapper.Map<SellerModel>(createdSeller);
         }
 
         public async Task<bool> UpdateSellerAsync(SellerModel seller, CancellationToken cancellationToken = default)

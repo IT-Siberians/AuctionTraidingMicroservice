@@ -24,13 +24,14 @@ namespace AuctionTrading.Application.Services
             var customer = await repository.GetCustomerByUsernameAsync(username, cancellationToken);
             return customer is null ? null : mapper.Map<CustomerModel>(customer);
         }
-        public async Task<bool> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken = default)
+        public async Task<CustomerModel?> CreateCustomerAsync(CreateCustomerModel customerInformation, CancellationToken cancellationToken = default)
         {
             if (await repository.GetByIdAsync(customerInformation.Id, cancellationToken) is not null)
-                return false;
+                return null;
 
             Customer customer = new(customerInformation.Id, new Username(customerInformation.Username));
-            return await repository.AddAsync(customer, cancellationToken);
+            var createdCustomer = await repository.AddAsync(customer, cancellationToken);
+            return createdCustomer is null ? null : mapper.Map<CustomerModel>(createdCustomer);
         }
 
         public async Task<bool> UpdateCustomerAsync(CustomerModel customer, CancellationToken cancellationToken = default)

@@ -40,9 +40,7 @@ namespace AuctionTrading.Application.Services
                 var newBid = lot.LastBid;
                 var result = await bidsRepository.AddAsync(newBid, cancellationToken);
                 await lotsRepository.UpdateAsync(lot, cancellationToken);
-                if (result == true)
-                    return bidStatus;
-
+                return result is not null?bidStatus:BidStatus.FaultedIncorrectBid;
             }
 
             return bidStatus;

@@ -19,12 +19,12 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
         public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
             => await context.Set<TEntity>().FindAsync(id, cancellationToken);
 
-        public async Task<bool> AddAsync(TEntity entity, CancellationToken cancellationToken)
+        public async Task<TEntity?> AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             await context.Set<TEntity>().AddAsync(entity, cancellationToken);
-            return await context.SaveChangesAsync(cancellationToken) > 0;
+            return await context.SaveChangesAsync(cancellationToken) > 0 ? entity:null;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity, CancellationToken cancellationToken)

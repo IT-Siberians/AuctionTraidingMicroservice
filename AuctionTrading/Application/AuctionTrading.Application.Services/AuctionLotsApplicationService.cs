@@ -9,7 +9,7 @@ namespace AuctionTrading.Application.Services
     public class AuctionLotsApplicationService(IAuctionLotRepository lotRepository, ISellersRepository sellersRepository, IMapper mapper) : IAuctionLotsApplicationService
     {
         public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsAsync(CancellationToken cancellationToken = default)
-            => (await lotRepository.GetAllAsync(cancellationToken, true)).Where(l=>l.IsActive).Select(mapper.Map<AuctionLotModel>);
+            => (await lotRepository.GetAllAsync(cancellationToken, true)).Where(l => l.IsActive).Select(mapper.Map<AuctionLotModel>);
 
         public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsByEndDateAsync(DateTime endDateUtc, CancellationToken cancellationToken = default)
             => (await lotRepository.GetAllByEndDateAsync(endDateUtc, cancellationToken, true)).Select(mapper.Map<AuctionLotModel>);
@@ -21,14 +21,14 @@ namespace AuctionTrading.Application.Services
             return lot is null ? null : mapper.Map<AuctionLotModel>(lot);
         }
 
-        public async Task<bool> CreateAuctionLotAsync(CreateAuctionLotModel auctionLotInformation, CancellationToken cancellationToken = default)
+        public async Task<AuctionLotModel?> CreateAuctionLotAsync(CreateAuctionLotModel auctionLotInformation, CancellationToken cancellationToken = default)
         {
             var seller = await sellersRepository.GetByIdAsync(auctionLotInformation.SellerId, cancellationToken);
             if (seller is null)
-                return false;
+                return null;
 
             if (await lotRepository.GetByIdAsync(auctionLotInformation.Id, cancellationToken) is not null)
-                return false;
+                return null;
 
             AuctionLot lot = new(
                 auctionLotInformation.Id,
@@ -40,10 +40,8 @@ namespace AuctionTrading.Application.Services
                 auctionLotInformation.StartDate,
                 auctionLotInformation.EndDate,
                 seller);
-
-            var res = await sellersRepository.UpdateAsync(seller, cancellationToken); // не уверена, что эта строчка нужна!
-            
-            return await lotRepository.AddAsync(lot, cancellationToken);
+            var cteatedLot = await lotRepository.AddAsync(lot, cancellationToken);
+            return cteatedLot is null ? null : mapper.Map<AuctionLotModel>(cteatedLot);
         }
 
         public async Task<bool> UpdateAuctionLotAsync(AuctionLotModel auctionLot, CancellationToken cancellationToken = default)
@@ -56,9 +54,9 @@ namespace AuctionTrading.Application.Services
             return await lotRepository.UpdateAsync(entity, cancellationToken);
         }
 
-        public async Task<bool> FinalizeAuctionOfLotAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> FinalizeAuctionLotAsync(CancellationToken cancellationToken = default)
         {
-            var entities = await lotRepository.GetAllAsync(cancellationToken,true);
+            var entities = await lotRepository.GetAllAsync(cancellationToken, true);
             if (entities is null)
                 return false;
 

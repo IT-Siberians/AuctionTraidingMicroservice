@@ -10,7 +10,7 @@ namespace AuctionTrading.Application.Services.Abstractions
 
         Task<IEnumerable<SellerModel>> GetSellersAsync(CancellationToken cancellationToken);
 
-        Task<bool> CreateSellerAsync(CreateSellerModel sellerInformation, CancellationToken cancellationToken);
+        Task<SellerModel?> CreateSellerAsync(CreateSellerModel sellerInformation, CancellationToken cancellationToken);
 
         Task<bool> UpdateSellerAsync(SellerModel seller, CancellationToken cancellationToken);
 

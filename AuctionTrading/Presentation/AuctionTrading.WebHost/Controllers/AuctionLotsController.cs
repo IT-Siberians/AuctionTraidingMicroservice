@@ -22,6 +22,8 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuctionLotDetailedResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetAuctionLotById(Guid id, CancellationToken cancellationToken)
         {
             var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(id, cancellationToken);
@@ -31,16 +33,17 @@ namespace AuctionTrading.WebHost.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotDetailedResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotShortResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateAuctionLot(CreateAuctionLotRequest request, CancellationToken cancellationToken)
         {
             var auctionLot = mapper.Map<CreateAuctionLotModel>(request);
-            var isCreatedAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot, cancellationToken);
-            if (!isCreatedAuctionLot)
+            var createdAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot, cancellationToken);
+            if (createdAuctionLot is null)
                 return BadRequest("Auction lot can not be created");
-            return Created("", mapper.Map<AuctionLotShortResponse>(auctionLot));
 
+            var auctionLotResponse = mapper.Map<AuctionLotShortResponse>(createdAuctionLot);
+            return CreatedAtAction(nameof(GetAuctionLotById), new { auctionLotResponse.Id }, auctionLotResponse);
         }
     }
 }

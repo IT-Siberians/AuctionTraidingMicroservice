@@ -8,7 +8,7 @@ namespace AuctionTrading.Domain.Repositories.Abstractions
     {
         Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken, bool asNoTracking = false);
         Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken);
-        Task<bool> AddAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<TEntity?> AddAsync(TEntity entity, CancellationToken cancellationToken);
         Task<bool> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
         Task<bool> DeleteAsync(TEntity entity, CancellationToken cancellationToken);
         Task<bool> DeleteAsync(TId id, CancellationToken cancellationToken);

@@ -8,8 +8,8 @@ namespace AuctionTrading.WebHost.Validators.Base
         public DescriptionPresentationValidator()
         {
             RuleFor(request => request)
-                .NotEmpty()
-                .NotNull();
+                .NotNull()
+                .NotEmpty();
         }
     }
 }

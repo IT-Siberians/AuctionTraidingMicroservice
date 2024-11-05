@@ -28,6 +28,8 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDetailedResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetCustomerById(Guid id, CancellationToken cancellationToken)
         {
             var customer = await customersApplicationService.GetCustomerByIdAsync(id, cancellationToken);
@@ -38,6 +40,8 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDetailedResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetCustomerByUsernameId(string username, CancellationToken cancellationToken)
         {
             var customer = await customersApplicationService.GetCustomerByUsernameAsync(username, cancellationToken);
@@ -48,16 +52,18 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerShortResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request, CancellationToken cancellationToken)
         {
             var customer = mapper.Map<CreateCustomerModel>(request);
 
-            var isCreatedCustomer = await customersApplicationService.CreateCustomerAsync(customer, cancellationToken);
-            if (!isCreatedCustomer)
+            var createdCustomer = await customersApplicationService.CreateCustomerAsync(customer, cancellationToken);
+            if (createdCustomer is null)
                 return BadRequest("Customer can not be created");
 
-            return Created("", mapper.Map<CustomerShortResponse>(customer));
+            var customerResponse = mapper.Map<CustomerShortResponse>(createdCustomer);
+            return CreatedAtAction(nameof(GetCustomerById), new { customerResponse.Id }, customerResponse);
         }
 
         [HttpPost("Add bid")]

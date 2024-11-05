@@ -3,6 +3,7 @@ using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.WebHost.Requests.AuctionLot;
 using AuctionTrading.WebHost.Requests.Seller;
 using AuctionTrading.WebHost.Responses.AuctionLot;
+using AuctionTrading.WebHost.Responses.Customer;
 using AuctionTrading.WebHost.Responses.Seller;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SellerDetailedResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Guid))]
         public async Task<IActionResult> GetSellerById(Guid id, CancellationToken cancellationToken)
         {
             var seller = await sellersApplicationService.GetSellerByIdAsync(id, cancellationToken);
@@ -36,6 +39,8 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpGet("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SellerDetailedResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Guid))]
         public async Task<IActionResult> GetSellerByUsernameId(string username, CancellationToken cancellationToken)
         {
             var seller = await sellersApplicationService.GetSellerByUsernameAsync(username, cancellationToken);
@@ -46,15 +51,17 @@ namespace AuctionTrading.WebHost.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SellerShortResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Guid))]
         public async Task<IActionResult> CreateSeller(CreateSellerRequest request, CancellationToken cancellationToken)
         {
             var seller = mapper.Map<CreateSellerModel>(request);
-            var isCreatedSeller = await sellersApplicationService.CreateSellerAsync(seller, cancellationToken);
-            if (!isCreatedSeller)
+            var createdSeller = await sellersApplicationService.CreateSellerAsync(seller, cancellationToken);
+            if (createdSeller is null)
                 return BadRequest("Seller can not be created");
-            return Created("", mapper.Map<SellerShortResponse>(seller));
 
+            var sellerResponse = mapper.Map<CustomerShortResponse>(createdSeller);
+            return CreatedAtAction(nameof(GetSellerById), new { sellerResponse.Id }, sellerResponse);
         }
 
         [HttpPost("cancel auction lot")]
@@ -74,7 +81,7 @@ namespace AuctionTrading.WebHost.Controllers
             if (seller.AuctionedLots is null || seller.AuctionedLots.FirstOrDefault(l => l.Id == request.AuctionLotId) is null)
                 return BadRequest($"Lot with id: {request.AuctionLotId} is not owned by the seller with id: {request.SellerId}");
 
-            return await sellingApplicationService.CancelAuctionLotAsync(auctionLot, cancellationToken) 
+            return await sellingApplicationService.CancelAuctionLotAsync(auctionLot, cancellationToken)
                 ? Created("", mapper.Map<AuctionLotShortResponse>(auctionLot))
                 : BadRequest($"Seller has not cancel this auction lot with id {request.AuctionLotId} ");
         }
