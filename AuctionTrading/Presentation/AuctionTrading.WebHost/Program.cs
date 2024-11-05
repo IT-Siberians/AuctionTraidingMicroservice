@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 namespace AuctionTrading.WebHost
 {
@@ -80,7 +82,10 @@ namespace AuctionTrading.WebHost
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
             builder.Services.AddFluentValidationAutoValidation();
 
-            builder.Services.AddHealthChecks();
+            builder.Services.AddHealthChecks()
+                .AddNpgSql(connectionString)
+                //.AddRabbitMQ(rabbitConnectionString: rmqConnectionString)
+                .AddDbContextCheck<ApplicationDbContext>();
 
             var app = builder.Build();
 
@@ -93,7 +98,10 @@ namespace AuctionTrading.WebHost
 
             //app.UseHttpsRedirection();
 
-            app.MapHealthChecks("health");
+            app.MapHealthChecks("health", new HealthCheckOptions
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 
             app.UseAuthorization();
 
