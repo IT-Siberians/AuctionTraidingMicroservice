@@ -1,0 +1,8 @@
+﻿namespace AuctionTrading.Common.Infrastructure.Queues.Abstraction
+{
+    public interface IQueue<T>
+    {
+        public T QueueName { get; }
+        public MessageType Type { get; }
+    }
+}

@@ -27,6 +27,7 @@
     <ProjectReference Include="..\..\Application\AuctionTrading.Application.Services\AuctionTrading.Application.Services.csproj" />
     <ProjectReference Include="..\..\Domain\AuctionTrading.Domain.Repositories.Abstractions\AuctionTrading.Domain.Repositories.Abstractions.csproj" />
     <ProjectReference Include="..\..\Infrastructure\AuctionTrading.Infrastructure.EntityFramework\AuctionTrading.Infrastructure.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\AuctionTrading.Infrastructure.RabbitMQ\AuctionTrading.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Repositories.Implementations\AuctionTrading.Infrastructure.Repositories.Implementations.csproj" />
   </ItemGroup>
 

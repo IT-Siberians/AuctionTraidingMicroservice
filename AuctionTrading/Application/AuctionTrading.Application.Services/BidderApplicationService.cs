@@ -6,7 +6,9 @@ using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Domain.ValueObjects;
 using AutoMapper;
+using MassTransit;
 using Microsoft.VisualBasic;
+using Otus.QueueDto.Lot;
 using System.Net.Http.Headers;
 
 namespace AuctionTrading.Application.Services
@@ -14,7 +16,8 @@ namespace AuctionTrading.Application.Services
     public class BidderApplicationService(
         ICustomersRepository customersRepository,
         IAuctionLotRepository lotsRepository,
-        IRepository<Bid, Guid> bidsRepository)
+        IRepository<Bid, Guid> bidsRepository,
+        IBusControl busControl)
         : IBidderApplicationService
     {
         public async Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken = default)
@@ -33,6 +36,9 @@ namespace AuctionTrading.Application.Services
             if (customer.Id == lot.Seller.Id)
                 return BidStatus.FaultedCreateBidOnYourLot;
 
+            bool isFirstBid = lot.LastBid is null;
+            Customer? previousCustomer = isFirstBid ? null : lot.LastBid!.Customer;
+
             var bidStatus = customer.TryMakeBid(lot, new(bidInformation.Amount));
 
             if (bidStatus == BidStatus.Success)
@@ -40,7 +46,30 @@ namespace AuctionTrading.Application.Services
                 var newBid = lot.LastBid;
                 var result = await bidsRepository.AddAsync(newBid, cancellationToken);
                 await lotsRepository.UpdateAsync(lot, cancellationToken);
-                return result is not null?bidStatus:BidStatus.FaultedIncorrectBid;
+                if (result is not null)
+                {
+                    await busControl.Publish(new BidPerLotEvent
+                    (
+                        customer.Id,
+                        previousCustomer is null ? Guid.Empty : previousCustomer.Id,
+                        lot.Id,
+                        lot.Title.Value,
+                        Convert.ToDouble(lot.LastBid!.Amount.Value)
+                    )
+                    , cancellationToken);
+                    if (lot.IsCompleted)
+                        await busControl.Publish(new WonLotEvent
+                            (
+                            customer.Id,
+                            lot.Id,
+                            lot.Title.Value,
+                            Convert.ToDouble(lot.LastBid!.Amount.Value))
+                            , cancellationToken);
+
+                    return bidStatus;
+                }
+
+                return BidStatus.FaultedIncorrectBid;
             }
 
             return bidStatus;

@@ -42,6 +42,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.HasOne(x => x.Seller).WithMany("_auctionLots");
             builder.HasMany<Bid>("_bids").WithOne(x => x.AuctionLot);
             builder.Ignore(x => x.IsActive);
+            builder.Ignore(x => x.IsCompleted);
             builder.Ignore(x => x.LastBid);
         }
     }

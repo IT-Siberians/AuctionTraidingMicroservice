@@ -3,6 +3,7 @@ using AuctionTrading.Domain.Entities.Base;
 using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Exceptions;
 using AuctionTrading.Domain.ValueObjects;
+using System;
 
 namespace AuctionTrading.Domain.Entities
 {
@@ -71,6 +72,11 @@ namespace AuctionTrading.Domain.Entities
         /// Returns a value indicating whether the lot is currently being bid on.
         /// </summary>
         public bool IsActive => Status == LotStatus.Active;
+
+        /// <summary>
+        /// Returns a value indicating whether the auction for the lot has ended.
+        /// </summary>
+        public bool IsCompleted => Status == LotStatus.Completed;
 
         /// <summary>
         /// Get the last bid of the auction lot.

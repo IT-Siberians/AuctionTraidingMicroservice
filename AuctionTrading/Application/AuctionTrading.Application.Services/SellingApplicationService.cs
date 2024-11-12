@@ -4,10 +4,11 @@ using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AutoMapper;
+using MassTransit;
 
 namespace AuctionTrading.Application.Services
 {
-    public class SellingApplicationService(ISellersRepository sellersRepository, IAuctionLotRepository lotsRepository)
+    public class SellingApplicationService(ISellersRepository sellersRepository, IAuctionLotRepository lotsRepository, IBusControl busControl)
         : ISellingApplicationService
     {
         public async Task<bool> CancelAuctionLotAsync(AuctionLotModel information, CancellationToken cancellationToken = default)
@@ -20,7 +21,17 @@ namespace AuctionTrading.Application.Services
             if (lot is null)
                 return false;
 
-            return !seller.CancelLot(lot) ? false : await sellersRepository.UpdateAsync(seller, cancellationToken);
+            if (!seller.CancelLot(lot))
+                return false;
+
+            if (!await sellersRepository.UpdateAsync(seller, cancellationToken))
+                return false;
+
+            //await _busControl.Publish(new MessageDto
+            //{
+            //    Content = $"Lesson {createdLesson.Id} with subject {createdLesson.Subject} is added"
+            //});
+            return true;
         }
     }
 }

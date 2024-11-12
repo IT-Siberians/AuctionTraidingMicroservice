@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using MassTransit;
+using AuctionTrading.Infrastructure.RabbitMQ;
 
 namespace AuctionTrading.WebHost
 {
@@ -26,6 +28,13 @@ namespace AuctionTrading.WebHost
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new InvalidOperationException("Connection string for AuctionTradingMicroserviceDbContext is not configured.");
+            }
+
+            var rmqConnectionString = builder.Configuration.GetConnectionString(nameof(RabbitMqConfig));
+
+            if (string.IsNullOrEmpty(rmqConnectionString))
+            {
+                throw new InvalidOperationException("Connection string for RabbitMqConfig is not configured.");
             }
 
             builder.Services.AddNpgsql<ApplicationDbContext>(connectionString, options =>
