@@ -7,17 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MassTransit" Version="8.3.1" />
     <PackageReference Include="Otus.QueueDto" Version="1.0.5.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\AuctionTrading.Common.Infrastructure.Queues.Abstraction\AuctionTrading.Common.Infrastructure.Queues.Abstraction.csproj" />
-    <ProjectReference Include="..\..\Common\AuctionTrading.Common\AuctionTrading.Common.csproj" />
-    <ProjectReference Include="..\..\Domain\AuctionTrading.Domain.Repositories.Abstractions\AuctionTrading.Domain.Repositories.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Domain\AuctionTrading.Domain\AuctionTrading.Domain.csproj" />
-    <ProjectReference Include="..\AuctionTrading.Application.Models\AuctionTrading.Application.Models.csproj" />
+    <ProjectReference Include="..\AuctionTrading.Infrastructure.MediatR\AuctionTrading.Infrastructure.MediatR.csproj" />
   </ItemGroup>
 
 </Project>

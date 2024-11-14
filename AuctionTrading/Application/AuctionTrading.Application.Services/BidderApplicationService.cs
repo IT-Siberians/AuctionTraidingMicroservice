@@ -2,6 +2,7 @@
 using AuctionTrading.Application.Models.Seller;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.Common.Enums;
+using AuctionTrading.Common.Infrastructure.Queues.Abstraction;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Domain.ValueObjects;
@@ -17,7 +18,8 @@ namespace AuctionTrading.Application.Services
         ICustomersRepository customersRepository,
         IAuctionLotRepository lotsRepository,
         IRepository<Bid, Guid> bidsRepository,
-        IBusControl busControl)
+        IProducerService<BidPerLotEvent> lotBidProducer,
+        IProducerService<WonLotEvent> lotPurchasedProducer)
         : IBidderApplicationService
     {
         public async Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken = default)
@@ -45,26 +47,32 @@ namespace AuctionTrading.Application.Services
             {
                 var newBid = lot.LastBid;
                 var result = await bidsRepository.AddAsync(newBid, cancellationToken);
-                await lotsRepository.UpdateAsync(lot, cancellationToken);
                 if (result is not null)
                 {
-                    await busControl.Publish(new BidPerLotEvent
+                    await lotBidProducer.Send(new BidPerLotEvent
                     (
                         customer.Id,
                         previousCustomer is null ? Guid.Empty : previousCustomer.Id,
+                        lot.Seller.Id,
                         lot.Id,
                         lot.Title.Value,
-                        Convert.ToDouble(lot.LastBid!.Amount.Value)
-                    )
-                    , cancellationToken);
+                        lot.LastBid!.Amount.Value
+                    ));
                     if (lot.IsCompleted)
-                        await busControl.Publish(new WonLotEvent
+                        await lotPurchasedProducer.Send(new WonLotEvent
                             (
                             customer.Id,
+                            lot.Seller.Id,
                             lot.Id,
+                            lot.LastBid!.Amount.Value,
                             lot.Title.Value,
-                            Convert.ToDouble(lot.LastBid!.Amount.Value))
-                            , cancellationToken);
+                            lot.Description.Value,
+                            lot.StartPrice.Value,
+                            lot.BidIncrement.Value,
+                            lot.RepurchasePrice.Value,
+                            lot.StartDate,
+                            lot.EndDate
+                            ));
 
                     return bidStatus;
                 }

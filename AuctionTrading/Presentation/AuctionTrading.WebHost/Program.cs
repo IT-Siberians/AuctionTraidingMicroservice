@@ -10,9 +10,20 @@ using GradeBookMicroservice.WebHost.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
+using AuctionTrading.Infrastructure.Queues.Implementations.Producers;
 using FluentValidation;
 using MassTransit;
 using AuctionTrading.Infrastructure.RabbitMQ;
+using AuctionTrading.Common.Infrastructure.Queues.Abstraction;
+using Otus.QueueDto.Lot;
+using MediatR;
+using Otus.QueueDto.Notification;
+using System.Reflection;
+using Otus.QueueDto.User;
+using AuctionTrading.Infrastructure.MediatR.Handlers;
+using AuctionTrading.Infrastructure.MediatR.Commands;
+using AuctionTrading.Infrastructure.Queues.Implementations.Consumers;
+using AuctionTrading.Infrastructure.MediatR.Mapper;
 
 namespace AuctionTrading.WebHost
 {
@@ -64,6 +75,9 @@ namespace AuctionTrading.WebHost
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.Configure<RabbitMqConfig>(builder.Configuration.GetSection(nameof(RabbitMqConfig)));
+
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IRepository<Bid, Guid>, EfRepository<Bid, Guid>>();
 
@@ -78,7 +92,42 @@ namespace AuctionTrading.WebHost
             builder.Services.AddScoped<ICustomersApplicationService, CustomersApplicationService>();
             builder.Services.AddScoped<IBidderApplicationService, BidderApplicationService>();
 
-            builder.Services.AddAutoMapper(typeof(PresentationProfile), typeof(ApplicationProfile));
+            builder.Services.AddTransient<IProducerService<BidPerLotEvent>, Producer<BidPerLotEvent>>();
+            builder.Services.AddTransient<IProducerService<WonLotEvent>, Producer<WonLotEvent>>();
+
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+            builder.Services.AddTransient<IRequestHandler<CreateSellerCommand<CreateUserEvent>, bool>, CreateSellerHandler>();
+            builder.Services.AddTransient<IRequestHandler<CreateCustomerCommand<CreateUserEvent>, bool>, CreateCustomerHandler>();
+
+
+            builder.Services.AddMassTransit(x =>
+            {
+                // x.AddConsumers(typeof(ConfirmationEmailConsumer).Assembly);
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri(rmqConnectionString));
+                    cfg.ReceiveEndpoint($"{nameof(CreateUserEvent)}.Notify", e =>
+                    {
+                        e.ConfigureConsumer<CreateUserConsumer>(context);
+                    });
+
+
+                    cfg.Host(new Uri(rmqConnectionString));
+
+
+
+                    cfg.ConfigureEndpoints(context);
+                    cfg.UseMessageRetry(r =>
+                    {
+                        r.Interval(3, TimeSpan.FromSeconds(10));
+                    });
+                });
+            });
+
+
+            builder.Services.AddAutoMapper(typeof(QueueProfile), typeof(PresentationProfile), typeof(ApplicationProfile));
 
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options =>

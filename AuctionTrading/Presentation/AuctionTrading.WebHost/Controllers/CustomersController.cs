@@ -89,7 +89,8 @@ namespace AuctionTrading.WebHost.Controllers
             var bidStatus = await bidderApplicationService.MakeBidAsync(bid, cancellationToken);
             if (bidStatus != Common.Enums.BidStatus.Success)
                 return BadRequest($"An attempt to place a bet ended in failure. Status {bidStatus}");
-
+            
+            auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
             return Created("", mapper.Map<BidDetailedResponse>(auctionLot.LastBid));
 
         }
