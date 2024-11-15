@@ -10,7 +10,7 @@ namespace AuctionTrading.Infrastructure.Queues.Implementations.Consumers
     {
         public async Task Consume(ConsumeContext<CreateUserEvent> context)
         {
-            //var result = await mediator.Send(new CreateSellerCommand<CreateUserEvent>(context.Message));
+            await mediator.Send(new CreateSellerCommand<CreateUserEvent>(context.Message));
 
             //if (!result)
             //{

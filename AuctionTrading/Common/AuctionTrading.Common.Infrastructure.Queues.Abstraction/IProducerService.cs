@@ -2,6 +2,6 @@
 {
     public interface IProducerService<TModelEvent>
     {
-        Task Send(TModelEvent message);
+        void Send(TModelEvent message);
     }
 }

@@ -17,7 +17,6 @@ using AuctionTrading.Infrastructure.RabbitMQ;
 using AuctionTrading.Common.Infrastructure.Queues.Abstraction;
 using Otus.QueueDto.Lot;
 using MediatR;
-using Otus.QueueDto.Notification;
 using System.Reflection;
 using Otus.QueueDto.User;
 using AuctionTrading.Infrastructure.MediatR.Handlers;
@@ -34,9 +33,9 @@ namespace AuctionTrading.WebHost
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString(nameof(ApplicationDbContext));
+            var dbConnectionString = builder.Configuration.GetConnectionString(nameof(ApplicationDbContext));
 
-            if (string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(dbConnectionString))
             {
                 throw new InvalidOperationException("Connection string for AuctionTradingMicroserviceDbContext is not configured.");
             }
@@ -48,7 +47,7 @@ namespace AuctionTrading.WebHost
                 throw new InvalidOperationException("Connection string for RabbitMqConfig is not configured.");
             }
 
-            builder.Services.AddNpgsql<ApplicationDbContext>(connectionString, options =>
+            builder.Services.AddNpgsql<ApplicationDbContext>(dbConnectionString, options =>
             {
                 options.MigrationsAssembly("AuctionTrading.Infrastructure.EntityFramework");
 
@@ -68,8 +67,11 @@ namespace AuctionTrading.WebHost
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options =>
                 {
-                    options.UseNpgsql(connectionString);
+                    options.UseNpgsql(dbConnectionString);
                 });
+
+
+            builder.Services.AddAutoMapper(typeof(QueueProfile), typeof(PresentationProfile), typeof(ApplicationProfile));
 
 
             builder.Services.AddControllers();
@@ -100,24 +102,22 @@ namespace AuctionTrading.WebHost
             builder.Services.AddTransient<IRequestHandler<CreateSellerCommand<CreateUserEvent>, bool>, CreateSellerHandler>();
             builder.Services.AddTransient<IRequestHandler<CreateCustomerCommand<CreateUserEvent>, bool>, CreateCustomerHandler>();
 
+            builder.Services.AddHealthChecks()
+                            .AddNpgSql(dbConnectionString)
+                            .AddRabbitMQ(rabbitConnectionString: rmqConnectionString)
+                            .AddDbContextCheck<ApplicationDbContext>();
 
             builder.Services.AddMassTransit(x =>
             {
-                // x.AddConsumers(typeof(ConfirmationEmailConsumer).Assembly);
+                x.AddConsumer<CreateUserConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(new Uri(rmqConnectionString));
-                    cfg.ReceiveEndpoint($"{nameof(CreateUserEvent)}.Notify", e =>
+                    cfg.ReceiveEndpoint($"{nameof(CreateUserEvent)}.AuctionTrading", e =>
                     {
                         e.ConfigureConsumer<CreateUserConsumer>(context);
                     });
-
-
-                    cfg.Host(new Uri(rmqConnectionString));
-
-
-
                     cfg.ConfigureEndpoints(context);
                     cfg.UseMessageRetry(r =>
                     {
@@ -127,12 +127,12 @@ namespace AuctionTrading.WebHost
             });
 
 
-            builder.Services.AddAutoMapper(typeof(QueueProfile), typeof(PresentationProfile), typeof(ApplicationProfile));
+
 
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options =>
                 {
-                    options.UseNpgsql(connectionString);
+                    options.UseNpgsql(dbConnectionString);
                 });
 
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();

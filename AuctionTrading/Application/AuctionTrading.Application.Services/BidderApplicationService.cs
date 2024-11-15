@@ -49,7 +49,7 @@ namespace AuctionTrading.Application.Services
                 var result = await bidsRepository.AddAsync(newBid, cancellationToken);
                 if (result is not null)
                 {
-                    await lotBidProducer.Send(new BidPerLotEvent
+                    lotBidProducer.Send(new BidPerLotEvent
                     (
                         customer.Id,
                         previousCustomer is null ? Guid.Empty : previousCustomer.Id,
@@ -59,7 +59,7 @@ namespace AuctionTrading.Application.Services
                         lot.LastBid!.Amount.Value
                     ));
                     if (lot.IsCompleted)
-                        await lotPurchasedProducer.Send(new WonLotEvent
+                        lotPurchasedProducer.Send(new WonLotEvent
                             (
                             customer.Id,
                             lot.Seller.Id,

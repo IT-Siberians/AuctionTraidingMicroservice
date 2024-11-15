@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace AuctionTrading.Infrastructure.MediatR.Mapper
 {
-    public class QueueProfile:Profile
+    public class QueueProfile : Profile
     {
         public QueueProfile()
         {
-            CreateMap<CreateSellerModel, CreateUserEvent>()
-        .ReverseMap();
-            CreateMap<CreateCustomerModel, CreateUserEvent>()
-.ReverseMap();
+            CreateMap<CreateUserEvent, CreateSellerModel>();
+            CreateMap<CreateUserEvent, CreateCustomerModel>();
         }
     }
 }
