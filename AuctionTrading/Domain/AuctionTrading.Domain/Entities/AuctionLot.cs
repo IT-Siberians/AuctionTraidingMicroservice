@@ -182,8 +182,8 @@ namespace AuctionTrading.Domain.Entities
 
             if (!(RepurchasePrice is not null
                 && LastBid is not null
-                && LastBid.Amount == RepurchasePrice
-                || EndDate == DateTime.UtcNow))
+                && LastBid.Amount >= RepurchasePrice
+                || EndDate <= DateTime.UtcNow))
                 return false;
 
             Status = LotStatus.Completed;
