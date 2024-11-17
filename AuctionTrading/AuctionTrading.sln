@@ -38,11 +38,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Common", "Common\AuctionTrading.Common\AuctionTrading.Common.csproj", "{2FF617F5-6177-46A3-A98C-2EF43CB9FFA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Common.Infrastructure.Queues.Abstraction", "Common\AuctionTrading.Common.Infrastructure.Queues.Abstraction\AuctionTrading.Common.Infrastructure.Queues.Abstraction.csproj", "{A31F94D5-F297-40A2-AAD6-974E1A119AA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Common.Infrastructure.Queues.Abstraction", "Common\AuctionTrading.Common.Infrastructure.Queues.Abstraction\AuctionTrading.Common.Infrastructure.Queues.Abstraction.csproj", "{A31F94D5-F297-40A2-AAD6-974E1A119AA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Infrastructure.Queues.Implementations", "Infrastructure\AuctionTrading.Infrastructure.Queues.Implementations\AuctionTrading.Infrastructure.Queues.Implementations.csproj", "{9001813F-D751-47D5-A34E-F64E98FA2076}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Infrastructure.Queues.Implementations", "Infrastructure\AuctionTrading.Infrastructure.Queues.Implementations\AuctionTrading.Infrastructure.Queues.Implementations.csproj", "{9001813F-D751-47D5-A34E-F64E98FA2076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.Infrastructure.MediatR", "Infrastructure\AuctionTrading.Infrastructure.MediatR\AuctionTrading.Infrastructure.MediatR.csproj", "{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Infrastructure.MediatR", "Infrastructure\AuctionTrading.Infrastructure.MediatR\AuctionTrading.Infrastructure.MediatR.csproj", "{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.GrpcService", "Presentation\AuctionTrading.GrpcService\AuctionTrading.GrpcService.csproj", "{070AFC83-DD32-45D4-8A15-7657E60EFE96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,6 +108,10 @@ Global
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{070AFC83-DD32-45D4-8A15-7657E60EFE96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{070AFC83-DD32-45D4-8A15-7657E60EFE96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{070AFC83-DD32-45D4-8A15-7657E60EFE96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{070AFC83-DD32-45D4-8A15-7657E60EFE96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{A31F94D5-F297-40A2-AAD6-974E1A119AA6} = {C01A6B14-E48B-446D-8632-2E87DF68DC5B}
 		{9001813F-D751-47D5-A34E-F64E98FA2076} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
+		{070AFC83-DD32-45D4-8A15-7657E60EFE96} = {FEAA0A05-F1A5-4C51-9353-3F72F06CF385}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}
