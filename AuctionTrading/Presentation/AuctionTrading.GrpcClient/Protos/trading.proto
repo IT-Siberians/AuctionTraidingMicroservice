@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package AuctionTrading;
+
+option csharp_namespace = "AuctionTrading.GrpcApi";
+
+service Trading {
+    rpc PayForLot(PayForLotRequestGrpc) returns (BaseResponseGrpc);
+    rpc RealeaseMoney(RealeaseMoneyRequestGrpc) returns (BaseResponseGrpc);
+    rpc ReserveMoney(ReserveMoneyRequestGrpc) returns (BaseResponseGrpc);
+}
+
+message PayForLotRequestGrpc {
+    string BuyerId = 1;
+    string SellerId = 2;
+    string LotId = 3;
+    double HammerPrice = 4;
+}
+
+message RealeaseMoneyRequestGrpc {
+    string BuyerId = 1;
+    string LotId = 2;
+    double Price = 3;
+};
+
+message ReserveMoneyRequestGrpc {
+    string BuyerId = 1;
+    double Price = 2;
+    LotInfoModelGrpc Lot = 3;
+}
+
+message LotInfoModelGrpc {
+    string Id = 1;
+    string Title = 2;
+    string Description = 3;
+}
+
+message BaseResponseGrpc {
+	bool IsError = 1;
+	string Message = 2;
+}

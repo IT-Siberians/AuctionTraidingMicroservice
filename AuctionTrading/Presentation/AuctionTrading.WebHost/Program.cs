@@ -143,6 +143,11 @@ namespace AuctionTrading.WebHost
             // Add services to the container.
             builder.Services.AddGrpc();
 
+            builder.Services.AddGrpcClient<Trading.TradingClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:5001");
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
