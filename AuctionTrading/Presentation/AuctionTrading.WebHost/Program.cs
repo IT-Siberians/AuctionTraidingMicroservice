@@ -23,6 +23,7 @@ using AuctionTrading.Infrastructure.MediatR.Handlers;
 using AuctionTrading.Infrastructure.MediatR.Commands;
 using AuctionTrading.Infrastructure.Queues.Implementations.Consumers;
 using AuctionTrading.Infrastructure.MediatR.Mapper;
+using AuctionTrading.GrpcApi;
 
 namespace AuctionTrading.WebHost
 {
@@ -145,7 +146,7 @@ namespace AuctionTrading.WebHost
 
             builder.Services.AddGrpcClient<Trading.TradingClient>(o =>
             {
-                o.Address = new Uri("https://localhost:5001");
+                o.Address = new Uri("https://localhost:7142");
             });
 
             var app = builder.Build();

@@ -11,8 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Protos\tra
-				  ding.proto" GrpcServices="Server" />
+		<Protobuf Include="Protos\trading.proto" GrpcServices="Client" />
 	</ItemGroup>
 
 </Project>

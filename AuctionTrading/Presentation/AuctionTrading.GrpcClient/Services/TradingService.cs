@@ -1,22 +1,31 @@
+using AuctionTrading.GrpcApi;
 using AuctionTrading.GrpcClient;
 using Grpc.Core;
 
 namespace AuctionTrading.GrpcClient.Services
 {
-    public class GreeterService : Greeter.GreeterBase
+    public class TradingService
     {
-        private readonly ILogger<GreeterService> _logger;
-        public GreeterService(ILogger<GreeterService> logger)
+        private readonly Trading.TradingClient _client;
+
+        public TradingService(Trading.TradingClient client)
         {
-            _logger = logger;
+            _client = client;
         }
 
-        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+        public async Task<BaseResponseGrpc> PayForLotAsync(PayForLotRequestGrpc request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new HelloReply
-            {
-                Message = "Hello " + request.Name
-            });
+            return await _client.PayForLotAsync(request, null, null, cancellationToken); 
+        }
+
+        public async Task<BaseResponseGrpc> RealeaseMoneyAsync(RealeaseMoneyRequestGrpc request, CancellationToken cancellationToken)
+        {
+            return await _client.RealeaseMoneyAsync(request, null, null, cancellationToken);
+        }
+
+        public async Task<BaseResponseGrpc> ReserveMoney(ReserveMoneyRequestGrpc request, CancellationToken cancellationToken)
+        {
+            return await _client.ReserveMoneyAsync(request, null, null, cancellationToken);
         }
     }
 }
