@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionTrading.Infrastructure.MediatR", "Infrastructure\AuctionTrading.Infrastructure.MediatR\AuctionTrading.Infrastructure.MediatR.csproj", "{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.GrpcClient", "Presentation\AuctionTrading.GrpcClient\AuctionTrading.GrpcClient.csproj", "{E2C31995-9F5B-4863-BDCA-052760D8F156}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionTrading.GrpcClient", "Presentation\AuctionTrading.GrpcClient\AuctionTrading.GrpcClient.csproj", "{3B935E5F-6DA9-4195-B008-E1F609246697}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,10 +108,10 @@ Global
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2C31995-9F5B-4863-BDCA-052760D8F156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2C31995-9F5B-4863-BDCA-052760D8F156}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2C31995-9F5B-4863-BDCA-052760D8F156}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2C31995-9F5B-4863-BDCA-052760D8F156}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B935E5F-6DA9-4195-B008-E1F609246697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B935E5F-6DA9-4195-B008-E1F609246697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B935E5F-6DA9-4195-B008-E1F609246697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B935E5F-6DA9-4195-B008-E1F609246697}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,7 +131,7 @@ Global
 		{A31F94D5-F297-40A2-AAD6-974E1A119AA6} = {C01A6B14-E48B-446D-8632-2E87DF68DC5B}
 		{9001813F-D751-47D5-A34E-F64E98FA2076} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
 		{5FF07F7E-D5D6-4E7E-B40E-238290343EAF} = {4B500E4D-7F20-4DD2-B0EF-68D3670386C5}
-		{E2C31995-9F5B-4863-BDCA-052760D8F156} = {FEAA0A05-F1A5-4C51-9353-3F72F06CF385}
+		{3B935E5F-6DA9-4195-B008-E1F609246697} = {FEAA0A05-F1A5-4C51-9353-3F72F06CF385}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D74A14A-E3BE-45C4-A79F-EDD2F33B6591}

@@ -23,7 +23,8 @@ using AuctionTrading.Infrastructure.MediatR.Handlers;
 using AuctionTrading.Infrastructure.MediatR.Commands;
 using AuctionTrading.Infrastructure.Queues.Implementations.Consumers;
 using AuctionTrading.Infrastructure.MediatR.Mapper;
-using AuctionTrading.GrpcApi;
+using AuctionTrading.GrpcClient;
+using AuctionGrpcClient;
 
 namespace AuctionTrading.WebHost
 {
@@ -80,8 +81,12 @@ namespace AuctionTrading.WebHost
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.Configure<RabbitMqConfig>(builder.Configuration.GetSection(nameof(RabbitMqConfig)));
-
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<ITradingClient, TradingClient>();
+            builder.Services.AddScoped<Trading.TradingClient>();
+
+
             builder.Services.AddScoped<IRepository<Bid, Guid>, EfRepository<Bid, Guid>>();
 
             builder.Services.AddScoped<IAuctionLotRepository, EfAuctionLotRepository>();
@@ -158,6 +163,7 @@ namespace AuctionTrading.WebHost
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
+
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

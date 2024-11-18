@@ -1,4 +1,5 @@
-﻿using AuctionTrading.Application.Models.Bid;
+﻿using AuctionGrpcClient;
+using AuctionTrading.Application.Models.Bid;
 using AuctionTrading.Application.Models.Seller;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.Common.Enums;
@@ -6,6 +7,7 @@ using AuctionTrading.Common.Infrastructure.Queues.Abstraction;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Domain.ValueObjects;
+using AuctionTrading.GrpcClient;
 using AutoMapper;
 using MassTransit;
 using Microsoft.VisualBasic;
@@ -19,7 +21,8 @@ namespace AuctionTrading.Application.Services
         IAuctionLotRepository lotsRepository,
         IRepository<Bid, Guid> bidsRepository,
         IProducerService<BidPerLotEvent> lotBidProducer,
-        IProducerService<WonLotEvent> lotPurchasedProducer)
+        IProducerService<WonLotEvent> lotPurchasedProducer
+        ITradingClient client)
         : IBidderApplicationService
     {
         public async Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken = default)
@@ -45,6 +48,22 @@ namespace AuctionTrading.Application.Services
 
             if (bidStatus == BidStatus.Success)
             {
+                var request = new ReserveMoneyCommandGrpc
+                {
+                    BuyerId = customer.Id.ToString(),
+                    Price = (double)bidInformation.Amount,
+                    Lot = new LotInfoModelGrpc
+                    {
+                        Id = lot.Id.ToString(),
+                        Title = lot.Title.Value,
+                        Description = lot.Description.Value
+                    }
+                };
+
+                var response = await client.ReserveMoney(request, cancellationToken);
+                if (response.IsError == true)
+                    return BidStatus.FaultedIncorrectBid;
+
                 var newBid = lot.LastBid;
                 var result = await bidsRepository.AddAsync(newBid, cancellationToken);
                 if (result is not null)

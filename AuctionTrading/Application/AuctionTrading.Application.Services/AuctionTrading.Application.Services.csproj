@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\Common\AuctionTrading.Common\AuctionTrading.Common.csproj" />
     <ProjectReference Include="..\..\Domain\AuctionTrading.Domain.Repositories.Abstractions\AuctionTrading.Domain.Repositories.Abstractions.csproj" />
     <ProjectReference Include="..\..\Domain\AuctionTrading.Domain\AuctionTrading.Domain.csproj" />
+    <ProjectReference Include="..\..\Presentation\AuctionTrading.GrpcClient\AuctionTrading.GrpcClient.csproj" />
     <ProjectReference Include="..\AuctionTrading.Application.Models\AuctionTrading.Application.Models.csproj" />
   </ItemGroup>
 

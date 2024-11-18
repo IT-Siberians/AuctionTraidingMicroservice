@@ -40,7 +40,8 @@
     <ProjectReference Include="..\..\Infrastructure\AuctionTrading.Infrastructure.Queues.Implementations\AuctionTrading.Infrastructure.Queues.Implementations.csproj" />
     <ProjectReference Include="..\..\Infrastructure\AuctionTrading.Infrastructure.RabbitMQ\AuctionTrading.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Repositories.Implementations\AuctionTrading.Infrastructure.Repositories.Implementations.csproj" />
-    <ProjectReference Include="..\AuctionTrading.GrpcClient\AuctionTrading.GrpcClient.csproj" />
+	<ProjectReference Include="..\AuctionTrading.GrpcClient\AuctionTrading.GrpcClient.csproj" />
+
   </ItemGroup>
 
 </Project>
