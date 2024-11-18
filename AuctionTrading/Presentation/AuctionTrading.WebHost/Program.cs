@@ -84,7 +84,7 @@ namespace AuctionTrading.WebHost
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<ITradingClient, TradingClient>();
-            builder.Services.AddScoped<Trading.TradingClient>();
+           // builder.Services.AddScoped<Trading.TradingClient()>();
 
 
             builder.Services.AddScoped<IRepository<Bid, Guid>, EfRepository<Bid, Guid>>();
