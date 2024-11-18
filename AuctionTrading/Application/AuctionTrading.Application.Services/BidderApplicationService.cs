@@ -21,7 +21,7 @@ namespace AuctionTrading.Application.Services
         IAuctionLotRepository lotsRepository,
         IRepository<Bid, Guid> bidsRepository,
         IProducerService<BidPerLotEvent> lotBidProducer,
-        IProducerService<WonLotEvent> lotPurchasedProducer
+        IProducerService<WonLotEvent> lotPurchasedProducer,
         ITradingClient client)
         : IBidderApplicationService
     {
