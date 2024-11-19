@@ -84,7 +84,7 @@ namespace AuctionTrading.WebHost
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<ITradingClient, TradingClient>();
-           // builder.Services.AddScoped<Trading.TradingClient()>();
+            // builder.Services.AddScoped<Trading.TradingClient()>();
 
 
             builder.Services.AddScoped<IRepository<Bid, Guid>, EfRepository<Bid, Guid>>();
@@ -168,6 +168,14 @@ namespace AuctionTrading.WebHost
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors(policy =>
+            {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 
