@@ -86,9 +86,11 @@ namespace AuctionTrading.WebHost.Controllers
                 return BadRequest($"The buyer cannot bid on his auction lot with id {auctionLot.Id}");
 
             var bid = mapper.Map<CreateBidModel>(request);
-            var bidStatus = await bidderApplicationService.MakeBidAsync(bid, cancellationToken);
-            if (bidStatus != Common.Enums.BidStatus.Success)
-                return BadRequest($"An attempt to place a bet ended in failure. Status {bidStatus}");
+            var response = await bidderApplicationService.MakeBidAsync(bid, cancellationToken);
+            if (response.Result != Common.Enums.BidStatus.Success)
+                return response.Message is not null
+                    ? BadRequest(response.Message)
+                    : BadRequest($"An attempt to place a bet ended in failure. Status {response}");
             
             auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(request.AuctionLotId, cancellationToken);
             return Created("", mapper.Map<BidDetailedResponse>(auctionLot.LastBid));

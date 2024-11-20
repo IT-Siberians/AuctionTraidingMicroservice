@@ -4,6 +4,8 @@ using AuctionTrading.Application.Models.Seller;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.Common.Enums;
 using AuctionTrading.Common.Infrastructure.Queues.Abstraction;
+using AuctionTrading.Common.Responses;
+using AuctionTrading.Common.Responses.Base;
 using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Domain.ValueObjects;
@@ -25,21 +27,21 @@ namespace AuctionTrading.Application.Services
         ITradingClient client)
         : IBidderApplicationService
     {
-        public async Task<BidStatus> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken = default)
+        public async Task<IResponse<BidStatus>> MakeBidAsync(CreateBidModel bidInformation, CancellationToken cancellationToken = default)
         {
             var customer = await customersRepository.GetByIdAsync(bidInformation.CustomerId, cancellationToken);
             if (customer is null)
-                return BidStatus.FaultedCustomerNotFound;
+                return new BidResponse(BidStatus.FaultedCustomerNotFound);
 
             var lot = await lotsRepository.GetByIdAsync(bidInformation.AuctionLotId, cancellationToken);
             if (lot is null)
-                return BidStatus.FaultedLotNotFound;
+                return new BidResponse(BidStatus.FaultedLotNotFound);
 
             if (!lot.IsActive)
-                return BidStatus.FaultedLotNotActive;
+                return new BidResponse(BidStatus.FaultedLotNotActive);
 
             if (customer.Id == lot.Seller.Id)
-                return BidStatus.FaultedCreateBidOnYourLot;
+                return new BidResponse(BidStatus.FaultedCreateBidOnYourLot);
 
             bool isFirstBid = lot.LastBid is null;
             Customer? previousCustomer = isFirstBid ? null : lot.LastBid!.Customer;
@@ -62,22 +64,14 @@ namespace AuctionTrading.Application.Services
 
                 var response = await client.ReserveMoney(request, cancellationToken);
                 if (response.IsError == true)
-                    return BidStatus.FaultedIncorrectBid;
+                    return new BidResponse(BidStatus.FaultedIncorrectBid, response.Message);
 
                 var newBid = lot.LastBid;
                 var result = await bidsRepository.AddAsync(newBid, cancellationToken);
                 if (result is not null)
                 {
-                    lotBidProducer.Send(new BidPerLotEvent
-                    (
-                        customer.Id,
-                        previousCustomer is null ? Guid.Empty : previousCustomer.Id,
-                        lot.Seller.Id,
-                        lot.Id,
-                        lot.Title.Value,
-                        lot.LastBid!.Amount.Value
-                    ));
                     if (lot.IsCompleted)
+                    {
                         lotPurchasedProducer.Send(new WonLotEvent
                             (
                             customer.Id,
@@ -92,14 +86,34 @@ namespace AuctionTrading.Application.Services
                             lot.StartDate,
                             lot.EndDate
                             ));
-
-                    return bidStatus;
+                        var payForLotRequest = new PayForLotCommandGrpc
+                        {
+                            BuyerId = customer.Id.ToString(),
+                            SellerId = lot.Seller.Id.ToString(),
+                            LotId = lot.Id.ToString(),
+                            HammerPrice = (double)lot.LastBid!.Amount.Value
+                        };
+                        response = await client.PayForLotAsync(payForLotRequest, cancellationToken);
+                        return response.IsError == true
+                            ? new BidResponse(BidStatus.FaultedPayForLot, response.Message)
+                            : new BidResponse(BidStatus.Success);
+                    }
+                    var realeaseMoneyRequest = new RealeaseMoneyCommandGrpc
+                    {
+                        BuyerId = customer.Id.ToString(),
+                        LotId = previousCustomer.Id.ToString(),
+                        Price = (double)lot.LastBid!.Amount.Value
+                    };
+                    response = await client.RealeaseMoneyAsync(realeaseMoneyRequest, cancellationToken);
+                    return response.IsError
+                        ? new BidResponse(BidStatus.FaultedNotRealeaseMoney)
+                        : new BidResponse(bidStatus);
                 }
 
-                return BidStatus.FaultedIncorrectBid;
+                return new BidResponse(BidStatus.FaultedIncorrectBid);
             }
 
-            return bidStatus;
+            return new BidResponse(bidStatus);
         }
     }
 }
