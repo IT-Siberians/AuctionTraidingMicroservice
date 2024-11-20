@@ -105,9 +105,16 @@ namespace AuctionTrading.Application.Services
                         Price = (double)lot.LastBid!.Amount.Value
                     };
                     response = await client.RealeaseMoneyAsync(realeaseMoneyRequest, cancellationToken);
-                    return response.IsError
-                        ? new BidResponse(BidStatus.FaultedNotRealeaseMoney)
-                        : new BidResponse(bidStatus);
+                    if (response.IsError)
+                        return new BidResponse(BidStatus.FaultedNotRealeaseMoney);
+                    lotBidProducer.Send(new BidPerLotEvent(
+                        customer.Id, 
+                        previousCustomer is null?Guid.Empty:previousCustomer.Id, 
+                        lot.Seller.Id, 
+                        lot.Id, 
+                        lot.Title.Value, 
+                        lot.LastBid!.Amount.Value));
+                        return new BidResponse(bidStatus);
                 }
 
                 return new BidResponse(BidStatus.FaultedIncorrectBid);
