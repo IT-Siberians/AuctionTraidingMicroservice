@@ -4,6 +4,9 @@ namespace AuctionTrading.Domain.Repositories.Abstractions
 {
     public interface IAuctionLotRepository : IRepository<AuctionLot, Guid>
     {
-        Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(DateTime endDateUtc);
+        Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(
+            DateTime endDateUtc,
+            CancellationToken cancellationToken,
+            bool asNoTracking = false);
     }
 }

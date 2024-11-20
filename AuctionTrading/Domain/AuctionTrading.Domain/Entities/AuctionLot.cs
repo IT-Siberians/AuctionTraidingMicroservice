@@ -3,6 +3,7 @@ using AuctionTrading.Domain.Entities.Base;
 using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.Exceptions;
 using AuctionTrading.Domain.ValueObjects;
+using System;
 
 namespace AuctionTrading.Domain.Entities
 {
@@ -73,6 +74,11 @@ namespace AuctionTrading.Domain.Entities
         public bool IsActive => Status == LotStatus.Active;
 
         /// <summary>
+        /// Returns a value indicating whether the auction for the lot has ended.
+        /// </summary>
+        public bool IsCompleted => Status == LotStatus.Completed;
+
+        /// <summary>
         /// Get the last bid of the auction lot.
         /// </summary>
         public Bid? LastBid => _bids.Any() ? _bids.MaxBy(i => i.CreationTime) : null;
@@ -98,7 +104,7 @@ namespace AuctionTrading.Domain.Entities
         /// <param name="endDate">The end date of the auction lot.</param>
         /// <param name="status">The status of the auction lot.</param>
         /// <param name="seller">The seller of the auction lot.</param>
-        public AuctionLot(
+        protected AuctionLot(
             Guid id,
             Title title,
             Description description,
@@ -131,6 +137,20 @@ namespace AuctionTrading.Domain.Entities
             Status = status;
         }
 
+        public AuctionLot(
+            Guid id,
+            Title title,
+            Description description,
+            Money startPrice,
+            Money bidIncrement,
+            Money? repurchasePrice,
+            DateTime startDate,
+            DateTime endDate,
+            Seller seller) :
+            this(id, title, description, startPrice, bidIncrement, repurchasePrice, startDate, endDate, LotStatus.Active, seller)
+        {
+
+        }
         #endregion // Constructors
 
         /// <summary>
@@ -155,7 +175,7 @@ namespace AuctionTrading.Domain.Entities
             return true;
         }
 
-        internal bool SetComplete()
+        public bool SetComplete()
         {
             if (!IsActive)
                 throw new CompletedNotActiveAuctionLotException(this);
@@ -213,7 +233,7 @@ namespace AuctionTrading.Domain.Entities
         {
             Money minAmount = LastBid is null
                 ? StartPrice + BidIncrement
-                : newBid.Amount + BidIncrement;
+                : LastBid.Amount + BidIncrement;
             return (newBid.Amount >= minAmount && newBid.CreationTime < EndDate);
         }
     }

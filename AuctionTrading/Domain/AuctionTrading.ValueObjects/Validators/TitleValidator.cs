@@ -11,12 +11,12 @@ namespace AuctionTrading.Domain.ValueObjects.Validators
         /// <summary>
         /// The Title's min length
         /// </summary>
-        public int MIN_LENGTH => 3;
+        public static int MIN_LENGTH => 3;
 
         /// <summary>
         /// The Title's max length
         /// </summary>
-        public int MAX_LENGTH => 50;
+        public static int MAX_LENGTH => 50;
 
         /// <summary>
         /// Verifies the string to make sure it is not null, empty or doesn't consists only white-space characters. 

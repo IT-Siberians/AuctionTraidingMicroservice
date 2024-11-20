@@ -12,6 +12,15 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-1809 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Presentation/AuctionTrading.WebHost/AuctionTrading.WebHost.csproj", "Presentation/AuctionTrading.WebHost/"]
+COPY ["Application/AuctionTrading.Application.Services/AuctionTrading.Application.Services.csproj", "Application/AuctionTrading.Application.Services/"]
+COPY ["Common/AuctionTrading.Common/AuctionTrading.Common.csproj", "Common/AuctionTrading.Common/"]
+COPY ["Domain/AuctionTrading.Domain.Repositories.Abstractions/AuctionTrading.Domain.Repositories.Abstractions.csproj", "Domain/AuctionTrading.Domain.Repositories.Abstractions/"]
+COPY ["Domain/AuctionTrading.Domain/AuctionTrading.Domain.csproj", "Domain/AuctionTrading.Domain/"]
+COPY ["Domain/AuctionTrading.ValueObjects/AuctionTrading.Domain.ValueObjects.csproj", "Domain/AuctionTrading.ValueObjects/"]
+COPY ["Application/AuctionTrading.Application.Models/AuctionTrading.Application.Models.csproj", "Application/AuctionTrading.Application.Models/"]
+COPY ["Infrastructure/AuctionTrading.Infrastructure.EntityFramework/AuctionTrading.Infrastructure.EntityFramework.csproj", "Infrastructure/AuctionTrading.Infrastructure.EntityFramework/"]
+COPY ["Infrastructure/Repositories.Implementations/AuctionTrading.Infrastructure.Repositories.Implementations.csproj", "Infrastructure/Repositories.Implementations/"]
+COPY ["Domain/AuctionTrading.Domain.Services/AuctionTrading.Domain.Services.csproj", "Domain/AuctionTrading.Domain.Services/"]
 RUN dotnet restore "./Presentation/AuctionTrading.WebHost/AuctionTrading.WebHost.csproj"
 COPY . .
 WORKDIR "/src/Presentation/AuctionTrading.WebHost"

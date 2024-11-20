@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using AuctionTrading.Domain.ValueObjects;
+using AuctionTrading.Domain.ValueObjects.Validators;
 
 namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
 {
@@ -14,7 +15,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasConversion(title => title.Value, str => new Title(str))
-                .HasMaxLength(50);
+                .HasMaxLength(TitleValidator.MAX_LENGTH);
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.Description)
                 .IsRequired()
@@ -41,6 +42,7 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Configurations
             builder.HasOne(x => x.Seller).WithMany("_auctionLots");
             builder.HasMany<Bid>("_bids").WithOne(x => x.AuctionLot);
             builder.Ignore(x => x.IsActive);
+            builder.Ignore(x => x.IsCompleted);
             builder.Ignore(x => x.LastBid);
         }
     }

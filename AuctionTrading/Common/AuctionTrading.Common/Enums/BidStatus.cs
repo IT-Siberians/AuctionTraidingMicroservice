@@ -5,7 +5,10 @@
         Success,
         FaultedIncorrectBid,
         FaultedCreateBidOnYourLot,
+        FaultedLotNotActive,
         FaultedLotWasCancel,
-        FaultedLotWasPurchased
+        FaultedLotWasPurchased,
+        FaultedCustomerNotFound,
+        FaultedLotNotFound
     }
 }

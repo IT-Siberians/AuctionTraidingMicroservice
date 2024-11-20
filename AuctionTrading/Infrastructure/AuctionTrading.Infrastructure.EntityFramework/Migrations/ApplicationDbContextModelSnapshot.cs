@@ -22,6 +22,21 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AuctionLotCustomer", b =>
+                {
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("_observableAuctionLotsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("CustomerId", "_observableAuctionLotsId");
+
+                    b.HasIndex("_observableAuctionLotsId");
+
+                    b.ToTable("AuctionLotCustomer");
+                });
+
             modelBuilder.Entity("AuctionTrading.Domain.Entities.AuctionLot", b =>
                 {
                     b.Property<Guid>("Id")
@@ -122,6 +137,21 @@ namespace AuctionTrading.Infrastructure.EntityFramework.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sellers");
+                });
+
+            modelBuilder.Entity("AuctionLotCustomer", b =>
+                {
+                    b.HasOne("AuctionTrading.Domain.Entities.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AuctionTrading.Domain.Entities.AuctionLot", null)
+                        .WithMany()
+                        .HasForeignKey("_observableAuctionLotsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AuctionTrading.Domain.Entities.AuctionLot", b =>

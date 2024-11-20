@@ -3,9 +3,8 @@ using AuctionTrading.Application.Models.Base;
 
 namespace AuctionTrading.Application.Models.Seller
 {
-    public record class SellerModel(
-        Guid Id,
-        string Username,
-        IEnumerable<AuctionLotModel> AuctionedLots)
-        : BidderCreateModel(Id, Username);
+    public record class SellerModel(Guid Id, string Username) : BidderModel(Id, Username) 
+    {
+        public IEnumerable<AuctionLotModel> AuctionedLots { get; init; }
+    }
 }

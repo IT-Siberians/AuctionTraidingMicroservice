@@ -11,7 +11,10 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.InMemory
         {
         }
 
-        public Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(DateTime endDateUtc)
+        public Task<IEnumerable<AuctionLot>> GetAllByEndDateAsync(
+            DateTime endDateUtc,
+            CancellationToken cancellationToken,
+            bool asNoTracking = false)
             => Task.FromResult(_entities.Where(x => x.EndDate < endDateUtc.ToUniversalTime()));
     }
 }

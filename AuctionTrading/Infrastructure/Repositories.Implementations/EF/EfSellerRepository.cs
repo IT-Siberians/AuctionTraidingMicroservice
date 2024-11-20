@@ -1,5 +1,6 @@
 ﻿using AuctionTrading.Domain.Entities;
 using AuctionTrading.Domain.Repositories.Abstractions;
+using AuctionTrading.Domain.ValueObjects;
 using AuctionTrading.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +11,12 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
     {
         private readonly DbSet<Seller> _sellers = context.Set<Seller>();
 
-        public override Task<Seller?> GetByIdAsync(Guid id)
-            => _sellers.Include(s => s.ActiveAuctionLots)
-            .FirstOrDefaultAsync(s => s.Id == id);
+        public override Task<Seller?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+            => _sellers.Include("_auctionLots")
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
 
-        public Task<Seller?> GetSellerByUsernameAsync(string username)
-            => _sellers.Include(s => s.ActiveAuctionLots)
-            .FirstOrDefaultAsync(s => s.Username.Value == username);
+        public Task<Seller?> GetSellerByUsernameAsync(string username, CancellationToken cancellationToken)
+            => _sellers.Include("_auctionLots")
+            .FirstOrDefaultAsync(s => s.Username.Equals(new Username(username)), cancellationToken);
     }
 }

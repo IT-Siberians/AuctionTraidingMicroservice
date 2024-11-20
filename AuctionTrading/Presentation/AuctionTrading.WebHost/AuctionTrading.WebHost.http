@@ -1,6 +1,20 @@
 @AuctionTrading.WebHost_HostAddress = http://localhost:5233
-
-GET {{AuctionTrading.WebHost_HostAddress}}/weatherforecast/
+### Create seller
+POST {{AuctionTrading.WebHost_HostAddress}}/api/v1/Sellers/
 Accept: application/json
+Content-Type: application/json
 
-###
+{
+  "name" : "Yana Kryukova"
+}
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 201, "Response status is not 200");
+    });
+
+    client.test("Response content-type is json", function () {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/json", `Expected 'application/json' but received '${type}'`);
+    });
+    client.global.set("seller_id", response.body.id);
+%}
