@@ -11,6 +11,7 @@ namespace AuctionTrading.WebHost.Responses.AuctionLot
        decimal? RepurchasePrice,
        DateTime StartDate,
        DateTime EndDate,
-       BidDetailedResponse? LastBid,
-       Guid SellerId);
+       Guid SellerId,
+       string SellerUsername,
+       BidDetailedResponse? LastBid);
 }

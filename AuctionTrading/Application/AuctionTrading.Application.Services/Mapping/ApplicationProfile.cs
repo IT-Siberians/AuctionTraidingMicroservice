@@ -20,7 +20,8 @@ namespace AuctionTrading.Application.Services.Mapping
             .ForMember(dest => dest.BidIncrement, opt => opt.MapFrom(src => src.BidIncrement))
             .ForMember(dest => dest.RepurchasePrice, opt => opt.MapFrom((opt, dest) => opt.RepurchasePrice?.Value ?? null))
             .ForMember(dest => dest.LastBid, opt => opt.MapFrom((opt, dest) => opt.LastBid ?? null))
-            .ForMember(dest => dest.SellerId, opt => opt.MapFrom(src => src.Seller.Id));
+            .ForMember(dest => dest.SellerId, opt => opt.MapFrom(src => src.Seller.Id))
+            .ForMember(dest => dest.SellerUsername, opt => opt.MapFrom(src => src.Seller.Username.Value));
 
             CreateMap<Bid, BidModel>()
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount.Value));
