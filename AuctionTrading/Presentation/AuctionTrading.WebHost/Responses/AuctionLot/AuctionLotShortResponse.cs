@@ -1,4 +1,6 @@
-﻿namespace AuctionTrading.WebHost.Responses.AuctionLot
+﻿using AuctionTrading.WebHost.Responses.Bid;
+
+namespace AuctionTrading.WebHost.Responses.AuctionLot
 {
-    public record class AuctionLotShortResponse(Guid Id, string Title, decimal StartPrice);
+    public record class AuctionLotShortResponse(Guid Id, string Title, decimal StartBid, BidDetailedResponse? LastBid, Guid SellerId);
 }
