@@ -1,5 +1,4 @@
-﻿
-using AuctionTrading.Application.Models.AuctionLot;
+﻿using AuctionTrading.Application.Models.AuctionLot;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.WebHost.Requests.AuctionLot;
 using AuctionTrading.WebHost.Responses.AuctionLot;
@@ -10,12 +9,13 @@ namespace AuctionTrading.WebHost.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class AuctionLotsController(IAuctionLotsApplicationService auctionLotsApplicationService,
-                                    IMapper mapper) : ControllerBase
+    public class AuctionLotsController(
+        IAuctionLotsApplicationService auctionLotsApplicationService,
+        IMapper mapper) : ControllerBase
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AuctionLotShortResponse>))]
-        public async Task<IActionResult> GetAllAuctionLots(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<AuctionLotShortResponse>>> GetAllAuctionLots(CancellationToken cancellationToken)
         {
             var auctionLots = await auctionLotsApplicationService.GetAuctionLotsAsync(cancellationToken);
             return Ok(mapper.Map<IEnumerable<AuctionLotShortResponse>>(auctionLots));
@@ -25,7 +25,7 @@ namespace AuctionTrading.WebHost.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuctionLotDetailedResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        public async Task<IActionResult> GetAuctionLotById(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<AuctionLotDetailedResponse>> GetAuctionLotById(Guid id, CancellationToken cancellationToken)
         {
             var auctionLot = await auctionLotsApplicationService.GetAuctionLotByIdAsync(id, cancellationToken);
             if (auctionLot is null)
@@ -36,7 +36,7 @@ namespace AuctionTrading.WebHost.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AuctionLotShortResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<IActionResult> CreateAuctionLot(CreateAuctionLotRequest request, CancellationToken cancellationToken)
+        public async Task<ActionResult<AuctionLotShortResponse>> CreateAuctionLot(CreateAuctionLotRequest request, CancellationToken cancellationToken)
         {
             var auctionLot = mapper.Map<CreateAuctionLotModel>(request);
             var createdAuctionLot = await auctionLotsApplicationService.CreateAuctionLotAsync(auctionLot, cancellationToken);

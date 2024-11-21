@@ -9,7 +9,9 @@ namespace AuctionTrading.Application.Services
     public class AuctionLotsApplicationService(IAuctionLotRepository lotRepository, ISellersRepository sellersRepository, IMapper mapper) : IAuctionLotsApplicationService
     {
         public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsAsync(CancellationToken cancellationToken = default)
-            => (await lotRepository.GetAllAsync(cancellationToken, true)).Where(l => l.IsActive).Select(mapper.Map<AuctionLotModel>);
+            => (await lotRepository.GetAllAsync(cancellationToken, true))
+                .Where(l => l.IsActive)
+                .Select(mapper.Map<AuctionLotModel>);
 
         public async Task<IEnumerable<AuctionLotModel>> GetAuctionLotsByEndDateAsync(DateTime endDateUtc, CancellationToken cancellationToken = default)
             => (await lotRepository.GetAllByEndDateAsync(endDateUtc, cancellationToken, true)).Select(mapper.Map<AuctionLotModel>);
@@ -17,7 +19,6 @@ namespace AuctionTrading.Application.Services
         public async Task<AuctionLotModel?> GetAuctionLotByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var lot = await lotRepository.GetByIdAsync(id, cancellationToken);
-            var res = mapper.Map<AuctionLotModel>(lot);
             return lot is null ? null : mapper.Map<AuctionLotModel>(lot);
         }
 
