@@ -1,4 +1,5 @@
-﻿using AuctionTrading.Application.Models.AuctionLot;
+﻿
+using AuctionTrading.Application.Models.AuctionLot;
 using AuctionTrading.Application.Services.Abstractions;
 using AuctionTrading.WebHost.Requests.AuctionLot;
 using AuctionTrading.WebHost.Responses.AuctionLot;
