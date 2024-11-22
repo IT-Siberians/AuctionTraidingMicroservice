@@ -1,5 +1,6 @@
 ﻿using AuctionTrading.Application.Models.Base;
 using AuctionTrading.Application.Models.Bid;
+using AuctionTrading.Domain.Enums;
 
 namespace AuctionTrading.Application.Models.AuctionLot
 {
@@ -15,5 +16,5 @@ namespace AuctionTrading.Application.Models.AuctionLot
         Guid SellerId,
         string SellerUsername,
         BidModel? LastBid,
-        bool IsActive) : IModel<Guid>;
+        LotStatus Status) : IModel<Guid>;
 }

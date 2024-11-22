@@ -1,4 +1,5 @@
-﻿using AuctionTrading.WebHost.Responses.Bid;
+﻿using AuctionTrading.Domain.Enums;
+using AuctionTrading.WebHost.Responses.Bid;
 
 namespace AuctionTrading.WebHost.Responses.AuctionLot
 {
@@ -14,5 +15,5 @@ namespace AuctionTrading.WebHost.Responses.AuctionLot
        Guid SellerId,
        string SellerUsername,
        BidDetailedResponse? LastBid,
-       bool IsActive);
+       LotStatus Status);
 }
