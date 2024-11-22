@@ -9,6 +9,10 @@
         FaultedLotWasCancel,
         FaultedLotWasPurchased,
         FaultedCustomerNotFound,
-        FaultedLotNotFound
+        FaultedLotNotFound,
+        FaultedMoneyIsNotFrozen,
+        FaultedPayForLot,
+        FaultedNotRealeaseMoney
+
     }
 }

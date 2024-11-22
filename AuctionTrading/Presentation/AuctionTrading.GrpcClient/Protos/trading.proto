@@ -1,29 +1,29 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
-package AuctionTrading;
+package WalletTrading;
 
-option csharp_namespace = "AuctionTrading.GrpcApi";
+option csharp_namespace = "AuctionGrpcClient";
 
 service Trading {
-    rpc PayForLot(PayForLotRequestGrpc) returns (BaseResponseGrpc);
-    rpc RealeaseMoney(RealeaseMoneyRequestGrpc) returns (BaseResponseGrpc);
-    rpc ReserveMoney(ReserveMoneyRequestGrpc) returns (BaseResponseGrpc);
+    rpc PayForLot(PayForLotCommandGrpc) returns (BaseResponseGrpc);
+    rpc RealeaseMoney(RealeaseMoneyCommandGrpc) returns (BaseResponseGrpc);
+    rpc ReserveMoney(ReserveMoneyCommandGrpc) returns (BaseResponseGrpc);
 }
 
-message PayForLotRequestGrpc {
+message PayForLotCommandGrpc {
     string BuyerId = 1;
     string SellerId = 2;
     string LotId = 3;
     double HammerPrice = 4;
 }
 
-message RealeaseMoneyRequestGrpc {
+message RealeaseMoneyCommandGrpc {
     string BuyerId = 1;
     string LotId = 2;
     double Price = 3;
 };
 
-message ReserveMoneyRequestGrpc {
+message ReserveMoneyCommandGrpc {
     string BuyerId = 1;
     double Price = 2;
     LotInfoModelGrpc Lot = 3;

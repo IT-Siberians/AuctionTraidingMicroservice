@@ -2,8 +2,6 @@
 using AuctionTrading.Domain.Repositories.Abstractions;
 using AuctionTrading.Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
 {
@@ -12,9 +10,9 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
         where TEntity : Entity<TId>
         where TId : struct, IEquatable<TId>
     {
-        public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken, bool asNoTracking = false)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken, bool asNoTracking = false)
             => await (asNoTracking ? context.Set<TEntity>().AsNoTracking() : context.Set<TEntity>())
-            .ToListAsync(cancellationToken);
+                .ToListAsync(cancellationToken);
 
         public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
             => await context.Set<TEntity>().FindAsync(id, cancellationToken);
@@ -24,7 +22,7 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             await context.Set<TEntity>().AddAsync(entity, cancellationToken);
-            return await context.SaveChangesAsync(cancellationToken) > 0 ? entity:null;
+            return await context.SaveChangesAsync(cancellationToken) > 0 ? entity : null;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
@@ -48,7 +46,6 @@ namespace AuctionTrading.Infrastructure.Repositories.Implementations.EF
             var entity = await GetByIdAsync(id, cancellationToken);
 
             return entity is null ? false : await DeleteAsync(entity, cancellationToken);
-
         }
     }
 }
