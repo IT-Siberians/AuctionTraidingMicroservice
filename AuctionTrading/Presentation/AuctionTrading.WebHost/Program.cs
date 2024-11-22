@@ -97,6 +97,7 @@ namespace AuctionTrading.WebHost
 
             builder.Services.AddTransient<IProducerService<BidPerLotEvent>, Producer<BidPerLotEvent>>();
             builder.Services.AddTransient<IProducerService<WonLotEvent>, Producer<WonLotEvent>>();
+            builder.Services.AddTransient<IProducerService<CancelLotEvent>, Producer<CancelLotEvent>>();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
