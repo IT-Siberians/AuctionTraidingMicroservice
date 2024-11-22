@@ -13,5 +13,6 @@ namespace AuctionTrading.WebHost.Responses.AuctionLot
        DateTime EndDate,
        Guid SellerId,
        string SellerUsername,
-       BidDetailedResponse? LastBid);
+       BidDetailedResponse? LastBid,
+       bool IsActive);
 }

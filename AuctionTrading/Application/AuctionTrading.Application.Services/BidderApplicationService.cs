@@ -79,6 +79,18 @@ namespace AuctionTrading.Application.Services
                     if (response.IsError)
                         return new BidResponse(BidStatus.FaultedNotRealeaseMoney);
                 }
+                if (previousBid is not null)
+                {
+                    var realeaseMoneyRequest = new RealeaseMoneyCommandGrpc
+                    {
+                        BuyerId = previousBid.Customer.Id.ToString(),
+                        LotId = lot.Id.ToString(),
+                        Price = (double)previousBid.Amount.Value
+                    };
+                    response = await client.RealeaseMoneyAsync(realeaseMoneyRequest, cancellationToken);
+                    if (response.IsError)
+                        return new BidResponse(BidStatus.FaultedNotRealeaseMoney);
+                }
                 if (lot.IsCompleted)
                 {
                     lotPurchasedProducer.Send(new WonLotEvent
@@ -106,18 +118,6 @@ namespace AuctionTrading.Application.Services
                     return response.IsError == true
                         ? new BidResponse(BidStatus.FaultedPayForLot, response.Message)
                         : new BidResponse(BidStatus.Success);
-                }
-                if (previousBid is not null)
-                {
-                    var realeaseMoneyRequest = new RealeaseMoneyCommandGrpc
-                    {
-                        BuyerId = previousBid.Customer.Id.ToString(),
-                        LotId = lot.Id.ToString(),
-                        Price = (double)previousBid.Amount.Value
-                    };
-                    response = await client.RealeaseMoneyAsync(realeaseMoneyRequest, cancellationToken);
-                    if (response.IsError)
-                        return new BidResponse(BidStatus.FaultedNotRealeaseMoney);
                 }
                 lotBidProducer.Send(new BidPerLotEvent(
                     customer.Id,

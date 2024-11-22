@@ -3,6 +3,7 @@ using AuctionTrading.Application.Models.Bid;
 using AuctionTrading.Application.Models.Customer;
 using AuctionTrading.Application.Models.Seller;
 using AuctionTrading.Domain.Entities;
+using AuctionTrading.Domain.Enums;
 using AuctionTrading.Domain.ValueObjects;
 using AutoMapper;
 
